@@ -25,7 +25,7 @@ id	project_i;
 //===========================================================
 - initVars
 {
-	char		*s;
+	NSString	*s;
 	
 	s = [preferences_i getProjectPath];
 	StripFilename(s);

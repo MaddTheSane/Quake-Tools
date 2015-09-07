@@ -78,7 +78,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" id="87">
-                                    <rect key="frame" x="46.000000903760629" y="77" width="240" height="21"/>
+                                    <rect key="frame" x="46.000000438094141" y="77" width="240" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="453">
                                         <font key="font" size="12" name="Helvetica"/>
@@ -90,7 +90,7 @@
                                     </connections>
                                 </textField>
                                 <textField verticalHuggingPriority="750" id="77">
-                                    <rect key="frame" x="45.000000903760657" y="8" width="241" height="66"/>
+                                    <rect key="frame" x="45" y="8" width="241.00000043809413" height="66"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="454">
                                         <font key="font" size="12" name="Helvetica"/>
@@ -405,10 +405,10 @@ Entry</string>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <size key="minSize" width="261" height="81"/>
-                                                <size key="maxSize" width="272" height="10000000"/>
+                                                <size key="maxSize" width="278" height="10000000"/>
                                                 <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <size key="minSize" width="261" height="81"/>
-                                                <size key="maxSize" width="272" height="10000000"/>
+                                                <size key="maxSize" width="278" height="10000000"/>
                                             </textView>
                                         </subviews>
                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

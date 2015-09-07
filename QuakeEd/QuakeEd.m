@@ -103,20 +103,12 @@ void CheckCmdDone(DPSTimedEntry tag, double now, void *userData)
 init
 ===============
 */
-- initContent:(const NSRect *)contentRect
-style:(int)aStyle
-backing:(int)backingType
-buttonMask:(int)mask
-defer:(BOOL)flag
+-(instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)backingType defer:(BOOL)flag
 {
-	[super initContent:contentRect
-		style:aStyle
-		backing:backingType
-		buttonMask:mask
-		defer:flag];
+	if (self = [super initWithContentRect:contentRect styleMask:aStyle backing:backingType defer:flag]) {
 
 	[self addToEventMask:
-		NX_RMOUSEDRAGGEDMASK|NX_LMOUSEDRAGGEDMASK];	
+		NSRightMouseDraggedMask|NSLeftMouseDraggedMask];	
 	
     malloc_error(My_Malloc_Error);
 	
@@ -126,16 +118,15 @@ defer:(BOOL)flag
 	DPSAddTimedEntry(5*60, AutoSave, self, NX_BASETHRESHOLD);
 
 	upath = newUserPath ();
-
+	}
+	
 	return self;
 }
 
-- setDefaultFilename
+- (void)setDefaultFilename
 {	
 	strcpy (filename, FN_TEMPSAVE);
 	[self setTitleAsFilename:filename];
-	
-	return self;
 }
 
 
@@ -168,7 +159,7 @@ void postappdefined (void)
 		return;
 			
 // post an event at the end of the que
-	ev.type = NX_APPDEFINED;
+	ev.type = NSApplicationDefined;
 	if (DPSPostEvent(&ev, 0) == -1)
 		printf ("WARNING: DPSPostEvent: full\n");
 //printf ("posted\n");

@@ -27,8 +27,8 @@ FILE METHODS
 
 - saveSelected
 {
-	int		i, c;
-	id		o, w;
+	NSInteger	i, c;
+	id			o, w;
 	
 	[oldselection empty];
 	w = [self objectAtIndex: 0];
@@ -51,8 +51,7 @@ FILE METHODS
 	{
 		o = [self objectAt: 0];
 		[self removeObjectAt: 0];
-		[o freeObjects];
-		[o free];
+		[o release];
 	}
 
 	return self;
@@ -60,8 +59,8 @@ FILE METHODS
 
 - addSelected
 {
-	NSInteger		i, c;
-	id		n, w;
+	NSInteger	i, c;
+	id			n, w;
 	
 	c = [oldselection count];
 	w = [self objectAt: 0];	// world object

@@ -35,7 +35,7 @@ Adjust the size for the pop up scale menu
 =================
 */
 
-- tile
+- (void)tile
 {
 	NSRect	scrollerframe;
 	NSRect	buttonframe, buttonframe2;

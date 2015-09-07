@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
 	NSRect		realbounds, newrect, combinedrect;
 	NSPoint		midpoint;
 	int			gridsize;
-	float		scale;
+	CGFloat		scale;
 
 // for textured view
 	int			xywidth, xyheight;
@@ -48,20 +48,20 @@ typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
 
 //- setModeRadio: m;
 
-- setDrawMode: (drawmode_t)mode;
+- (void)setDrawMode: (drawmode_t)mode;
 
-- newSuperBounds;
-- newRealBounds: (NSRect *)nb;
+- (void)newSuperBounds;
+- (void)newRealBounds: (NSRect *)nb;
 
-- addToScrollRange: (float)x :(float)y;
-- setOrigin: (NSPoint *)pt scale: (float)sc;
-- centerOn: (vec3_t)org;
+- (void)addToScrollRange: (float)x :(float)y;
+- (void)setOrigin: (NSPoint *)pt scale: (float)sc;
+- (void)centerOn: (vec3_t)org;
 
 - (IBAction)drawMode:(id) sender;
 
-- superviewChanged;
+- (void)superviewChanged;
 
 - (int)gridsize;
-- (float)snapToGrid: (float)f;
+- (CGFloat)snapToGrid: (CGFloat)f;
 
 @end

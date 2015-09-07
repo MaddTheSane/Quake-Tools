@@ -1,9 +1,7 @@
 
 #include "qedefs.h"
 
-@implementation Entity {
-	NSMutableArray *_internalList;
-}
+@implementation Entity
 
 vec3_t bad_mins = {-8, -8, -8};
 vec3_t bad_maxs = {8, 8, 8};
@@ -17,13 +15,10 @@ vec3_t bad_maxs = {8, 8, 8};
 	
 // get class
 	new = [entity_classes_i classForName: [self valueForQKey: "classname"]];
-	if (new)
-	{
+	if (new) {
 		v = [new mins];
 		v2 = [new maxs];
-	}
-	else
-	{
+	} else {
 		v = bad_mins;
 		v2 = bad_maxs;
 	}
@@ -36,24 +31,18 @@ vec3_t bad_maxs = {8, 8, 8};
 
 	VectorAdd (org, v, emins);
 	VectorAdd (org, v2, emaxs);
-	new = [[SetBrush alloc] initOwner: self mins:emins maxs:emaxs
+	new = [[SetBrush alloc] initWithOwner: self mins:emins maxs:emaxs
 		texture: &td];
 	[new setEntityColor: color];
 
 	[self addObject: new];
 }
 
-- (void)addObject:(id)obj
-{
-	
-}
-
-- (instancetype)copyFromZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
 	Entity *new;
 	epair_t	*e;
-	int	i;
-		
+	
 	new = [[Entity alloc] init];
 	[new setModifiable: modifiable];
 	
@@ -63,7 +52,7 @@ vec3_t bad_maxs = {8, 8, 8};
 			[new setKey: e->key toValue: e->value];
 	}
 
-	for (id nb in _internalList) {
+	for (id nb in internalList) {
 		id newObj = [nb copy];
 		[newObj setParent:new];
 		[new addObject:newObj];
@@ -72,7 +61,7 @@ vec3_t bad_maxs = {8, 8, 8};
 	return new;
 }
 
-- initClass: (char *)classname
+- (instancetype)initWithClass: (char *)classname
 {
 	id		new;
 	esize_t	esize;
@@ -81,7 +70,6 @@ vec3_t bad_maxs = {8, 8, 8};
 	float	*v;
 	
 	self = [super init];
-	_internalList = [[NSMutableArray alloc] init];
 	
 	modifiable = YES;
 
@@ -95,8 +83,7 @@ vec3_t bad_maxs = {8, 8, 8};
 		esize = [new esize];
 	
 // create a brush if needed
-	if (esize == esize_fixed)
-	{
+	if (esize == esize_fixed) {
 		v = [new mins];
 		[[map_i selectedBrush] getMins: min maxs: max];	
 		VectorSubtract (min, v, min);
@@ -105,8 +92,7 @@ vec3_t bad_maxs = {8, 8, 8};
 		[self setKey:"origin" toValue: value];
 
 		[self createFixedBrush: min];
-	}
-	else
+	} else
 		modifiable = YES;
 			
 	return self;
@@ -123,7 +109,6 @@ vec3_t bad_maxs = {8, 8, 8};
 		free (e);
 	}
 	
-	[_internalList release];
 	[super dealloc];
 }
 
@@ -132,22 +117,24 @@ vec3_t bad_maxs = {8, 8, 8};
 	return modifiable;
 }
 
-- setModifiable: (BOOL)m
+- (void)setModifiable: (BOOL)m
 {
 	modifiable = m;
-	return self;
 }
 
-- (void)removeObject:(id) o
+- (id)removeObject: o
 {
-	[_internalList removeObject: o];
-	if ([_internalList count])
-		return;
+	o = [super removeObject: o];
+	if (numElements)
+		return o;
 // the entity is empty, so remove the entire thing
 	if ( self == [map_i objectAtIndex: 0])
-		return;	// never remove the world
+		return o;	// never remove the world
 		
 	[map_i removeObject: self];
+	//[self free];
+
+	return o;
 }
 
 
@@ -165,7 +152,7 @@ vec3_t bad_maxs = {8, 8, 8};
 	return "";
 }
 
-- getVector: (vec3_t)v forKey: (char *)k
+- (void)getVector: (vec3_t)v forKey: (char *)k
 {
 	char	*c;
 	
@@ -174,21 +161,17 @@ vec3_t bad_maxs = {8, 8, 8};
 	v[0] = v[1] = v[2] = 0;
 		
 	sscanf (c, "%f %f %f", &v[0], &v[1], &v[2]);
-
-	return self;
 }
 
-- print
+- (void)print
 {
 	epair_t	*e;
 	
 	for (e=epairs ; e ; e=e->next)
 		printf ("%20s : %20s\n",e->key, e->value);
-
-	return self;
 }
 
-- setKey:(char *)k toValue:(char *)v
+- (void)setKey:(char *)k toValue:(char *)v
 {
 	epair_t	*e;
 
@@ -200,14 +183,14 @@ vec3_t bad_maxs = {8, 8, 8};
 	while (*k && *k <= ' ')
 		k++;
 	if (!*k)
-		return self;	// don't set NULL values
+		return;	// don't set NULL values
 		
 	for (e=epairs ; e ; e=e->next)
 		if (!strcmp(k,e->key))
 		{
 			memset (e->value, 0, sizeof(e->value));
 			strcpy (e->value, v);
-			return self;
+			return;
 		}
 
 	e = malloc (sizeof(epair_t));
@@ -217,8 +200,6 @@ vec3_t bad_maxs = {8, 8, 8};
 	strcpy (e->value, v);
 	e->next = epairs;
 	epairs = e;
-	
-	return self;
 }
 
 - (int)numPairs
@@ -237,18 +218,18 @@ vec3_t bad_maxs = {8, 8, 8};
 	return epairs;
 }
 
-- removeKeyPair: (char *)key
+- (void)removeKeyPair: (char *)key
 {
 	epair_t	*e, *e2;
 	
 	if (!epairs)
-		return self;
+		return;
 	e = epairs;
 	if (!strcmp(e->key, key))
 	{
 		epairs = e->next;
 		free (e);
-		return self;
+		return;
 	}
 	
 	for (; e ; e=e->next)
@@ -258,12 +239,11 @@ vec3_t bad_maxs = {8, 8, 8};
 			e2 = e->next;
 			e->next = e2->next;
 			free (e2);
-			return self;
+			return;
 		}
 	}
 	
 	printf ("WARNING: removeKeyPair: %s not found\n", key);
-	return self;	
 }
 
 
@@ -317,7 +297,7 @@ FILE METHODS
 
 int	nument;
 
-- initFromTokens
+- (instancetype)initFromTokens
 {
 	char	key[MAXTOKEN];
 	id		eclass, brush;
@@ -326,14 +306,14 @@ int	nument;
 	vec3_t	org;
 	texturedef_t	td;
 	esize_t	esize;
-	int		i, c;
+	NSInteger	i, c;
 	float	*color;
 	
 	[self init];
 
 	if (!GetToken (true))
 	{
-		[self free];
+		[self release];
 		return nil;
 	}
 
@@ -372,7 +352,7 @@ int	nument;
 	if ([self count] && esize != esize_model)
 	{
 		printf ("WARNING:Entity with brushes and wrong model type\n"); 
-		[self empty];
+		[self removeAllObjects];
 	}
 	
 	if (![self count] && esize == esize_model)
@@ -384,7 +364,7 @@ int	nument;
 			emins[i] = org[i] - 8;
 			emaxs[i] = org[i] + 8;
 		}
-		brush = [[SetBrush alloc] initOwner: self mins:emins maxs:emaxs
+		brush = [[SetBrush alloc] initWithOwner: self mins:emins maxs:emaxs
 			texture: &td];
 		[self addObject: brush];
 	}
@@ -409,7 +389,7 @@ int	nument;
 }
 
 
-- writeToFILE: (FILE *)f region:(BOOL)reg;
+- (void)writeToFILE: (FILE *)f region:(BOOL)reg;
 {
 	epair_t	*e;
 	int		i;
@@ -430,9 +410,9 @@ int	nument;
 			sprintf (value, "%i", (int)([cameraview_i yawAngle]*180/M_PI));
 			[self setKey: "angle" toValue: value];
 		}
-		else if ( self != [map_i objectAt: 0] 
-		&& [[self objectAt: 0] regioned] )
-			return self;	// skip the entire entity definition
+		else if ( self != [map_i objectAtIndex: 0]
+		&& [[self objectAtIndex: 0] regioned] )
+			return;	// skip the entire entity definition
 	}
 	
 	fprintf (f,"{\n");
@@ -440,7 +420,7 @@ int	nument;
 // set an origin epair
 	if (!modifiable)
 	{
-		[[self objectAt: 0] getMins: mins maxs: maxs];
+		[[self objectAtIndex: 0] getMins: mins maxs: maxs];
 		if (temporg)
 		{
 			[cameraview_i getOrigin: mins];
@@ -467,15 +447,13 @@ int	nument;
 	if ( modifiable )
 	{
 		for (i=0 ; i<numElements ; i++)
-			[[self objectAt: i] writeToFILE: f region: reg];
+			[[self objectAtIndex: i] writeToFILE: f region: reg];
 	}
 	
 	fprintf (f,"}\n");
 	
 	if (temporg)
 		[self setKey: "angle" toValue: oldang];
-
-	return self;
 }
 
 /*

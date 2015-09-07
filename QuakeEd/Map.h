@@ -4,8 +4,8 @@
 #import "List.h"
 
 @class SetBrush;
-
-extern	id	map_i;
+@class Map;
+extern Map *map_i;
 
 @interface Map : List
 {
@@ -14,14 +14,14 @@ extern	id	map_i;
 	float	minz, maxz;
 }
 
-- newMap;
+- (void)newMap;
 
-- writeStats;
+- (void)writeStats;
 
-- readMapFile: (char *)fname;
-- writeMapFile: (char *)fname useRegion: (BOOL)reg;
+- (void)readMapFile: (char *)fname;
+- (void)writeMapFile: (char *)fname useRegion: (BOOL)reg;
 
-- entityConnect: (vec3_t)p1 : (vec3_t)p2;
+- (void)entityConnect: (vec3_t)p1 : (vec3_t)p2;
 
 - (void)selectRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)ef;
 - (SetBrush*)grabRay: (vec3_t)p1 : (vec3_t)p2;
@@ -44,26 +44,26 @@ extern	id	map_i;
 - (void)makeAllPerform: (SEL)sel;
 - (void)makeGlobalPerform: (SEL)sel;	// in and out of region
 
-- (IBAction)cloneSelection: sender;
+- (IBAction)cloneSelection:(id) sender;
 
-- (IBAction)makeEntity: sender;
+- (IBAction)makeEntity:(id) sender;
 
-- (IBAction)subtractSelection: sender;
+- (IBAction)subtractSelection:(id) sender;
 
-- (IBAction)selectCompletelyInside: sender;
-- (IBAction)selectPartiallyInside: sender;
+- (IBAction)selectCompletelyInside:(id) sender;
+- (IBAction)selectPartiallyInside:(id) sender;
 
-- (IBAction)tallBrush: sender;
-- (IBAction)shortBrush: sender;
+- (IBAction)tallBrush:(id) sender;
+- (IBAction)shortBrush:(id) sender;
 
-- (IBAction)rotate_x: sender;
-- (IBAction)rotate_y: sender;
-- (IBAction)rotate_z: sender;
+- (IBAction)rotate_x:(id) sender;
+- (IBAction)rotate_y:(id) sender;
+- (IBAction)rotate_z:(id) sender;
 
-- (IBAction)flip_x: sender;
-- (IBAction)flip_y: sender;
-- (IBAction)flip_z: sender;
+- (IBAction)flip_x:(id) sender;
+- (IBAction)flip_y:(id) sender;
+- (IBAction)flip_z:(id) sender;
 
-- (IBAction)selectCompleteEntity: sender;
+- (IBAction)selectCompleteEntity:(id) sender;
 
 @end

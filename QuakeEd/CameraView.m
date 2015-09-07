@@ -356,7 +356,7 @@ void CameraLineto(vec3_t p)
 drawSolid
 =============
 */
-- drawSolid
+- (void)drawSolid
 {
 	unsigned char	*planes[5];
 		
@@ -408,7 +408,6 @@ drawSolid
 	
 	
 	
-	return self;
 }
 
 
@@ -417,33 +416,31 @@ drawSolid
 drawWire
 ===================
 */
-- drawWire: (const NSRect *)rect
+- (void)drawWire: (NSRect)rect
 {
 // copy current info to globals for the C callbacks	
-	mid_x = bounds.size.width / 2;
-	mid_y = 2 * bounds.size.height / 3;
+	mid_x = [self bounds].size.width / 2;
+	mid_y = 2 * [self bounds].size.height / 3;
 
 	VectorCopy (origin, r_origin);
 	VectorCopy (matrix[0], r_matrix[0]);
 	VectorCopy (matrix[1], r_matrix[1]);
 	VectorCopy (matrix[2], r_matrix[2]);
 	
-	r_width = bounds.size.width;
-	r_height = bounds.size.height;
+	r_width = [self bounds].size.width;
+	r_height = [self bounds].size.height;
 	r_picbuffer = imagebuffer;
 	r_zbuffer = zbuffer;
 
 	REN_BeginCamera ();
 	
 // erase window
-	NXEraseRect (rect);
+	NSEraseRect (rect);
 	
 // draw all entities
 	linestart (0,0,0);
 	[map_i makeUnselectedPerform: @selector(CameraDrawSelf)];
 	lineflush ();
-
-	return self;
 }
 
 /*
@@ -451,7 +448,7 @@ drawWire
 drawSelf
 ===================
 */
-- drawSelf:(const NSRect *)rects :(int)rectCount
+-(void)drawRect:(NSRect)rect
 {
 	static float	drawtime;	// static to shut up compiler warning
 
@@ -461,7 +458,7 @@ drawSelf
 	if (drawmode == dr_texture || drawmode == dr_flat)
 		[self drawSolid];
 	else
-		[self drawWire: rects];
+		[self drawWire: rect];
 
 	if (timedrawing)
 	{
@@ -469,8 +466,6 @@ drawSelf
 		drawtime = I_FloatTime() - drawtime;
 		printf ("CameraView drawtime: %5.3f\n", drawtime);
 	}
-
-	return self;
 }
 
 
@@ -479,9 +474,22 @@ drawSelf
 XYDrawSelf
 =============
 */
-- XYDrawSelf
+- (void)XYDrawSelf
 {
+	NSBezierPath *bPath = [NSBezierPath bezierPath];
+	bPath.lineWidth = 0.15;
+	[bPath moveToPoint:NSMakePoint(origin[0] - 16, origin[1])];
+	[bPath relativeLineToPoint:NSMakePoint(16, 8)];
+	[bPath relativeLineToPoint:NSMakePoint(16, -8)];
+	[bPath relativeLineToPoint:NSMakePoint(-16, -8)];
+	[bPath relativeLineToPoint:NSMakePoint(-16, 8)];
+	[bPath relativeLineToPoint:NSMakePoint(32, 0)];
 	
+	[bPath moveToPoint:NSMakePoint(origin[0], origin[1])];
+	[bPath relativeLineToPoint:NSMakePoint(64*cos(ya+M_PI/4), 64*sin(ya+M_PI/4))];
+	[bPath moveToPoint:NSMakePoint(origin[0],origin[1])];
+	[bPath relativeLineToPoint:NSMakePoint(64*cos(ya-M_PI/4), 64*sin(ya-M_PI/4))];
+#if 0
 	PSsetrgbcolor (0,0,1.0);
 	PSsetlinewidth (0.15);
 	PSmoveto (origin[0]-16,origin[1]);
@@ -497,8 +505,8 @@ XYDrawSelf
 	PSrlineto (64*cos(ya-M_PI/4), 64*sin(ya-M_PI/4));
 	
 	PSstroke ();
-	
-	return self;
+#endif
+	[bPath stroke];
 }
 
 /*
@@ -541,7 +549,7 @@ ZDrawSelf
 modalMoveLoop
 ================
 */
-- modalMoveLoop: (NSPoint *)basept :(vec3_t)movemod : converter
+- (void)modalMoveLoop: (NSPoint *)basept :(vec3_t)movemod : converter
 {
 	vec3_t		originbase;
 	NSEvent		*event;
@@ -561,14 +569,14 @@ modalMoveLoop
 //
 	goto drawentry;
 
-	while (event->type != NX_LMOUSEUP && event->type != NX_RMOUSEUP)
+	while (event.type != NSLeftMouseUp && event.type != NSRightMouseUp)
 	{
 		//
 		// calculate new point
 		//
-		newpt = event->location;
-		[converter convertPoint:&newpt  fromView:NULL];
-				
+		newpt = event.locationInWindow;
+		newpt = [converter convertPoint:newpt fromView:nil];
+		
 		delta[0] = newpt.x-basept->x;
 		delta[1] = newpt.y-basept->y;
 		delta[2] = delta[1];		// height change
@@ -580,7 +588,7 @@ modalMoveLoop
 		//
 		// if command is down, look towards brush or entity
 		//
-		if (event->flags & NX_SHIFTMASK)
+		if (event->flags & NSShiftKeyMask)
 		{
 			ent = [quakemap_i selectedEntity];
 			if (ent)
@@ -603,10 +611,10 @@ drawentry:
 		[quakeed_i newinstance];
 		[self display];
 		
-		event = [NSApp getNextEvent: NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
-			| NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK | NX_APPDEFINEDMASK];
+		event = [NSApp getNextEvent: NSLeftMouseUpMask | NSLeftMouseDraggedMask
+			| NSRightMouseUpMask | NSRightMouseDraggedMask | NSApplicationDefinedMask];
 	
-		if (event->type == NX_KEYDOWN)
+		if (event.type == NSKeyDown)
 		{
 			[self _keyDown: event];
 			[self display];
@@ -614,8 +622,6 @@ drawentry:
 		}
 		
 	}
-
-	return self;
 }
 
 //============================================================================
@@ -634,7 +640,7 @@ XYmouseDown
 		return NO;
 	
 #if 0	
-	if (flags & NX_ALTERNATEMASK)
+	if (flags & NSAlternateKeyMask)
 	{	// up / down drag
 		movemod[0] = 0;
 		movemod[1] = 0;
@@ -695,20 +701,20 @@ viewDrag:
 //
 	goto drawentry;
 
-	while (event->type != NX_RMOUSEUP)
+	while (event.type != NSRightMouseUp)
 	{
 		//
 		// calculate new point
 		//
-		newpt = event->location;
-		[self convertPoint:&newpt  fromView:NULL];
+		newpt = event.locationInWindow;
+		newpt = [self convertPoint:newpt fromView:nil];
 
 		dx = newpt.x - pt->x;
 		dy = newpt.y - pt->y;
 		*pt = newpt;
 	
-		ya -= dx/bounds.size.width*M_PI/2 * 4;
-		xa += dy/bounds.size.width*M_PI/2 * 4;
+		ya -= dx/[self bounds].size.width*M_PI/2 * 4;
+		xa += dy/[self bounds].size.width*M_PI/2 * 4;
 	
 		[self matrixFromAngles];
 		
@@ -717,9 +723,9 @@ drawentry:
 		[self display];
 		
 		event = [NSApp getNextEvent: 
-			NX_KEYDOWNMASK | NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK];
+			NSKeyDownMask | NSRightMouseUpMask | NSRightMouseDraggedMask];
 	
-		if (event->type == NX_KEYDOWN)
+		if (event.type == NSKeyDown)
 		{
 			[self _keyDown: event];
 			[self display];
@@ -739,17 +745,17 @@ drawentry:
 mouseDown
 ===================
 */
-- mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
 	NSPoint			pt;
 	int				i;
 	vec3_t			p1, p2;
 	float			forward, right, up;
-	int				flags;
+	NSEventModifierFlags				flags;
 		
-	pt = theEvent->location;
+	pt = theEvent.locationInWindow;
 	
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt fromView:nil];
 
 	VectorCopy (origin, p1);
 	forward = 160;
@@ -760,7 +766,7 @@ mouseDown
 	for (i=0 ; i<3 ; i++)
 		p2[i] = p1[i] + 100*p2[i];
 
-	flags = theEvent->flags & (NX_SHIFTMASK | NX_CONTROLMASK | NX_ALTERNATEMASK | NX_COMMANDMASK);
+	flags = theEvent.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 //
 // bare click to select a texture
@@ -768,65 +774,63 @@ mouseDown
 	if (flags == 0)
 	{
 		[map_i getTextureRay: p1 : p2];
-		return self;
+		return;
 	}
 	
 //
 // shift click to select / deselect a brush from the world
 //
-	if (flags == NX_SHIFTMASK)
+	if (flags == NSShiftKeyMask)
 	{		
 		[map_i selectRay: p1 : p2 : NO];
-		return self;
+		return;
 	}
 
 	
 //
 // cmd-shift click to set a target/targetname entity connection
 //
-	if (flags == (NX_SHIFTMASK|NX_COMMANDMASK) )
+	if (flags == (NSShiftKeyMask|NSCommandKeyMask) )
 	{
 		[map_i entityConnect: p1 : p2];
-		return self;
+		return;
 	}
 
 //
 // alt click = set entire brush texture
 //
-	if (flags == NX_ALTERNATEMASK)
+	if (flags == NSAlternateKeyMask)
 	{
 		if (drawmode != dr_texture)
 		{
 			qprintf ("No texture setting except in texture mode!\n");
 			NopSound ();
-			return self;
+			return;
 		}		
 		[map_i setTextureRay: p1 : p2 : YES];
 		[quakeed_i updateAll];
-		return self;
+		return;
 	}
 		
 //
 // ctrl-alt click = set single face texture
 //
-	if (flags == (NX_CONTROLMASK | NX_ALTERNATEMASK) )
+	if (flags == (NSControlKeyMask | NSAlternateKeyMask) )
 	{
 		if (drawmode != dr_texture)
 		{
 			qprintf ("No texture setting except in texture mode!\n");
 			NopSound ();
-			return self;
+			return;
 		}
 		[map_i setTextureRay: p1 : p2 : NO];
 		[quakeed_i updateAll];
-		return self;
+		return;
 	}
 		
 
 	qprintf ("bad flags for click");
 	NopSound ();
-	
-	return self;
 }
 
 /*
@@ -834,16 +838,16 @@ mouseDown
 rightMouseDown
 ===================
 */
-- rightMouseDown:(NSEvent *)theEvent
+-(void)rightMouseDown:(NSEvent *)theEvent
 {
-	NSPoint			pt;
-	int				flags;
+	NSPoint					pt;
+	NSEventModifierFlags	flags;
 		
-	pt = theEvent->location;
+	pt = theEvent.locationInWindow;
+	pt = [self convertPoint:pt fromView:nil];
 	
-	[self convertPoint:&pt  fromView:NULL];
 
-	flags = theEvent->flags & (NX_SHIFTMASK | NX_CONTROLMASK | NX_ALTERNATEMASK | NX_COMMANDMASK);
+	flags = theEvent.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 //
 // click = drag camera
@@ -853,13 +857,11 @@ rightMouseDown
 		qprintf ("looking");
 		[self viewDrag: &pt];
 		qprintf ("");
-		return self;
+		return;
 	}		
 
 	qprintf ("bad flags for click");
 	NopSound ();
-	
-	return self;
 }
 
 /*
@@ -874,30 +876,30 @@ keyDown
 #define	KEY_DOWNARROW		0xaf
 
 
-- _keyDown: (NSEvent *)theEvent
+-(void)keyDown:(NSEvent *)theEvent
 {
-    int	ch;
+	unsigned short	ch = theEvent.keyCode;
 	
-    ch = tolower(theEvent->data.key.charCode);
+    //ch = tolower(theEvent.keyCode);
 	
 	switch (ch)
 	{
 	case 13:
-		return self;
+		return;
 		
 	case 'a':
 	case 'A':
 		xa += M_PI/8;
 		[self matrixFromAngles];
 		[quakeed_i updateCamera];
-		return self;
+		return;
 		
 	case 'z':
 	case 'Z':
 		xa -= M_PI/8;
 		[self matrixFromAngles];
 		[quakeed_i updateCamera];
-		return self;
+		return;
 		
 	case KEY_RIGHTARROW:
 		ya -= M_PI*move/(64*2);
@@ -948,9 +950,6 @@ keyDown
 		break;
 		
 	}
-
-	
-    return self;
 }
 
 

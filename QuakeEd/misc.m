@@ -94,7 +94,7 @@ void UngetToken ()
 
 
 
-void qprintf (char *fmt, ...)		// prints text to cmd_out_i
+void qprintf (const char *fmt, ...)		// prints text to cmd_out_i
 {
 	va_list			argptr;
 	static char		string[1024];
@@ -103,8 +103,8 @@ void qprintf (char *fmt, ...)		// prints text to cmd_out_i
 	vsprintf (string, fmt,argptr);
 	va_end (argptr);
 
-	[g_cmd_out_i setStringValue: string];
-	NXPing ();
+	[g_cmd_out_i setStringValue: @(string)];
+	//NXPing ();
 	
 	return;
 }
@@ -118,27 +118,29 @@ For abnormal program terminations
 =================
 */
 BOOL	in_error;
-void Error (char *error, ...)
+void Error (const char *error, ...)
 {
 	va_list		argptr;
-	static char		string[1024];
 	
+	va_start (argptr,error);
+	ErrorV(error, argptr);
+	va_end (argptr);
+}
+
+void ErrorV (const char* error, va_list argptr)
+{
+	static char		string[1024];
 	if (in_error)
 		[NSApp terminate: NULL];
 	in_error = YES;
+	vsnprintf (string,sizeof(string),error,argptr);
+	strncat (string, "\nmap saved to "FN_CRASHSAVE,sizeof(string) - strlen(string) - 1);
 	
-	va_start (argptr,error);
-	vsprintf (string,error,argptr);
-	va_end (argptr);
-
-	strcat (string, "\nmap saved to "FN_CRASHSAVE);
-
 	[map_i writeMapFile: FN_CRASHSAVE useRegion: NO];
 	NSRunAlertPanel (@"Error",@"%@",NULL,NULL,NULL, @(string));
-		
+	
 	[NSApp terminate: NULL];
 }
-
 
 
 void CleanupName (char *in, char *out)
@@ -204,7 +206,7 @@ void	CreatePath (char *path)
 	}
 }
 
-int I_FileOpenRead (char *path, int *handle)
+off_t I_FileOpenRead (char *path, int *handle)
 {
 	int	h;
 	struct stat	fileinfo;
@@ -245,8 +247,9 @@ Copies a more recent net file to the local drive
 */
 void Sys_UpdateFile (char *path, char *netpath)
 {
-	time_t		ltime, ntime;
-	int		in, out, size;
+	time_t	ltime, ntime;
+	int		in, out;
+	off_t	size;
 	char	*buf;
 	
 	ltime = FileTime (path);

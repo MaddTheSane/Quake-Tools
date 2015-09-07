@@ -20,12 +20,12 @@ extern	BOOL	brushdraw;			// YES when drawing cutbrushes and ents
 - (instancetype)initFromSetBrush: br;
 
 - (void)deselect;
-- (BOOL)isSelected;
+@property (readonly, getter=isSelected) BOOL selected;
 
 - (BOOL)XYmouseDown: (NSPoint *)pt;		// return YES if brush handled
 - (BOOL)ZmouseDown: (NSPoint *)pt;		// return YES if brush handled
 
-- _keyDown:(NSEvent *)theEvent;
+- (void)keyDown:(NSEvent *)theEvent;
 
 - (NSPoint)centerPoint;						// for camera flyby mode
 
@@ -34,19 +34,19 @@ extern	BOOL	brushdraw;			// YES when drawing cutbrushes and ents
 - ZDrawSelf;
 - CameraDrawSelf;
 
-- flipHorizontal: sender;
-- flipVertical: sender;
-- rotate90: sender;
+- (IBAction)flipHorizontal: sender;
+- (IBAction)flipVertical: sender;
+- (IBAction)rotate90: sender;
 
-- makeTall: sender;
-- makeShort: sender;
-- makeWide: sender;
-- makeNarrow: sender;
+- (IBAction)makeTall: sender;
+- (IBAction)makeShort: sender;
+- (IBAction)makeWide: sender;
+- (IBAction)makeNarrow: sender;
 
-- placeEntity: sender;
+- (IBAction)placeEntity: sender;
 
-- cut: sender;
-- copy: sender;
+- (IBAction)cut: sender;
+- (IBAction)copy: sender;
 
 - addBrush;
 

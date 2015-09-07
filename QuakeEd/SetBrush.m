@@ -388,7 +388,7 @@ If a face has a NULL winding, it is an overconstraining plane and
 can be removed.
 ===========
 */
-- calcWindings
+- (BOOL)calcWindings
 {
 	int				i,j, k;
 	float			v;
@@ -486,10 +486,10 @@ can be removed.
 		invalid = YES;
 		VectorCopy (vec3_origin, bmins);
 		VectorCopy (vec3_origin, bmaxs);
-		return nil;
+		return NO;
 	}
 	
-	return self;
+	return YES;
 }
 
 //============================================================================
@@ -499,7 +499,7 @@ can be removed.
 initOwner:::
 ===========
 */
-- initWithOwner: own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex
+- (instancetype)initWithOwner: own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex
 {
 	if (self = [super init]) {
 
@@ -511,7 +511,7 @@ initOwner:::
 	return self;
 }
 
-- setMins:(float *)mins maxs:(float *)maxs
+- (void)setMins:(float *)mins maxs:(float *)maxs
 {
 	int		i, j;
 	vec3_t	pts[4][2];
@@ -524,7 +524,7 @@ initOwner:::
 			VectorCopy (maxs, bmaxs);
 			invalid = YES;
 			numfaces = 0;
-			return self;
+			return;
 		} 
 	}
 	
@@ -592,15 +592,13 @@ initOwner:::
 	
 
 	[self calcWindings];
-	return self;
 }
 
 @synthesize parent;
 
-- setEntityColor: (vec3_t)color
+- (void)setEntityColor: (vec3_t)color
 {
 	VectorCopy (color, entitycolor);
-	return self;
 }
 
 - (void)freeWindings
@@ -615,7 +613,7 @@ initOwner:::
 		}
 }
 
-- (id)copyFromZone:(NSZone *)zone
+- (id)copyWithZone:(NSZone *)zone
 {
 	id	new;
 	
@@ -766,11 +764,10 @@ INTERACTION
 ==============================================================================
 */
 
-- getMins: (vec3_t)mins maxs: (vec3_t)maxs
+- (void)getMins: (vec3_t)mins maxs: (vec3_t)maxs
 {
 	VectorCopy (bmins, mins);
 	VectorCopy (bmaxs, maxs);
-	return self;
 }
 
 
@@ -779,7 +776,7 @@ INTERACTION
 setTexturedef
 ===========
 */
-- setTexturedef: (texturedef_t *)tex
+- (void)setTexturedef: (texturedef_t *)tex
 {
 	int		i;
 	
@@ -790,10 +787,9 @@ setTexturedef
 	}
 	
 	[self calcWindings];	// in case texture coords changed
-	return self;
 }
 
-- setTexturedef: (texturedef_t *)tex forFace:(int)f
+- (void)setTexturedef: (texturedef_t *)tex forFace:(int)f
 {
 	if ( (unsigned)f > numfaces)
 		Error ("setTexturedef:forFace: bad face number %i",f);
@@ -802,7 +798,6 @@ setTexturedef
 	faces[f].qtexture = NULL;	// recache next render
 
 	[self calcWindings];	// in case texture coords changed
-	return self;
 }
 
 /*
@@ -828,7 +823,7 @@ removeIfInvalid
 So created veneers don't stay around
 ===========
 */
-- removeIfInvalid
+- (BOOL)removeIfInvalid
 {
 	int		i, j;
 	
@@ -848,9 +843,9 @@ So created veneers don't stay around
 	{
 		invalid = YES;
 		[self remove];
-		return nil;
+		return YES;
 	}
-	return self;
+	return NO;
 }
 
 /*
@@ -875,7 +870,7 @@ clipRay
 
 ===========
 */
-- clipRay: (vec3_t)p1 : (vec3_t) p2 
+- (void)clipRay: (vec3_t)p1 : (vec3_t) p2
 	:(vec3_t)frontpoint : (int *)f_face
 	:(vec3_t)backpoint : (int *)b_face
 {
@@ -901,7 +896,7 @@ clipRay
 		{	// the entire ray is in front of the polytope
 			*f_face = -1;
 			*b_face = -1;
-			return self;
+			return;
 		}
 		if (d1 > 0 && d2 < 0)
 		{	// new front plane
@@ -923,8 +918,6 @@ clipRay
 	
 	*f_face = frontface;
 	*b_face = backface;
-		
-	return self;
 }
 
 
@@ -934,7 +927,7 @@ hitByRay
 
 ===========
 */
-- hitByRay: (vec3_t)p1 : (vec3_t) p2 : (float *)time : (int *)face
+- (void)hitByRay: (vec3_t)p1 : (vec3_t) p2 : (float *)time : (int *)face
 {
 	vec3_t	frontpoint, backpoint, dir;
 	int		frontface, backface;
@@ -943,7 +936,7 @@ hitByRay
 	{
 		*time = -1;
 		*face = -1;
-		return self;
+		return;
 	}
 	
 	[self clipRay: p1 : p2 : frontpoint: &frontface : backpoint : &backface];
@@ -952,7 +945,7 @@ hitByRay
 	{	// entire ray is inside the brush, select first face
 		*time = 0;
 		*face = 0;
-		return self;
+		return;
 	}
 	
 	
@@ -960,7 +953,7 @@ hitByRay
 	{	// ray started inside the polytope, don't select it
 		*time = -1;
 		*face = -1;
-		return self;
+		return;
 	}
 	
 	VectorSubtract (p2, p1, dir);
@@ -972,8 +965,6 @@ hitByRay
 		Error ("hitByRay: negative t");
 
 	*face = frontface;
-		
-	return self;
 }
 
 
@@ -987,10 +978,10 @@ DRAWING ROUTINES
 
 BOOL	fakebrush;
 
-- drawConnections
+- (void)drawConnections
 {
 	id	obj;
-	int	c, i;
+	NSInteger	c, i;
 	vec3_t	dest, origin;
 	vec3_t	mid;
 	vec3_t	forward, right;
@@ -1001,7 +992,7 @@ BOOL	fakebrush;
 	strcpy (targ, [parent valueForQKey: "target"]);
 
 	if (!targ || !targ[0])
-		return self;
+		return;
 	
 	origin[0] = (bmins[0] + bmaxs[0]) /2;
 	origin[1] = (bmins[1] + bmaxs[1]) /2;
@@ -1046,8 +1037,6 @@ BOOL	fakebrush;
 		XYlineto (temp);
 		
 	}
-	
-	return self;
 }
 
 - (BOOL)fakeBrush: (SEL)call
@@ -1066,8 +1055,8 @@ BOOL	fakebrush;
 	copy = [copy addFace: &face];
 	if (copy)
 	{
-		[copy perform:call];
-		[copy free];
+		[copy performSelector:call];
+		[copy release];
 	}
 	fakebrush = NO;
 	return YES;
@@ -1078,7 +1067,7 @@ BOOL	fakebrush;
 XYDrawSelf
 ===========
 */
-- XYDrawSelf
+- (void)XYDrawSelf
 {
 	int		i, j;
 	winding_t	*w;
@@ -1089,7 +1078,7 @@ XYDrawSelf
 	BOOL	keybrush;
 
 	if ([self fakeBrush: @selector(XYDrawSelf)])
-		return self;
+		return;
 	
 	[xyview_i addToScrollRange: bmins[0] : bmins[1]];
 	[xyview_i addToScrollRange: bmaxs[0] : bmaxs[1]];
@@ -1119,7 +1108,7 @@ XYDrawSelf
 	|| bmaxs[1] < xy_draw_rect.origin.y
 	|| bmins[0] > xy_draw_rect.origin.x + xy_draw_rect.size.width
 	|| bmins[1] > xy_draw_rect.origin.y + xy_draw_rect.size.height) )
-		return self;	// off view, don't bother
+		return;	// off view, don't bother
 
 	for (i=0 ; i<numfaces ; i++)
 	{
@@ -1586,7 +1575,7 @@ newRegion
 Set the regioned flag based on if the object is containted in region_min/max
 ===========
 */
-- newRegion
+- (void)newRegion
 {
 	int		i;
 	char	*name;
@@ -1597,7 +1586,7 @@ Set the regioned flag based on if the object is containted in region_min/max
 		if (filter_entities)
 		{
 			regioned = YES;
-			return self;
+			return;
 		}
 	
 		name = [parent valueForQKey: "classname"];
@@ -1606,25 +1595,25 @@ Set the regioned flag based on if the object is containted in region_min/max
 		|| (filter_path && !strncmp(name,"path",4) ) )
 		{
 			regioned = YES;
-			return self;
+			return;
 		}
 	}
 	else if (filter_world)
 	{
 		regioned = YES;
-		return self;
+		return;
 	}
 	
 	if (filter_clip_brushes && !strcasecmp(faces[0].texture.texture, "clip"))
 	{
 		regioned = YES;
-		return self;
+		return;
 	}
 		
 	if (filter_water_brushes && faces[0].texture.texture[0] == '*')
 	{
 		regioned = YES;
-		return self;
+		return;
 	}
 		
 	for (i=0 ; i<3 ; i++)
@@ -1634,59 +1623,53 @@ Set the regioned flag based on if the object is containted in region_min/max
 			if (selected)
 				[self deselect];
 			regioned = YES;
-			return self;
+			return;
 		}
 	}
 	
 	regioned = NO;
-	return self;
 }
 
 vec3_t	select_min, select_max;
-- selectPartial
+- (void)selectPartial
 {
-	int		i;
-	for (i=0 ; i<3 ; i++)
+	for (NSInteger i=0 ; i<3 ; i++)
 		if (select_min[i] >= bmaxs[i] || select_max[i] <= bmins[i])
-			return self;
+			return;
 	selected = YES;
-	return self;
 }
 
-- selectComplete
+- (void)selectComplete
 {
 	int		i;
 	for (i=0 ; i<3 ; i++)
 		if (select_min[i] > bmins[i] || select_max[i] < bmaxs[i])
-			return self;
+			return;
 	selected = YES;
-	return self;
 }
 
 
-- regionPartial
+- (void)regionPartial
 {
 	int		i;
 	for (i=0 ; i<3 ; i++)
 		if (select_min[i] >= bmaxs[i] || select_max[i] <= bmins[i])
-			return self;
+			return;
 	selected = YES;
-	return self;
 }
 
-- regionComplete
+- (void)regionComplete
 {
 	int		i;
 	for (i=0 ; i<3 ; i++)
 		if (select_min[i] > bmins[i] || select_max[i] < bmaxs[i])
-			return self;
+			return;
 	selected = YES;
-	return self;
 }
 
 
 id	sb_newowner;
-- moveToEntity
+- (void)moveToEntity
 {
 	id		eclass;
 	float	*c;
@@ -1695,7 +1678,7 @@ id	sb_newowner;
 	parent = sb_newowner;
 	
 // hack to allow them to be copied to another map
-	if ( [parent respondsTo:@selector(valueForQKey:)])
+	if ( [parent respondsToSelector:@selector(valueForQKey:)])
 	{
 		eclass = [entity_classes_i classForName: [parent valueForQKey: "classname"]];
 		c = [eclass drawColor];
@@ -1703,12 +1686,11 @@ id	sb_newowner;
 	}
 	
 	[parent addObject: self];
-	return self;
 }
 
 vec3_t	sb_translate;
 
-- translate
+- (void)translate
 {
 	int		i, j;
 	
@@ -1720,17 +1702,15 @@ vec3_t	sb_translate;
 		}
 
 	[self calcWindings];
-	
-	return self;
 }
 
 vec3_t	sb_mins, sb_maxs;
-- addToBBox
+- (void)addToBBox
 {
 	int			k;
 	
 	if (numfaces < 4)
-		return self;
+		return;
 
 	for (k=0 ; k<3 ; k++)
 	{
@@ -1739,11 +1719,9 @@ vec3_t	sb_mins, sb_maxs;
 		if (bmaxs[k] > sb_maxs[k])
 			sb_maxs[k] = bmaxs[k];
 	}
-
-	return self;
 }
 
-- flushTextures
+- (void)flushTextures
 {	// call when texture palette changes
 	int		i;
 	
@@ -1751,18 +1729,15 @@ vec3_t	sb_mins, sb_maxs;
 		faces[i].qtexture = NULL;
 	
 	[self calcWindings];
-
-	return self;
 }
 
-- select
+- (void)select
 {
 	[map_i setCurrentEntity: parent];
 	selected = YES;
-	return self;
 }
 
-- deselect
+- (void)deselect
 {
 	selected = NO;
 
@@ -1771,11 +1746,9 @@ vec3_t	sb_mins, sb_maxs;
 		printf ("WARNING: deselected invalid brush\n");
 	[map_i setCurrentMinZ: bmins[2]];
 	[map_i setCurrentMaxZ: bmaxs[2]];
-	
-	return self;
 }
 
-- remove
+- (void)remove
 {
 // the last selected brush determines 
 	if (!invalid)
@@ -1785,15 +1758,15 @@ vec3_t	sb_mins, sb_maxs;
 	}
 
 	[parent removeObject: self];
-	[self free];
+	//[self free];
 
-	return nil;
+	//return nil;
 }
 
 
 vec3_t	sel_x, sel_y, sel_z;
 vec3_t	sel_org;
-- transform
+- (void)transform
 {
 	int		i,j;
 	vec3_t	old;
@@ -1812,11 +1785,9 @@ vec3_t	sel_org;
 		}
 		
 	[self calcWindings];
-
-	return self;
 }
 
-- flipNormals	// used after an inside-out transform (flip x/y/z)
+- (void)flipNormals	// used after an inside-out transform (flip x/y/z)
 {
 	int		i;
 	vec3_t	temp;
@@ -1828,35 +1799,30 @@ vec3_t	sel_org;
 		VectorCopy (temp, faces[i].planepts[2]);
 	}
 	[self calcWindings];
-	return self;
 }
 
-- carveByClipper
+- (void)carveByClipper
 {
 	face_t face;
 	
 	if (![clipper_i getFace: &face])
-		return self;
+		return;
 		
 	[self addFace: &face];
-	
-	return self;
 }
 
 
-- takeCurrentTexture
+- (void)takeCurrentTexture
 {
 	texturedef_t	td;
 	
 	[texturepalette_i getTextureDef: &td];
 	[self setTexturedef: &td];
-	
-	return self;
 }
 
 
 float	sb_floor_dir, sb_floor_dist;
-- feetToFloor
+- (void)feetToFloor
 {
 	float	oldz;
 	vec3_t	p1, p2;
@@ -1873,7 +1839,7 @@ float	sb_floor_dir, sb_floor_dist;
 
 	[self clipRay: p1 : p2 : frontpoint : &frontface : backpoint : &backface];
 	if (frontface == -1)
-		return self;
+		return;
 
 	dist = frontpoint[2] - oldz;
 	
@@ -1887,7 +1853,6 @@ float	sb_floor_dir, sb_floor_dist;
 		if (dist < 0 && dist > sb_floor_dist)
 			sb_floor_dist = dist;	
 	}
-	return self;
 }
 
 
@@ -1906,7 +1871,7 @@ id		carve_in, carve_out;
 
 // returns the new brush formed after the addition of the given plane
 // nil is returned if it faced all of the original setbrush
-- addFace: (face_t *)f
+- (id)addFace: (face_t *)f
 {
 	if (numfaces == MAX_FACES)
 		Error ("addFace: numfaces == MAX_FACES");
@@ -1922,7 +1887,7 @@ id		carve_in, carve_out;
 	return [self removeIfInvalid];
 }
 
-- clipByFace: (face_t *)fa front:(id *)f back:(id *)b
+- (void)clipByFace: (face_t *)fa front:(id *)f back:(id *)b
 {
 	id		front, back;
 	face_t	fb;
@@ -1938,11 +1903,9 @@ id		carve_in, carve_out;
 
 	*b = [back addFace: fa];
 	*f = [front addFace: &fb];
-	
-	return self;
 }
 
-- carve
+- (void)carve
 {
 	int		i;
 	id		front, back;
@@ -1957,7 +1920,7 @@ id		carve_in, carve_out;
 		if (bmins[i] >= carvemax[i] || bmaxs[i] <= carvemin[i])
 		{
 			[carve_out addObject: self];
-			return self;
+			return;
 		}
 
 // carve by the planes
@@ -1968,11 +1931,10 @@ id		carve_in, carve_out;
 		if (front)
 			[carve_out addObject: front];
 		if (!back)
-			return nil;		// nothing completely inside
+			return;		// nothing completely inside
 	}
 	
 	[carve_in addObject: back];
-	return self;
 }
 
 /*
@@ -1980,14 +1942,12 @@ id		carve_in, carve_out;
 setCarveVars
 ==================
 */
-- setCarveVars
+- (void)setCarveVars
 {
 	VectorCopy (bmins, carvemin);
 	VectorCopy (bmaxs, carvemax);
 	numcarvefaces = numfaces;
 	carvefaces = faces;
-	
-	return self;
 }
 
 - (int) getNumBrushFaces

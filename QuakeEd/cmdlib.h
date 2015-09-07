@@ -25,7 +25,8 @@ double I_FloatTime (void);
 
 int		GetKey (void);
 
-void	Error (char *error, ...);
+void	Error (const char *error, ...);
+void	ErrorV (const char* error, va_list list);
 int		CheckParm (char *check);
 
 int 	SafeOpenWrite (char *filename);

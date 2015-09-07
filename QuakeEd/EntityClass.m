@@ -19,10 +19,10 @@ Flag names can follow the size description:
 char	*debugname;
 - initFromText: (char *)text
 {
-	char	*t;
-	int		len;
-	int		r, i;
-	char	parms[256], *p;
+	char		*t;
+	NSInteger	len;
+	int			r, i;
+	char		parms[256], *p;
 	
 	[super init];
 	
@@ -162,9 +162,9 @@ insertEC:
 	name = [ec classname];
 	for (i=0 ; i<numElements ; i++)
 	{
-		if (strcasecmp (name, [[self objectAt: i] classname]) < 0)
+		if (strcasecmp (name, [[self objectAtIndex: i] classname]) < 0)
 		{
-			[self insertObject: ec at:i];
+			[self insertObject: ec atIndex:i];
 			return;
 		}
 	}
@@ -213,7 +213,7 @@ scanDirectory
 	int		count, i;
 	struct direct **namelist, *ent;
 	
-	[self empty];
+	[self removeAllObjects];
 	
      count = scandir(source_path, &namelist, NULL, NULL);
 	
@@ -233,7 +233,7 @@ id	entity_classes_i;
 
 - initForSourceDirectory: (char *)path
 {
-	[super init];
+	self = [super init];
 	
 	source_path = path;	
 	[self scanDirectory];
@@ -253,7 +253,7 @@ id	entity_classes_i;
 	
 	for (i=0 ; i<numElements ; i++)
 	{
-		o = [self objectAt: i];
+		o = [self objectAtIndex: i];
 		if (!strcmp (name,[o classname]) )
 			return o;
 	}

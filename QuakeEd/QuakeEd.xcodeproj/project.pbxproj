@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; settings = {ASSET_TAGS = (); }; };
 		5531411E1B98E5C400390795 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5531411D1B98E5C400390795 /* Info.plist */; settings = {ASSET_TAGS = (); }; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; settings = {ASSET_TAGS = (); }; };
 		5531416A1B98E61F00390795 /* Clipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141241B98E61F00390795 /* Clipper.m */; settings = {ASSET_TAGS = (); }; };
@@ -46,13 +47,13 @@
 		553141911B98E61F00390795 /* XYView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141641B98E61F00390795 /* XYView.m */; settings = {ASSET_TAGS = (); }; };
 		553141921B98E61F00390795 /* ZScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141661B98E61F00390795 /* ZScrollView.m */; settings = {ASSET_TAGS = (); }; };
 		553141931B98E61F00390795 /* ZView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141681B98E61F00390795 /* ZView.m */; settings = {ASSET_TAGS = (); }; };
-		553141961B99097100390795 /* QuakeEd.nib in Resources */ = {isa = PBXBuildFile; fileRef = 553141951B99097100390795 /* QuakeEd.nib */; settings = {ASSET_TAGS = (); }; };
 		553141981B9909C600390795 /* DownArrow.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 553141971B9909C600390795 /* DownArrow.tiff */; settings = {ASSET_TAGS = (); }; };
 		5531419A1B9909D900390795 /* UpArrow.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 553141991B9909D800390795 /* UpArrow.tiff */; settings = {ASSET_TAGS = (); }; };
 		5531419D1B99100500390795 /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531419C1B99100500390795 /* List.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		552A27021B9D402E0055D5D9 /* QuakeEd.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuakeEd.xib; sourceTree = "<group>"; };
 		553141091B98E46B00390795 /* QuakeEd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuakeEd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5531411D1B98E5C400390795 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		553141201B98E61F00390795 /* Brush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Brush.h; sourceTree = "<group>"; };
@@ -120,7 +121,6 @@
 		553141661B98E61F00390795 /* ZScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZScrollView.m; sourceTree = "<group>"; };
 		553141671B98E61F00390795 /* ZView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZView.h; sourceTree = "<group>"; };
 		553141681B98E61F00390795 /* ZView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZView.m; sourceTree = "<group>"; };
-		553141951B99097100390795 /* QuakeEd.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = QuakeEd.nib; sourceTree = "<group>"; };
 		553141971B9909C600390795 /* DownArrow.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = DownArrow.tiff; sourceTree = "<group>"; };
 		553141991B9909D800390795 /* UpArrow.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = UpArrow.tiff; sourceTree = "<group>"; };
 		5531419B1B99100500390795 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
@@ -236,7 +236,7 @@
 		553141941B98E64900390795 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				553141951B99097100390795 /* QuakeEd.nib */,
+				552A27021B9D402E0055D5D9 /* QuakeEd.xib */,
 				553141341B98E61F00390795 /* help.txt */,
 				553141991B9909D800390795 /* UpArrow.tiff */,
 				553141971B9909C600390795 /* DownArrow.tiff */,
@@ -316,7 +316,6 @@
 			files = (
 				553141871B98E61F00390795 /* readme.txt in Resources */,
 				5531418A1B98E61F00390795 /* short.tiff in Resources */,
-				553141961B99097100390795 /* QuakeEd.nib in Resources */,
 				5531411E1B98E5C400390795 /* Info.plist in Resources */,
 				5531418F1B98E61F00390795 /* triggers.qc in Resources */,
 				553141731B98E61F00390795 /* i_90d.tiff in Resources */,
@@ -329,6 +328,7 @@
 				553141761B98E61F00390795 /* i_fliph.tiff in Resources */,
 				553141781B98E61F00390795 /* i_quakeed.tiff in Resources */,
 				553141721B98E61F00390795 /* help.txt in Resources */,
+				552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */,
 				553141771B98E61F00390795 /* i_flipv.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

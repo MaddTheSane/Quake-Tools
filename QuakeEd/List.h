@@ -9,18 +9,21 @@
 #import <Foundation/Foundation.h>
 
 #define maxElements [self count]
+#define numElements [self count]
+
+NS_ASSUME_NONNULL_BEGIN
 
 ///Simple wrapper around the NeXTStep `List` class.
 @interface List : NSObject {
 	NSMutableArray *internalList;
 }
 
-- (instancetype)init;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 - (void)addObject:(id)obj;
 - (id)objectAt:(int)index DEPRECATED_ATTRIBUTE;
 - (id)objectAtIndex:(NSInteger)index;
-- (id)removeObject:(id)obj;
+- (nullable id)removeObject:(id)obj;
 
 - (void)insertObject:(id)obj at:(int)idx DEPRECATED_ATTRIBUTE;
 - (void)insertObject:(id)obj atIndex:(NSInteger)idx;
@@ -30,4 +33,9 @@
 
 @property (readonly) NSInteger count;
 
+- (void)removeObjectAt:(int)idx DEPRECATED_ATTRIBUTE;
+- (void)removeObjectAtIndex:(NSInteger)idx;
+
 @end
+
+NS_ASSUME_NONNULL_END

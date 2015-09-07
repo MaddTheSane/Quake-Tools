@@ -16,7 +16,7 @@ double I_FloatTime (void);
 
 void NopSound (void);
 
-void qprintf (char *fmt, ...);		// prints text to cmd_out_i
+void qprintf (const char *fmt, ...);		// prints text to cmd_out_i
 
 @interface QuakeEd : NSWindow <NSApplicationDelegate>
 {
@@ -44,7 +44,7 @@ void qprintf (char *fmt, ...);		// prints text to cmd_out_i
         IBOutlet id		xy_drawmode_i;	// passed over to xyview after init
 }
 
-- setDefaultFilename;
+- (void)setDefaultFilename;
 - (char *)currentFilename;
 
 - (void)updateAll;		// when a model has been changed

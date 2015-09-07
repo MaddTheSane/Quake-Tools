@@ -26,19 +26,19 @@
 
 /*
 ===========
-copyFromZone
+copyWithZone
 
 JDC
 ===========
 */
-- copyFromZone:(NSZone *)zone
+- copyWithZone:(NSZone *)zone
 {
 	id	new;
 	int	i;
 	dict_t	*d;
 	char	*old;
 	
-	new = [super copyFromZone: zone];
+	new = [super copyWithZone: zone];
 	for (i=0 ; i<numElements ; i++)
 	{
 		d = [self elementAt: i];

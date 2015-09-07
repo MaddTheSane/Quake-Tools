@@ -2,6 +2,8 @@
 #import "mathlib.h"
 #import "SetBrush.h"
 
+//TODO: PORT TO OPENGL!
+
 @class CameraView;
 extern CameraView *cameraview_i;
 
@@ -42,8 +44,8 @@ extern	BOOL	timedrawing;
 
 - (float)yawAngle;
 
-- matrixFromAngles;
-- (void)_keyDown: (NSEvent *)theEvent;
+- (void)matrixFromAngles;
+- (void)keyDown: (NSEvent *)theEvent;
 
 - (IBAction)drawMode:(id) sender;
 - (void)setDrawMode: (drawmode_t)mode;

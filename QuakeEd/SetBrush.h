@@ -45,14 +45,14 @@ winding_t	*CopyWinding (winding_t *w);
 winding_t *NewWinding (int points);
 
 
-@interface SetBrush : NSObject
+@interface SetBrush : NSObject <NSCopying>
 {
 	BOOL		regioned;		// not active
 	BOOL		selected;
 
 	BOOL		invalid;		// not a proper polyhedron
 
-	id			parent;			// the entity this brush is in
+	List		*parent;			// the entity this brush is in
 	vec3_t		bmins, bmaxs;
 	vec3_t		entitycolor;
 	int			numfaces;
@@ -61,92 +61,92 @@ winding_t *NewWinding (int points);
 
 - (instancetype)initWithOwner:(id) own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex;
 - (instancetype)initFromTokens: own;
-- setMins:(float *)mins maxs:(float *)maxs;
+- (void)setMins:(float *)mins maxs:(float *)maxs;
 
 @property (assign) id parent;
 
-- setEntityColor: (vec3_t)color;
+- (void)setEntityColor: (vec3_t)color;
 
-- calcWindings;
+- (BOOL)calcWindings;
 
 - (void)writeToFILE: (FILE *)f region: (BOOL)reg;
 
 @property BOOL selected;
 @property BOOL regioned;
 
-- getMins: (vec3_t)mins maxs: (vec3_t)maxs;
+- (void)getMins: (vec3_t)mins maxs: (vec3_t)maxs;
 
 - (BOOL)containsPoint: (vec3_t)pt;
 
 - (void)freeWindings;
-- removeIfInvalid;
+- (BOOL)removeIfInvalid;
 
 extern	vec3_t	region_min, region_max;
-- newRegion;
+- (void)newRegion;
 
-- (texturedef_t *)texturedef;
-- (texturedef_t *)texturedefForFace: (int)f;
-- setTexturedef: (texturedef_t *)tex;
-- setTexturedef: (texturedef_t *)tex forFace:(int)f;
+- (texturedef_t *)texturedef NS_RETURNS_INNER_POINTER;
+- (texturedef_t *)texturedefForFace: (int)f NS_RETURNS_INNER_POINTER;
+- (void)setTexturedef: (texturedef_t *)tex;
+- (void)setTexturedef: (texturedef_t *)tex forFace:(int)f;
 
-- XYDrawSelf;
-- ZDrawSelf;
-- CameraDrawSelf;
-- XYRenderSelf;
-- CameraRenderSelf;
+- (void)XYDrawSelf;
+- (void)ZDrawSelf;
+- (void)CameraDrawSelf;
+- (void)XYRenderSelf;
+- (void)CameraRenderSelf;
 
-- hitByRay: (vec3_t)p1 : (vec3_t) p2 : (float *)time : (int *)face;
+- (void)hitByRay: (vec3_t)p1 : (vec3_t) p2 : (float *)time : (int *)face;
 
 //
 // single brush actions
 //
 extern	int		numcontrolpoints;
 extern	float	*controlpoints[MAX_FACES*3];
-- getZdragface: (vec3_t)dragpoint;
-- getXYdragface: (vec3_t)dragpoint;
-- getXYShearPoints: (vec3_t)dragpoint;
+- (void)getZdragface: (vec3_t)dragpoint;
+- (void)getXYdragface: (vec3_t)dragpoint;
+- (void)getXYShearPoints: (vec3_t)dragpoint;
 
-- addFace: (face_t *)f;
+- (id)addFace: (face_t *)f;
 
 //
 // multiple brush actions
 //
-- carveByClipper;
+- (void)carveByClipper;
 
 extern	vec3_t	sb_translate;
-- translate;
+- (void)translate;
 
 extern	id		carve_in, carve_out;
-- select;
-- deselect;
-- remove;
-- flushTextures;
+- (void)select;
+- (void)deselect;
+- (void)remove;
+- (void)flushTextures;
 
 extern	vec3_t	sb_mins, sb_maxs;
-- addToBBox;
+- (void)addToBBox;
 
 extern	vec3_t	sel_x, sel_y, sel_z;
 extern	vec3_t	sel_org;
-- transform;
+- (void)transform;
 
-- flipNormals;
+- (void)flipNormals;
 
-- carve;
-- setCarveVars;
+- (void)carve;
+- (void)setCarveVars;
 
 extern	id	sb_newowner;
-- moveToEntity;
+- (void)moveToEntity;
 
-- takeCurrentTexture;
+- (void)takeCurrentTexture;
 
 extern	vec3_t	select_min, select_max;
-- selectPartial;
-- selectComplete;
-- regionPartial;
-- regionComplete;
+- (void)selectPartial;
+- (void)selectComplete;
+- (void)regionPartial;
+- (void)regionComplete;
 
 extern	float	sb_floor_dir, sb_floor_dist;
-- feetToFloor;
+- (void)feetToFloor;
 
 - (int) getNumBrushFaces;
 - (face_t *)getBrushFace: (int)which;

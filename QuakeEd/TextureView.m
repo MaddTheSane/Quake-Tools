@@ -123,7 +123,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	List	*list;
 	NSRect	r;
 
-	//oldwindowmask = [window addToEventMask:NX_LMOUSEDRAGGEDMASK];
+	//oldwindowmask = [window addToEventMask:NSLeftMouseDraggedMask];
 	loc = theEvent.locationInWindow;
 	loc =[self convertPoint:loc fromView:NULL];
 	

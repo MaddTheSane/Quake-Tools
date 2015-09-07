@@ -20,24 +20,24 @@ extern	float	zplanedir;
 	vec3_t		origin;
 }
 
-- clearBounds;
-- getBounds: (float *)top :(float *)bottom;
+- (void)clearBounds;
+- (void)getBounds: (float *)top :(float *)bottom;
 
 - getPoint: (NSPoint *)pt;
 - setPoint: (NSPoint *)pt;
 
-- addToHeightRange: (float)height;
+- (void)addToHeightRange: (float)height;
 
-- newRealBounds;
-- newSuperBounds;
+- (void)newRealBounds;
+- (void)newSuperBounds;
 
-- XYDrawSelf;
+- (void)XYDrawSelf;
 
 - (BOOL)XYmouseDown: (NSPoint *)pt;
 
-- setXYOrigin: (NSPoint *)pt;
+- (void)setXYOrigin: (NSPoint *)pt;
 
-- setOrigin: (NSPoint *)pt scale: (float)sc;
+- (void)setOrigin: (NSPoint *)pt scale: (float)sc;
 
 @end
 

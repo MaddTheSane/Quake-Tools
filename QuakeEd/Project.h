@@ -18,31 +18,30 @@
 #define SUBDIR_GFX		"gfx"
 
 @class Project;
-
-extern	Project *project_i;
+extern Project *project_i;
 
 @interface Project: NSObject
 {
 	IBOutlet id	projectInfo;		// dictionary storage of project info
 
-IBOutlet id	basepathinfo_i;		// outlet to base path info textfield
-IBOutlet id	mapbrowse_i;		// outlet to QuakeEd Maps browser
-IBOutlet id	currentmap_i;		// outlet to current map textfield
-IBOutlet id	mapList;			// list of map names (Storage)
-IBOutlet id	descList;			// list of map descriptions (Storage)
-IBOutlet id	wadList;			// list of wad names (Storage)
+	IBOutlet id	basepathinfo_i;		// outlet to base path info textfield
+	IBOutlet id	mapbrowse_i;		// outlet to QuakeEd Maps browser
+	IBOutlet id	currentmap_i;		// outlet to current map textfield
+	IBOutlet id	mapList;			// list of map names (Storage)
+	IBOutlet id	descList;			// list of map descriptions (Storage)
+	IBOutlet id	wadList;			// list of wad names (Storage)
 	
-IBOutlet id	pis_panel_i;		// outlet to Project Info Settings (PIS) panel
-
-IBOutlet id	pis_basepath_i;		// outlet to PIS->base path
-IBOutlet id	pis_wads_i;			// outlet to PIS->wad browser	
-IBOutlet id	pis_fullvis_i;		// outlet to PIS->full vis command
-IBOutlet id	pis_fastvis_i;		// outlet to PIS->fast vis command
-IBOutlet id	pis_novis_i;		// outlet to PIS->no vis command
-IBOutlet id	pis_relight_i;		// outlet to PIS->relight command
-IBOutlet id	pis_leaktest_i;		// outlet to PIS->leak test command
-
-IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
+	IBOutlet id	pis_panel_i;		// outlet to Project Info Settings (PIS) panel
+	
+	IBOutlet id	pis_basepath_i;		// outlet to PIS->base path
+	IBOutlet id	pis_wads_i;			// outlet to PIS->wad browser
+	IBOutlet id	pis_fullvis_i;		// outlet to PIS->full vis command
+	IBOutlet id	pis_fastvis_i;		// outlet to PIS->fast vis command
+	IBOutlet id	pis_novis_i;		// outlet to PIS->no vis command
+	IBOutlet id	pis_relight_i;		// outlet to PIS->relight command
+	IBOutlet id	pis_leaktest_i;		// outlet to PIS->leak test command
+	
+	IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
 	
 	char	path_projectinfo[128];	// path of QE_Project file
 
@@ -68,8 +67,8 @@ IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
 	time_t	lastModified;	// last time project file was modified
 }
 
-- (id)initProject;
-- initVars;
+- (void)initProject;
+- (void)initVars;
 
 - (char *)currentProjectFile;
 
@@ -77,15 +76,19 @@ IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
 
 - (void)addToOutput:(char *)string;
 - (IBAction)clearBspOutput:sender;
-- initProjSettings;
-- changeChar:(char)f to:(char)t in:(id)obj;
+- (void)initProjSettings;
+- (void)changeChar:(char)f to:(char)t in:(id)obj;
 - (int)searchForString:(char *)str in:(id)obj;
 
-- (void)parseProjectFile;		// read defaultsdatabase for project path
-- (void)openProjectFile:(char *)path;	// called by openProject and newProject
+/// read defaultsdatabase for project path
+- (void)parseProjectFile;
+/// called by openProject and newProject
+- (void)openProjectFile:(char *)path;
 - (void)openProject;
-- (IBAction)clickedOnMap:sender;		// called if clicked on map in browser
-- (IBAction)clickedOnWad:sender;		// called if clicked on wad in browser
+/// called if clicked on map in browser
+- (IBAction)clickedOnMap:(id)sender;
+/// called if clicked on wad in browser
+- (IBAction)clickedOnWad:(id)sender;
 
 - (IBAction)saveSettings:(id)sender;
 

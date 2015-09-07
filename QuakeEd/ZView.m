@@ -59,7 +59,7 @@ initFrame:
 	];
 	[zscrollview_i setAutosizing: NX_WIDTHSIZABLE | NX_HEIGHTSIZABLE];
 
-	[[zscrollview_i setDocView: self] free];
+	[zscrollview_i setDocumentView: self];
 
 //	[superview setDrawOrigin: 0 : 0];
 
@@ -73,7 +73,8 @@ initFrame:
 	
 	[self setOrigin: &pt scale: 1];
 	
-	return zscrollview_i;
+	//return zscrollview_i;
+	return self;
 }
 
 - setXYOrigin: (NSPoint *)pt
@@ -158,17 +159,19 @@ Called when the scaler popup on the window is used
 {
 	NSRect		visrect, sframe;
 	float		nscale;
+	NSScanner	*scanner;
 	
 	NSString *item = [[sender selectedCell] title];
-	sscanf (item,"%f",&nscale);
+	scanner = [NSScanner scannerWithString:item];
+	[scanner scanFloat:&nscale];
 	nscale /= 100;
 	
 	if (nscale == scale)
-		return NULL;
+		return;
 		
 // keep the center of the view constant
-	[superview getBounds: &visrect];
-	[superview getFrame: &sframe];
+	visrect = self.superview.bounds;
+	sframe = self.superview.frame;
 	visrect.origin.x += visrect.size.width/2;
 	visrect.origin.y += visrect.size.height/2;
 	
@@ -179,19 +182,16 @@ Called when the scaler popup on the window is used
 }
 
 
-- clearBounds
+- (void)clearBounds
 {
 	topbound = 999999;
 	bottombound = -999999;
-
-	return self;
 }
 
-- getBounds: (float *)top :(float *)bottom;
+- (void)getBounds: (float *)top :(float *)bottom;
 {
 	*top = topbound;
 	*bottom = bottombound;
-	return self;
 }
 
 
@@ -200,13 +200,12 @@ Called when the scaler popup on the window is used
 addToHeightRange:
 ==================
 */
-- addToHeightRange: (float)height
+- (void)addToHeightRange: (float)height
 {
 	if (height < minheight)
 		minheight = height;
 	if (height > maxheight)
 		maxheight = height;
-	return self;
 }
 
 
@@ -217,12 +216,10 @@ newSuperBounds
 When superview is resized
 ==================
 */
-- newSuperBounds
+- (void)newSuperBounds
 {	
 	oldminheight++;
 	[self newRealBounds];
-	
-	return self;
 }
 
 
@@ -234,13 +231,13 @@ Should only change the scroll bars, not cause any redraws.
 If realbounds has shrunk, nothing will change.
 ===================
 */
-- newRealBounds
+- (void)newRealBounds
 {
 	NSRect		sbounds;
 	float		vistop, visbottom;
 
 	if (minheight == oldminheight && maxheight == oldmaxheight)
-		return self;
+		return;
 		
 	oldminheight = minheight;
 	oldmaxheight = maxheight;
@@ -260,7 +257,7 @@ If realbounds has shrunk, nothing will change.
 	if (visbottom < minheight)
 		minheight = visbottom;
 	if (minheight == [self bounds].origin.y && maxheight-minheight == [self bounds].size.height)
-		return self;
+		return;
 		
 	sbounds.origin.y = minheight;
 	sbounds.size.height = maxheight - minheight;
@@ -280,8 +277,6 @@ If realbounds has shrunk, nothing will change.
 	[quakeed_i reenableDisplay];
 	
 	[[[[self superview] superview] verticalScroller] display];
-	
-	return self;
 }
 
 
@@ -370,7 +365,8 @@ Rect is in global world (unscaled) coordinates
 	}
 
 	//endUserPath (upath, dps_ustroke);
-	PSsetgray (12.0/16.0);
+	[NSColor colorWithDeviceWhite:1 - (12.0 / 16.0) alpha:1];
+	//PSsetgray (12.0/16.0);
 	sendUserPath (upath);
 
 //
@@ -436,23 +432,23 @@ drawSelf
 ===============================================================================
 */
 
-- drawSelf:(const NSRect *)rects :(int)rectCount
+-(void)drawRect:(NSRect)dirtyRect
 {
 	NSRect		visRect;
 	
 	minheight = 999999;
 	maxheight = -999999;
 
-// allways draw the entire bar	
-	[self getVisibleRect:&visRect];
-	rects = &visRect;
+// allways draw the entire bar
+	visRect = [self visibleRect];
+	dirtyRect = visRect;
 
 // erase window
 	
-	NXEraseRect (&rects[0]);
+	NSEraseRect (dirtyRect);
 	
 // draw grid
-	[self drawGrid: &rects[0]];
+	[self drawGrid: dirtyRect];
 	
 // draw zplane
 //	[self drawZplane];
@@ -462,8 +458,6 @@ drawSelf
 
 // possibly resize the view
 	[self newRealBounds];
-
-	return self;
 }
 
 /*
@@ -539,9 +533,9 @@ static	NSPoint		oldreletive;
 	while (1)
 	{
 		event = [NSApp getNextEvent: 
-			NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
-			| NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK];
-		if (event->type == NX_LMOUSEUP || event->type == NX_RMOUSEUP)
+			NSLeftMouseUpMask | NSLeftMouseDraggedMask
+			| NSRightMouseUpMask | NSRightMouseDraggedMask];
+		if (event->type == NSLeftMouseUp || event->type == NSRightMouseUp)
 			break;
 			
 		newpt = event->location;
@@ -689,12 +683,12 @@ mouseDown
 	p1[1] = origin[1];
 	p1[2] = pt.y;
 	
-	flags = theEvent->flags & (NX_SHIFTMASK | NX_CONTROLMASK | NX_ALTERNATEMASK | NX_COMMANDMASK);
+	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 //
 // shift click to select / deselect a brush from the world
 //
-	if (flags == NX_SHIFTMASK)
+	if (flags == NSShiftKeyMask)
 	{		
 		[map_i selectRay: p1 : p1 : NO];
 		return self;
@@ -703,7 +697,7 @@ mouseDown
 //
 // alt click = set entire brush texture
 //
-	if (flags == NX_ALTERNATEMASK)
+	if (flags == NSAlternateKeyMask)
 	{
 		[map_i setTextureRay: p1 : p1 : YES];
 		return self;
@@ -712,7 +706,7 @@ mouseDown
 //
 // control click = position view
 //
-	if (flags == NX_CONTROLMASK)
+	if (flags == NSControlKeyMask)
 	{
 		[cameraview_i setZOrigin: pt.y];
 		[quakeed_i updateAll];
@@ -760,7 +754,7 @@ rightMouseDown
 	pt= theEvent->location;
 	[self convertPoint:&pt  fromView:NULL];
 
-	flags = theEvent->flags & (NX_SHIFTMASK | NX_CONTROLMASK | NX_ALTERNATEMASK | NX_COMMANDMASK);
+	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 	
 //
@@ -807,7 +801,7 @@ modalMoveLoop
 //
 	goto drawentry;
 
-	while (event->type != NX_LMOUSEUP)
+	while (event->type != NSLeftMouseUp)
 	{
 		//
 		// calculate new point
@@ -832,7 +826,7 @@ drawentry:
 		NXPing ();
 				
 		event = [NSApp getNextEvent: 
-			NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK];		
+			NSLeftMouseUpMask | NSLeftMouseDraggedMask];		
 	}
 
 //

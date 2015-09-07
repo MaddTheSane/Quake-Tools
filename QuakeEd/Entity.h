@@ -19,24 +19,21 @@ typedef struct epair_s
 	BOOL	modifiable;
 }
 
-- initClass: (char *)classname;
-- initFromTokens;
+- (instancetype)initWithClass: (char *)classname;
+- (instancetype)initFromTokens;
 
-- free;
-
-- (BOOL)modifiable;
-- setModifiable: (BOOL)m;
+@property (nonatomic) BOOL modifiable;
 
 - (char *)targetname;
 
-- writeToFILE: (FILE *)f region:(BOOL)reg;
+- (void)writeToFILE: (FILE *)f region:(BOOL)reg;
 
 - (char *)valueForQKey: (char *)k;
-- getVector: (vec3_t)v forKey: (char *)k;
-- setKey:(char *)k toValue:(char *)v;
-- (int)numPairs;
+- (void)getVector: (vec3_t)v forKey: (char *)k;
+- (void)setKey:(char *)k toValue:(char *)v;
+@property (readonly) int numPairs;
 - (epair_t *)epairs;
-- removeKeyPair: (char *)key;
+- (void)removeKeyPair: (char *)key;
 
 @end
 
