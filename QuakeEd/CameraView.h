@@ -1,8 +1,9 @@
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import "mathlib.h"
 #import "SetBrush.h"
 
-extern id cameraview_i;
+@class CameraView;
+extern CameraView *cameraview_i;
 
 extern	byte	renderlist[1024*1024*4];
 
@@ -11,7 +12,7 @@ void CameraLineto(vec3_t p);
 
 extern	BOOL	timedrawing;
 
-@interface CameraView :  View
+@interface CameraView :  NSView
 {
 	float		xa, ya, za;
 	float		move;
@@ -24,38 +25,38 @@ extern	BOOL	timedrawing;
 	vec3_t		origin;
 	vec3_t		matrix[3];
 	
-	NXPoint		dragspot;
+	NSPoint		dragspot;
 	
 	drawmode_t	drawmode;
 	
 // UI links
-	id			mode_radio_i;
+	IBOutlet NSMatrix			*mode_radio_i;
 	
 }
 
-- setXYOrigin: (NXPoint *)pt;
-- setZOrigin: (float)pt;
+- (void)setXYOrigin: (NSPoint)pt;
+- (void)setZOrigin: (float)pt;
 
-- setOrigin: (vec3_t)org angle: (float)angle;
-- getOrigin: (vec3_t)org;
+- (void)setOrigin: (vec3_t)org angle: (float)angle;
+- (void)getOrigin: (vec3_t)org;
 
 - (float)yawAngle;
 
 - matrixFromAngles;
-- _keyDown: (NXEvent *)theEvent;
+- (void)_keyDown: (NSEvent *)theEvent;
 
-- drawMode: sender;
-- setDrawMode: (drawmode_t)mode;
+- (IBAction)drawMode:(id) sender;
+- (void)setDrawMode: (drawmode_t)mode;
 
-- homeView: sender;
+- (IBAction)homeView:(id) sender;
 
-- XYDrawSelf;						// for drawing viewpoint in XY view
-- ZDrawSelf;						// for drawing viewpoint in XY view
-- (BOOL)XYmouseDown: (NXPoint *)pt flags:(int)flags;	// return YES if brush handled
-- (BOOL)ZmouseDown: (NXPoint *)pt flags:(int)flags;	// return YES if brush handled
+- (void)XYDrawSelf;						// for drawing viewpoint in XY view
+- (void)ZDrawSelf;						// for drawing viewpoint in XY view
+- (BOOL)XYmouseDown: (NSPoint *)pt flags:(int)flags;	// return YES if brush handled
+- (BOOL)ZmouseDown: (NSPoint *)pt flags:(int)flags;	// return YES if brush handled
 
-- upFloor:sender;
-- downFloor: sender;
+- (IBAction)upFloor:sender;
+- (IBAction)downFloor: sender;
 
 @end
 

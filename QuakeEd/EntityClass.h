@@ -1,11 +1,12 @@
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import "mathlib.h"
+#import "List.h"
 
 typedef enum {esize_model, esize_fixed} esize_t;
 
 #define	MAX_FLAGS	8
 
-@interface EntityClass : Object
+@interface EntityClass : NSObject
 {
 	char	*name;
 	esize_t	esize;
@@ -15,7 +16,7 @@ typedef enum {esize_model, esize_fixed} esize_t;
 	char	flagnames[MAX_FLAGS][32];
 }
 
-- initFromText: (char *)text;
+- (id)initFromText: (char *)text;
 - (char *)classname;
 - (esize_t)esize;
 - (float *)mins;		// only for esize_fixed
@@ -34,7 +35,7 @@ extern	id	entity_classes_i;
 	char	*source_path;
 }
 
-- initForSourceDirectory: (char *)path;
+- (instancetype)initForSourceDirectory: (char *)path;
 - (id)classForName: (char *)name;
 - (void)scanDirectory;
 

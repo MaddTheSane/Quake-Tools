@@ -1,9 +1,9 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
 #define MINIWINICON	"DoomEdIcon"
 
-typedef enum
+typedef NS_ENUM(NSInteger, insp_e)
 {
 	i_project,
 	i_textures,
@@ -13,26 +13,26 @@ typedef enum
 	i_output,
 	i_help,
 	i_end
-} insp_e;
+};
 
 extern	id		inspcontrol_i;
 
-@interface InspectorControl:Object
+@interface InspectorControl: NSObject
 {
-	id	inspectorView_i;	// inspector view
-	id	inspectorSubview_i;	// inspector view's current subview (gets replaced)
+	IBOutlet id	inspectorView_i;	// inspector view
+	IBOutlet id	inspectorSubview_i;	// inspector view's current subview (gets replaced)
 
-	id	contentList;		// List of contentviews (corresponds to
+	IBOutlet id	contentList;		// List of contentviews (corresponds to
 							// insp_e enum order)
-	id	windowList;			// List of Windows (corresponds to
+	IBOutlet id	windowList;			// List of Windows (corresponds to
 							// insp_e enum order)
 
-	id	obj_textures_i;		// TexturePalette object (for delegating)
-	id	obj_genkeypair_i;	// GenKeyPair object
+	IBOutlet id	obj_textures_i;		// TexturePalette object (for delegating)
+	IBOutlet id	obj_genkeypair_i;	// GenKeyPair object
 
-	id	popUpButton_i;		// PopUpList title button
-	id	popUpMatrix_i;		// PopUpList matrix
-	id	itemList;			// List of popUp buttons
+	IBOutlet id	popUpButton_i;		// PopUpList title button
+	IBOutlet id	popUpMatrix_i;		// PopUpList matrix
+	IBOutlet id	itemList;			// List of popUp buttons
 		
 	insp_e	currentInspectorType;	// keep track of current inspector
 	//
@@ -41,25 +41,25 @@ extern	id		inspcontrol_i;
 	//  corresponds to the enums above!
 	
 	// Windows
-	id	win_project_i;		// project
-	id	win_textures_i;		// textures
-	id	win_things_i;		// things
-	id	win_prefs_i;		// preferences
-	id	win_settings_i;		// project settings
-	id	win_output_i;		// bsp output
-	id	win_help_i;			// documentation
+	IBOutlet id	win_project_i;		// project
+	IBOutlet id	win_textures_i;		// textures
+	IBOutlet id	win_things_i;		// things
+	IBOutlet id	win_prefs_i;		// preferences
+	IBOutlet id	win_settings_i;		// project settings
+	IBOutlet id	win_output_i;		// bsp output
+	IBOutlet id	win_help_i;			// documentation
 	
 	// PopUpList objs
-	id	itemProject_i;		// project
-	id	itemTextures_i;		// textures
-	id	itemThings_i;		// things
-	id	itemPrefs_i;		// preferences
-	id	itemSettings_i;		// project settings
-	id	itemOutput_i;		// bsp output
-	id	itemHelp_i;			// docs
+	IBOutlet id	itemProject_i;		// project
+	IBOutlet id	itemTextures_i;		// textures
+	IBOutlet id	itemThings_i;		// things
+	IBOutlet id	itemPrefs_i;		// preferences
+	IBOutlet id	itemSettings_i;		// project settings
+	IBOutlet id	itemOutput_i;		// bsp output
+	IBOutlet id	itemHelp_i;			// docs
 }
 
-- awakeFromNib;
+- (void)awakeFromNib;
 - changeInspector:sender;
 - changeInspectorTo:(insp_e)which;
 - (insp_e)getCurrentInspector;

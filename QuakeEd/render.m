@@ -229,7 +229,7 @@ void REN_DrawFlatSpan (int y)
 		{
 			r_zbuffer[ofs] = zfrac;
 			out = (pixel32_t *)&r_picbuffer[ofs];
-			*out = r_flatcolor.p;
+			*out = r_flatcolor;
 		}
 		zfrac += zstep;
 		ofs++;

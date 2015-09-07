@@ -10,20 +10,20 @@ id	keypairview_i;
 initFrame:
 ==================
 */
-- initFrame:(const NXRect *)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
-	[super initFrame:frameRect];
+	self = [super initWithFrame:frameRect];
 	keypairview_i = self;
 	return self;
 }
 
 
-- calcViewSize
+- (void)calcViewSize
 {
 	NXCoord	w;
 	NXCoord	h;
-	NXRect	b;
-	NXPoint	pt;
+	NSRect	b;
+	NSPoint	pt;
 	int		count;
 	id		ent;
 	
@@ -38,10 +38,9 @@ initFrame:
 	[self	sizeTo:w :h];
 	pt.x = pt.y = 0;
 	[self scrollPoint: &pt];
-	return self;
 }
 
-- drawSelf:(const NXRect *)rects :(int)rectCount
+- drawSelf:(const NSRect *)rects :(int)rectCount
 {
 	epair_t	*pair;
 	int		y;
@@ -68,16 +67,16 @@ initFrame:
 	return self;
 }
 
-- mouseDown:(NXEvent *)theEvent
+- mouseDown:(NSEvent *)theEvent
 {
-	NXPoint	loc;
+	NSPoint	loc;
 	int		i;
 	epair_t	*p;
 
-	loc = theEvent->location;
-	[self convertPoint:&loc	fromView:NULL];
+	loc = [theEvent locationInWindow];
+	loc = [self convertPoint:loc	fromView:NULL];
 	
-	i = (bounds.size.height - loc.y - 4) / LINEHEIGHT;
+	i = (self.bounds.size.height - loc.y - 4) / LINEHEIGHT;
 
 	p = [[map_i currentEntity] epairs];
 	while (	i )

@@ -31,7 +31,7 @@ copyFromZone
 JDC
 ===========
 */
-- copyFromZone:(NXZone *)zone
+- copyFromZone:(NSZone *)zone
 {
 	id	new;
 	int	i;

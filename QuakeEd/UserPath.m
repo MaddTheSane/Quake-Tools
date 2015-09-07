@@ -9,18 +9,17 @@
 
 #import "UserPath.h"
 #import <mach/mach_init.h>
-#import <appkit/graphics.h>
-#import <appkit/errors.h>
+#import <AppKit/AppKit.h>
 #import <math.h>
 #import <libc.h>
 
-static NXZone      *upZone = NULL;
+static NSZone      *upZone = NULL;
 
-NXZone *userPathZone()
+NSZone *userPathZone()
 /* Creates a unique zone for use by all user paths */
 {
     if (!upZone) {
-	upZone = NXCreateZone(vm_page_size, vm_page_size, 1);
+	upZone = NSCreateZone(vm_page_size, vm_page_size, 1);
     }
     
     return upZone;
@@ -31,11 +30,11 @@ UserPath *newUserPath()
 {
     UserPath    *up;
 
-    up = (UserPath *)NXZoneMalloc(userPathZone(), sizeof(UserPath));
+    up = (UserPath *)NSZoneMalloc(userPathZone(), sizeof(UserPath));
     up->max = 8192;	// JDC
-    up->points = (float *)NXZoneMalloc(userPathZone(),
+    up->points = (float *)NSZoneMalloc(userPathZone(),
     				       sizeof(float) * up->max);
-    up->ops = (char *)NXZoneMalloc(userPathZone(),
+    up->ops = (char *)NSZoneMalloc(userPathZone(),
     				   (2 + (up->max / 2)) * sizeof(char));
     up->ping = NO;
     
@@ -83,9 +82,9 @@ void beginUserPath(UserPath *up, BOOL cache)
     up->bbox[0] = up->bbox[1] = 1.0e6;
     up->bbox[2] = up->bbox[3] = -1.0e6;
     if (cache) {
-	up->ops[up->numberOfOps++] = dps_ucache;
+	//up->ops[up->numberOfOps++] = dps_ucache;
     }
-    up->ops[up->numberOfOps++] = dps_setbbox;
+    //up->ops[up->numberOfOps++] = dps_setbbox;
     up->opForUserPath = 0;
     
     return;

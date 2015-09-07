@@ -179,7 +179,7 @@ scanFile
 */
 - (void)scanFile: (char *)filename
 {
-	int		size;
+	ssize_t	size;
 	char	*data;
 	id		cl;
 	int		i;

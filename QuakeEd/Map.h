@@ -1,12 +1,16 @@
 
 // Map is a list of Entity objects
 
+#import "List.h"
+
+@class SetBrush;
+
 extern	id	map_i;
 
 @interface Map : List
 {
 	id		currentEntity;
-	id		oldselection;	// temp when loading a new map
+	List	*oldselection;	// temp when loading a new map
 	float	minz, maxz;
 }
 
@@ -27,13 +31,16 @@ extern	id	map_i;
 - currentEntity;
 - setCurrentEntity: ent;
 
+@property (nonatomic) float currentMinZ;
+@property (nonatomic) float currentMaxZ;
+
 - (float)currentMinZ;
-- setCurrentMinZ: (float)m;
+- (void)setCurrentMinZ: (float)m;
 - (float)currentMaxZ;
-- setCurrentMaxZ: (float)m;
+- (void)setCurrentMaxZ: (float)m;
 
 - (int)numSelected;
-- selectedBrush;			// returns the first selected brush
+- (SetBrush*)selectedBrush;			// returns the first selected brush
 
 //
 // operations on current selection
@@ -43,26 +50,26 @@ extern	id	map_i;
 - makeAllPerform: (SEL)sel;
 - makeGlobalPerform: (SEL)sel;	// in and out of region
 
-- cloneSelection: sender;
+- (IBAction)cloneSelection: sender;
 
-- makeEntity: sender;
+- (IBAction)makeEntity: sender;
 
-- subtractSelection: sender;
+- (IBAction)subtractSelection: sender;
 
-- selectCompletelyInside: sender;
-- selectPartiallyInside: sender;
+- (IBAction)selectCompletelyInside: sender;
+- (IBAction)selectPartiallyInside: sender;
 
-- tallBrush: sender;
-- shortBrush: sender;
+- (IBAction)tallBrush: sender;
+- (IBAction)shortBrush: sender;
 
-- rotate_x: sender;
-- rotate_y: sender;
-- rotate_z: sender;
+- (IBAction)rotate_x: sender;
+- (IBAction)rotate_y: sender;
+- (IBAction)rotate_z: sender;
 
-- flip_x: sender;
-- flip_y: sender;
-- flip_z: sender;
+- (IBAction)flip_x: sender;
+- (IBAction)flip_y: sender;
+- (IBAction)flip_z: sender;
 
-- selectCompleteEntity: sender;
+- (IBAction)selectCompleteEntity: sender;
 
 @end

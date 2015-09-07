@@ -1,7 +1,10 @@
 
-extern	id	clipper_i;
+#import <AppKit/AppKit.h>
 
-@interface Clipper : Object
+@class Clipper;
+extern	Clipper	*clipper_i;
+
+@interface Clipper : NSObject
 {
 	int			num;
 	vec3_t		pos[3];
@@ -9,16 +12,16 @@ extern	id	clipper_i;
 }
 
 - (BOOL)hide;
-- XYClick: (NXPoint)pt;
-- (BOOL)XYDrag: (NXPoint *)pt;
-- ZClick: (NXPoint)pt;
-- carve;
-- flipNormal;
+- (void)XYClick: (NSPoint)pt;
+- (BOOL)XYDrag: (NSPoint)pt;
+- (void)ZClick: (NSPoint)pt;
+- (void)carve;
+- (void)flipNormal;
 - (BOOL)getFace: (face_t *)pl;
 
-- cameraDrawSelf;
-- XYDrawSelf;
-- ZDrawSelf;
+- (void)cameraDrawSelf;
+- (void)XYDrawSelf;
+- (void)ZDrawSelf;
 
 @end
 

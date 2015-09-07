@@ -5,11 +5,12 @@ id	clipper_i;
 
 @implementation Clipper
 
-- init
+- (instancetype)init
 {
-	[super init];
+	if (self = [super init]) {
 	clipper_i = self;
-	return self;	
+	}
+	return self;
 }
 
 - (BOOL)hide
@@ -21,7 +22,7 @@ id	clipper_i;
 	return (oldnum > 0);
 }
 
-- flipNormal
+- (void)flipNormal
 {
 	vec3_t	temp;
 	
@@ -40,10 +41,9 @@ id	clipper_i;
 	else
 	{
 		qprintf ("no clipplane");
-		NXBeep ();
+		NSBeep ();
 	}
 	
-	return self;
 }
 
 - (BOOL)getFace: (face_t *)f
@@ -83,7 +83,7 @@ id	clipper_i;
 XYClick
 ================
 */
-- XYClick: (NXPoint)pt
+- (void)XYClick: (NSPoint)pt
 {
 	int		i;
 	vec3_t	new;
@@ -102,7 +102,7 @@ XYClick
 			else
 				pos[i][2] = [map_i currentMinZ];
 			[quakeed_i updateAll];
-			return self;
+			return;
 		}
 	}
 	
@@ -114,8 +114,6 @@ XYClick
 	num++;
 
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
 /*
@@ -123,13 +121,13 @@ XYClick
 XYDrag
 ================
 */
-- (BOOL)XYDrag: (NXPoint *)pt
+- (BOOL)XYDrag: (NSPoint)pt
 {
 	int		i;
 	
 	for (i=0 ; i<3 ; i++)
 	{
-		if (fabs(pt->x - pos[i][0] > 10) || fabs(pt->y - pos[i][1] > 10) )
+		if (fabs(pt.x - pos[i][0] > 10) || fabs(pt.y - pos[i][1] > 10) )
 			continue;
 	// drag this point
 	
@@ -138,22 +136,21 @@ XYDrag
 	return NO;
 }
 
-- ZClick: (NXPoint)pt
+- (void)ZClick: (NSPoint)pt
 {
-	return self;
+	return;
 }
 
 //=============================================================================
 
-- carve
+- (void)carve
 {
 	[map_i makeSelectedPerform: @selector(carveByClipper)];
 	num = 0;
-	return self;
 }
 
 
-- cameraDrawSelf
+- (void)cameraDrawSelf
 {
 	vec3_t		mid;
 	int			i;
@@ -178,11 +175,9 @@ XYDrag
 		mid[1] -= 16;
 		CameraLineto (mid);
 	}
-	
-	return self;
 }
 
-- XYDrawSelf
+- (void)XYDrawSelf
 {
 	int		i;
 	char	text[8];
@@ -200,10 +195,9 @@ XYDrag
 		PSarc ( pos[i][0], pos[i][1], 10, 0, 360);
 		PSstroke ();
 	}
-	return self;
 }
 
-- ZDrawSelf
+- (void)ZDrawSelf
 {
 	int		i;
 	char	text[8];
@@ -221,7 +215,6 @@ XYDrag
 		PSarc ( -28+i*8, pos[i][2], 10, 0, 360);
 		PSstroke ();
 	}
-	return self;
 }
 
 @end

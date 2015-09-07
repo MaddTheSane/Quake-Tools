@@ -7,19 +7,19 @@ This does not include everything necessary to build maps.  There are graphics fi
 
 This is a NEXTSTEP application, so hardly anyone is going to be able to use the code as is.  This is not an OPENSTEP application.  It doesn't even use the foundation kit, so porting to gnustep or openstep-solaris/mach/nt would not be trivial.
 
-There are lots of mixed case and >8 character filenames, so I'm using unix gnutar (compressed) format.
+There are lots of mixed case and >8 character filenames, so I'm using unix gzip  (compressed) format.
 
 Because most people won't have access to a NEXTSTEP machine, I took pictures of some of the more important stuff from interface builder:
 
-mainwindow.tiff : a screenshot of the primary window
+mainwindow.tiff	: a screenshot of the primary window
 inspectors.tiff : a screenshot of the important inspector views
-help.txt        : a dump of the (minimal) help inspector's contents.
+help.txt		: a dump of the (minimal) help inspector's contents.
 
 I included some sample data to help you follow the code:
 
-quake.qpr       : our current project file
-jrbase1.map     : a sample map
-triggers.qc     : a sample qc source file that includes some /*QUAKED comments
+quake.qpr		: our current project file
+jrbase1.map 	: a sample map
+triggers.qc		: a sample qc source file that includes some /*QUAKED comments
 
 There will not be any major changes to this code base.  I am eagerly looking forward to writing a brand new editor for windows NT + open GL as soon as Quake ships.
 

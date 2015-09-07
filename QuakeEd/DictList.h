@@ -1,12 +1,13 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
+#import "List.h"
 
-@interface DictList:List
+@interface DictList: List
 {
 }
 
-- initListFromFile:(FILE *)fp;
-- writeListFile:(char *)filename;
+- (instancetype)initListFromFile:(FILE *)fp;
+- (void)writeListFile:(char *)filename;
 - (id) findDictKeyword:(char *)key;
 
 @end

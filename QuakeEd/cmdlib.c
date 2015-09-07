@@ -2,6 +2,8 @@
 
 #include "cmdlib.h"
 
+#include <CoreFoundation/CoreFoundation.h>
+
 #define PATHSEPERATOR   '/'
 
 
@@ -14,7 +16,7 @@ double I_FloatTime (void)
 {
 	struct timeval tp;
 	struct timezone tzp;
-	static int		secbase;
+	static time_t	secbase;
 
 	gettimeofday(&tp, &tzp);
 	
@@ -29,7 +31,7 @@ double I_FloatTime (void)
 
 
 char		com_token[1024];
-boolean		com_eof;
+bool		com_eof;
 
 /*
 ==============
@@ -121,7 +123,7 @@ skipwhite:
 ================
 */
 
-int filelength (int handle)
+off_t filelength (int handle)
 {
 	struct stat	fileinfo;
     
@@ -134,7 +136,7 @@ int filelength (int handle)
 	return fileinfo.st_size;
 }
 
-int tell (int handle)
+off_t tell (int handle)
 {
 	return lseek (handle, 0, L_INCR);
 }
@@ -161,11 +163,6 @@ char *strlower (char *start)
 		in++;
 	}
 	return start;
-}
-
-char *getcwd (char *path, int length)
-{
-	return getwd(path);
 }
 
 
@@ -243,7 +240,7 @@ int SafeOpenRead (char *filename)
 
 void SafeRead (int handle, void *buffer, long count)
 {
-	int        iocount;
+	ssize_t        iocount;
 
 	iocount = read (handle,buffer,count);
 	if (iocount != count)
@@ -253,7 +250,7 @@ void SafeRead (int handle, void *buffer, long count)
 
 void SafeWrite (int handle, void *buffer, long count)
 {
-	int        iocount;
+	ssize_t        iocount;
 
 	iocount = write (handle,buffer,count);
 	if (iocount != count)
@@ -354,7 +351,7 @@ void DefaultPath (char *path, char *basepath)
 
 void    StripFilename (char *path)
 {
-	int             length;
+	size_t             length;
 
 	length = strlen(path)-1;
 	while (length > 0 && path[length] != PATHSEPERATOR)
@@ -364,7 +361,7 @@ void    StripFilename (char *path)
 
 void    StripExtension (char *path)
 {
-	int             length;
+	size_t             length;
 
 	length = strlen(path)-1;
 	while (length > 0 && path[length] != '.')
@@ -496,116 +493,45 @@ int GetKey (void)
 ============================================================================
 */
 
-#ifdef __BIG_ENDIAN__
-
-short   LittleShort (short l)
-{
-	byte    b1,b2;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-
-	return (b1<<8) + b2;
-}
 
 short   BigShort (short l)
 {
-	return l;
-}
-
-
-long    LittleLong (long l)
-{
-	byte    b1,b2,b3,b4;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-	b3 = (l>>16)&255;
-	b4 = (l>>24)&255;
-
-	return ((long)b1<<24) + ((long)b2<<16) + ((long)b3<<8) + b4;
-}
-
-long    BigLong (long l)
-{
-	return l;
-}
-
-
-float	LittleFloat (float l)
-{
-	union {byte b[4]; float f;} in, out;
-	
-	in.f = l;
-	out.b[0] = in.b[3];
-	out.b[1] = in.b[2];
-	out.b[2] = in.b[1];
-	out.b[3] = in.b[0];
-	
-	return out.f;
-}
-
-float	BigFloat (float l)
-{
-	return l;
-}
-
-
-#else
-
-
-short   BigShort (short l)
-{
-	byte    b1,b2;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-
-	return (b1<<8) + b2;
+	return CFSwapInt16BigToHost(l);
 }
 
 short   LittleShort (short l)
 {
-	return l;
+	return CFSwapInt16LittleToHost(l);
 }
 
 
-long    BigLong (long l)
+int    BigLong (int l)
 {
-	byte    b1,b2,b3,b4;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-	b3 = (l>>16)&255;
-	b4 = (l>>24)&255;
-
-	return ((long)b1<<24) + ((long)b2<<16) + ((long)b3<<8) + b4;
+	return CFSwapInt32BigToHost(l);
 }
 
-long    LittleLong (long l)
+int    LittleLong (int l)
 {
-	return l;
+	return CFSwapInt32LittleToHost(l);
 }
 
 float	BigFloat (float l)
 {
-	union {byte b[4]; float f;} in, out;
+	union {int b; float f;} in, out;
 	
 	in.f = l;
-	out.b[0] = in.b[3];
-	out.b[1] = in.b[2];
-	out.b[2] = in.b[1];
-	out.b[3] = in.b[0];
-	
+	out.b = CFSwapInt32BigToHost(in.b);
+
 	return out.f;
 }
 
 float	LittleFloat (float l)
 {
-	return l;
+	union {int b; float f;} in, out;
+	
+	in.f = l;
+	out.b = CFSwapInt32LittleToHost(in.b);
+	
+	return out.f;
 }
-
-
-
-#endif
 

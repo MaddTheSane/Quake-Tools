@@ -1,4 +1,6 @@
 
+#import <AppKit/AppKit.h>
+
 typedef union
 {
 	byte		chan[4];
@@ -21,7 +23,7 @@ typedef struct
 	
 	int			width;
 	int			height;
-	NXBitmapImageRep	*rep;
+	NSBitmapImageRep	*rep;
 	void		*data;
 	pixel32_t	flatcolor;
 } qtexture_t;
@@ -37,8 +39,8 @@ qtexture_t *TEX_ForName (char *name);
 
 typedef struct
 {
-	id		image;		// NXImage
-	NXRect	r;
+	NSImage		*image;		// NXImage
+	NSRect	r;
 	char	*name;
 	int		index;
 	int		display;	// flag (on/off)
@@ -49,13 +51,13 @@ typedef struct
 
 extern	id texturepalette_i;
 
-@interface TexturePalette:Object
+@interface TexturePalette: NSObject
 {
 	char	currentwad[1024];
 	id	textureList_i;
-	id	textureView_i;
-	id	searchField_i;
-	id	sizeField_i;
+	IBOutlet id	textureView_i;
+	IBOutlet id	searchField_i;
+	IBOutlet id	sizeField_i;
 	
 	id	field_Xshift_i;
 	id	field_Yshift_i;
@@ -69,7 +71,7 @@ extern	id texturepalette_i;
 }
 
 - (char*)currentWad;
-- initPaletteFromWadfile:(char *)wf;
+- (id)initPaletteFromWadfile:(char *)wf;
 - computeTextureViewSize;
 - alphabetize;
 - getList;
@@ -86,27 +88,27 @@ extern	id texturepalette_i;
 - getTextureDef:(texturedef_t *)td;
 
 // Action methods
-- searchForTexture:sender;
+- (IBAction)searchForTexture:sender;
 
-- clearTexinfo: sender;
+- (IBAction)clearTexinfo: sender;
 
-- incXShift:sender;
-- decXShift:sender;
+- (IBAction)incXShift:sender;
+- (IBAction)decXShift:sender;
 
-- incYShift:sender;
-- decYShift:sender;
+- (IBAction)incYShift:sender;
+- (IBAction)decYShift:sender;
 
-- incRotate: sender;
-- decRotate: sender;
+- (IBAction)incRotate: sender;
+- (IBAction)decRotate: sender;
 
-- incXScale:sender;
-- decXScale:sender;
+- (IBAction)incXScale:sender;
+- (IBAction)decXScale:sender;
 
-- incYScale:sender;
-- decYScale:sender;
+- (IBAction)incYScale:sender;
+- (IBAction)decYScale:sender;
 
-- texturedefChanged: sender;
-- onlyShowMapTextures:sender;
+- (IBAction)texturedefChanged: sender;
+- (IBAction)onlyShowMapTextures:sender;
 - (int) searchForTextureInPalette:(char *)texture;
 - setDisplayFlag:(int)index to:(int)value;
 

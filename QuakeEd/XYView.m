@@ -14,7 +14,7 @@ float		xy_viewdist;		// clip behind this plane
 initFrame:
 ==================
 */
-- initFrame:(const NXRect *)frameRect
+- initFrame:(const NSRect *)frameRect
 {
 	[super initFrame:frameRect];
 	[self allocateGState];
@@ -119,10 +119,10 @@ initFrame:
 setOrigin:scale:
 ===================
 */
-- setOrigin: (NXPoint *)pt scale: (float)sc
+- setOrigin: (NSPoint *)pt scale: (float)sc
 {
-	NXRect		sframe;
-	NXRect		newbounds;
+	NSRect		sframe;
+	NSRect		newbounds;
 	
 //
 // calculate the area visible in the cliprect
@@ -168,8 +168,8 @@ setOrigin:scale:
 
 - centerOn: (vec3_t)org
 {
-	NXRect	sbounds;
-	NXPoint	mid, delta;
+	NSRect	sbounds;
+	NSPoint	mid, delta;
 	
 	[[xyview_i superview] getBounds: &sbounds];
 	
@@ -195,7 +195,7 @@ When superview is resized
 */
 - newSuperBounds
 {
-	NXRect	r;
+	NSRect	r;
 	
 	[superview getBounds: &r];
 	[self newRealBounds: &r];
@@ -212,9 +212,9 @@ Should only change the scroll bars, not cause any redraws.
 If realbounds has shrunk, nothing will change.
 ===================
 */
-- newRealBounds: (NXRect *)nb
+- newRealBounds: (NSRect *)nb
 {
-	NXRect		sbounds;
+	NSRect		sbounds;
 	
 	realbounds = *nb;
 	
@@ -256,7 +256,7 @@ Called when the scaler popup on the window is used
 - scaleMenuTarget: sender
 {
 	char	const	*item;
-	NXRect		visrect, sframe;
+	NSRect		visrect, sframe;
 	float		nscale;
 	
 	item = [[sender selectedCell] title];
@@ -285,13 +285,13 @@ Called when the scaler popup on the window is used
 zoomIn
 ==============
 */
-- zoomIn: (NXPoint *)constant
+- zoomIn: (NSPoint *)constant
 {
 	id			itemlist;
 	int			selected, numrows, numcollumns;
 
-	NXRect		visrect;
-	NXPoint		ofs, new;
+	NSRect		visrect;
+	NSPoint		ofs, new;
 
 //
 // set the popup
@@ -327,13 +327,13 @@ zoomIn
 zoomOut
 ==============
 */
-- zoomOut: (NXPoint *)constant
+- zoomOut: (NSPoint *)constant
 {
 	id			itemlist;
 	int			selected, numrows, numcollumns;
 
-	NXRect		visrect;
-	NXPoint		ofs, new;
+	NSRect		visrect;
+	NSPoint		ofs, new;
 	
 //
 // set the popup
@@ -513,7 +513,7 @@ Rect is in global world (unscaled) coordinates
 ============
 */
 
-- drawGrid: (const NXRect *)rect
+- drawGrid: (const NSRect *)rect
 {
 	int	x,y, stopx, stopy;
 	float	top,bottom,right,left;
@@ -640,9 +640,9 @@ PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
 drawWire
 ==================
 */
-- drawWire: (const NXRect *)rects
+- drawWire: (const NSRect *)rects
 {
-	NXRect	visRect;
+	NSRect	visRect;
 	int	i,j, c, c2;
 	id	ent, brush;
 	vec3_t	mins, maxs;
@@ -718,7 +718,7 @@ drawSolid
 - drawSolid
 {
 	unsigned char	*planes[5];
-	NXRect	visRect;
+	NSRect	visRect;
 
 	[self getVisibleRect:&visRect];
 
@@ -791,8 +791,8 @@ drawSolid
 drawSelf
 ===================
 */
-NXRect	xy_draw_rect;
-- drawSelf:(const NXRect *)rects :(int)rectCount
+NSRect	xy_draw_rect;
+- drawSelf:(const NSRect *)rects :(int)rectCount
 {
 	static float	drawtime;	// static to shut up compiler warning
 
@@ -837,14 +837,14 @@ NXRect	xy_draw_rect;
 dragLoop:
 ================
 */
-static	NXPoint		oldreletive;
-- dragFrom: (NXEvent *)startevent 
+static	NSPoint		oldreletive;
+- dragFrom: (NSEvent *)startevent 
 	useGrid: (BOOL)ug
 	callback: (void (*) (float dx, float dy)) callback
 {
-	NXEvent		*event;
-	NXPoint		startpt, newpt;
-	NXPoint		reletive, delta;
+	NSEvent		*event;
+	NSPoint		startpt, newpt;
+	NSPoint		reletive, delta;
 
 	startpt = startevent->location;
 	[self convertPoint:&startpt  fromView:NULL];
@@ -859,7 +859,7 @@ static	NXPoint		oldreletive;
 	
 	while (1)
 	{
-		event = [NXApp getNextEvent: NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
+		event = [NSApp getNextEvent: NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
 			| NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK | NX_APPDEFINEDMASK];
 
 		if (event->type == NX_LMOUSEUP || event->type == NX_RMOUSEUP)
@@ -909,7 +909,7 @@ void DragCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- selectionDragFrom: (NXEvent*)theEvent	
+- selectionDragFrom: (NSEvent*)theEvent	
 {
 	qprintf ("dragging selection");
 	[self	dragFrom:	theEvent 
@@ -925,8 +925,8 @@ void DragCallback (float dx, float dy)
 
 void ScrollCallback (float dx, float dy)
 {
-	NXRect		basebounds;
-	NXPoint		neworg;
+	NSRect		basebounds;
+	NSPoint		neworg;
 	float		scale;
 	
 	[ [xyview_i superview] getBounds: &basebounds];
@@ -942,7 +942,7 @@ void ScrollCallback (float dx, float dy)
 	[xyview_i setOrigin: &neworg scale: scale];
 }
 
-- scrollDragFrom: (NXEvent*)theEvent	
+- scrollDragFrom: (NSEvent*)theEvent	
 {
 	qprintf ("scrolling view");
 	[self	dragFrom:	theEvent 
@@ -977,9 +977,9 @@ void DirectionCallback (float dx, float dy)
 	[cameraview_i display];
 }
 
-- directionDragFrom: (NXEvent*)theEvent	
+- directionDragFrom: (NSEvent*)theEvent	
 {
-	NXPoint			pt;
+	NSPoint			pt;
 
 	qprintf ("changing camera direction");
 
@@ -1030,11 +1030,11 @@ void NewCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- newBrushDragFrom: (NXEvent*)theEvent	
+- newBrushDragFrom: (NSEvent*)theEvent	
 {
 	id				owner;
 	texturedef_t	td;
-	NXPoint			pt;
+	NSPoint			pt;
 
 	qprintf ("sizing new brush");
 	
@@ -1087,9 +1087,9 @@ void ControlCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- (BOOL)planeDragFrom: (NXEvent*)theEvent	
+- (BOOL)planeDragFrom: (NSEvent*)theEvent	
 {
-	NXPoint			pt;
+	NSPoint			pt;
 	vec3_t			dragpoint;
 
 	if ([map_i numSelected] != 1)
@@ -1123,9 +1123,9 @@ void ControlCallback (float dx, float dy)
 	return YES;
 }
 
-- (BOOL)shearDragFrom: (NXEvent*)theEvent	
+- (BOOL)shearDragFrom: (NSEvent*)theEvent	
 {
-	NXPoint			pt;
+	NSPoint			pt;
 	vec3_t			dragpoint;
 	vec3_t			p1, p2;
 	float			time;
@@ -1196,9 +1196,9 @@ void ControlCallback (float dx, float dy)
 mouseDown
 ===================
 */
-- mouseDown:(NXEvent *)theEvent
+- mouseDown:(NSEvent *)theEvent
 {
-	NXPoint	pt;
+	NSPoint	pt;
 	id		ent;
 	vec3_t	p1, p2;
 	int		flags;
@@ -1348,9 +1348,9 @@ return self;
 rightMouseDown
 ===================
 */
-- rightMouseDown:(NXEvent *)theEvent
+- rightMouseDown:(NSEvent *)theEvent
 {
-	NXPoint	pt;
+	NSPoint	pt;
 	int		flags;
 		
 	pt= theEvent->location;

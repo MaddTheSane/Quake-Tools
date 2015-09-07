@@ -11,11 +11,11 @@ BOOL	timedrawing = 0;
 initFrame:
 ==================
 */
-- initFrame:(const NXRect *)frameRect
+- (id)initWithFrame:(NSRect)frameRect
 {
 	int		size;
 	
-	[super initFrame: frameRect];
+	self = [super initWithFrame: frameRect];
 	
 	cameraview_i = self;
 	
@@ -29,38 +29,34 @@ initFrame:
 	
 	move = 16;
 	
-	size = bounds.size.width * bounds.size.height;
+	size = [self bounds].size.width * [self bounds].size.height;
 	zbuffer = malloc (size*4);
 	imagebuffer = malloc (size*4);
 	
 	return self;
 }
 
-- setXYOrigin: (NXPoint *)pt
+- (void)setXYOrigin: (NSPoint)pt
 {
-	origin[0] = pt->x;
-	origin[1] = pt->y;
-	return self;
+	origin[0] = pt.x;
+	origin[1] = pt.y;
 }
 
-- setZOrigin: (float)pt
+- (void)setZOrigin: (float)pt
 {
 	origin[2] = pt;
-	return self;
 }
 
-- setOrigin: (vec3_t)org angle: (float)angle
+- (void)setOrigin: (vec3_t)org angle: (float)angle
 {
 	VectorCopy (org, origin);
 	ya = angle;
 	[self matrixFromAngles];
-	return self;
 }
 
-- getOrigin: (vec3_t)org
+- (void)getOrigin: (vec3_t)org
 {
 	VectorCopy (origin, org);
-	return self;
 }
 
 - (float)yawAngle
@@ -68,7 +64,7 @@ initFrame:
 	return ya;
 }
 
-- upFloor:sender
+- (IBAction)upFloor:(id)sender
 {
 	sb_floor_dir = 1;
 	sb_floor_dist = 99999;
@@ -76,15 +72,14 @@ initFrame:
 	if (sb_floor_dist == 99999)
 	{
 		qprintf ("already on top floor");
-		return self;
+		return;
 	}
 	qprintf ("up floor");
 	origin[2] += sb_floor_dist;
 	[quakeed_i updateCamera];
-	return self;
 }
 
-- downFloor: sender
+- (IBAction)downFloor:(id)sender
 {
 	sb_floor_dir = -1;
 	sb_floor_dist = -99999;
@@ -92,12 +87,11 @@ initFrame:
 	if (sb_floor_dist == -99999)
 	{
 		qprintf ("already on bottom floor");
-		return self;
+		return;
 	}
 	qprintf ("down floor");
 	origin[2] += sb_floor_dist;
 	[quakeed_i updateCamera];
-	return self;
 }
 
 /*
@@ -113,7 +107,7 @@ UI TARGETS
 homeView
 ============
 */
-- homeView: sender
+- (IBAction)homeView: sender
 {
 	xa = za = 0;
 	
@@ -122,23 +116,19 @@ homeView
 	[quakeed_i updateAll];
 
 	qprintf ("homed view angle");
-	
-	return self;
 }
 
-- drawMode: sender
+- (IBAction)drawMode: sender
 {
-	drawmode = [sender selectedCol];
+	drawmode = [sender selectedColumn];
 	[quakeed_i updateCamera];
-	return self;
 }
 
-- setDrawMode: (drawmode_t)mode
+- (void)setDrawMode: (drawmode_t)mode
 {
 	drawmode = mode;
-	[mode_radio_i selectCellAt:0: mode];
+	[mode_radio_i selectCellAtRow:0 column:mode];
 	[quakeed_i updateCamera];
-	return self;
 }
 
 /*
@@ -378,8 +368,8 @@ drawSolid
 	VectorCopy (matrix[1], r_matrix[1]);
 	VectorCopy (matrix[2], r_matrix[2]);
 	
-	r_width = bounds.size.width;
-	r_height = bounds.size.height;
+	r_width = [self bounds].size.width;
+	r_height = [self bounds].size.height;
 	r_picbuffer = imagebuffer;
 	r_zbuffer = zbuffer;
 
@@ -396,7 +386,7 @@ drawSolid
 //
 // display the output
 //
-	[[self window] setBackingType:NX_RETAINED];
+	//[[self window] setBackingType:NX_RETAINED];
 	
 	planes[0] = (unsigned char *)imagebuffer;
 	NXDrawBitmap(
@@ -409,7 +399,7 @@ drawSolid
 		r_width*4,
 		NO,
 		NO,
-		NX_RGBColorSpace,
+		NSRGBColorSpace,
 		planes
 	);
 
@@ -427,7 +417,7 @@ drawSolid
 drawWire
 ===================
 */
-- drawWire: (const NXRect *)rect
+- drawWire: (const NSRect *)rect
 {
 // copy current info to globals for the C callbacks	
 	mid_x = bounds.size.width / 2;
@@ -461,7 +451,7 @@ drawWire
 drawSelf
 ===================
 */
-- drawSelf:(const NXRect *)rects :(int)rectCount
+- drawSelf:(const NSRect *)rects :(int)rectCount
 {
 	static float	drawtime;	// static to shut up compiler warning
 
@@ -516,7 +506,7 @@ XYDrawSelf
 ZDrawSelf
 =============
 */
-- ZDrawSelf
+- (void)ZDrawSelf
 {
 	PSsetrgbcolor (0,0,1.0);
 	PSsetlinewidth (0.15);
@@ -535,8 +525,6 @@ ZDrawSelf
 	PSrlineto (0,-54);
 
 	PSstroke ();
-
-	return self;
 }
 
 
@@ -553,12 +541,12 @@ ZDrawSelf
 modalMoveLoop
 ================
 */
-- modalMoveLoop: (NXPoint *)basept :(vec3_t)movemod : converter
+- modalMoveLoop: (NSPoint *)basept :(vec3_t)movemod : converter
 {
 	vec3_t		originbase;
-	NXEvent		*event;
-	NXPoint		newpt;
-//	NXPoint		brushpt;
+	NSEvent		*event;
+	NSPoint		newpt;
+//	NSPoint		brushpt;
 	vec3_t		delta;
 //	id			ent;
 	int			i;
@@ -615,7 +603,7 @@ drawentry:
 		[quakeed_i newinstance];
 		[self display];
 		
-		event = [NXApp getNextEvent: NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
+		event = [NSApp getNextEvent: NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
 			| NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK | NX_APPDEFINEDMASK];
 	
 		if (event->type == NX_KEYDOWN)
@@ -637,7 +625,7 @@ drawentry:
 XYmouseDown
 ===============
 */
-- (BOOL)XYmouseDown: (NXPoint *)pt flags:(int)flags	// return YES if brush handled
+- (BOOL)XYmouseDown: (NSPoint *)pt flags:(int)flags	// return YES if brush handled
 {	
 	vec3_t		movemod;
 	
@@ -671,7 +659,7 @@ XYmouseDown
 ZmouseDown
 ===============
 */
-- (BOOL)ZmouseDown: (NXPoint *)pt flags:(int)flags	// return YES if brush handled
+- (BOOL)ZmouseDown: (NSPoint *)pt flags:(int)flags	// return YES if brush handled
 {	
 	vec3_t		movemod;
 	
@@ -696,11 +684,11 @@ ZmouseDown
 viewDrag:
 ===================
 */
-- viewDrag:(NXPoint *)pt
+- viewDrag:(NSPoint *)pt
 {
 	float	dx,dy;
-	NXEvent		*event;
-	NXPoint		newpt;
+	NSEvent		*event;
+	NSPoint		newpt;
 	
 //
 // modal event loop using instance drawing
@@ -728,7 +716,7 @@ drawentry:
 		[quakeed_i newinstance];
 		[self display];
 		
-		event = [NXApp getNextEvent: 
+		event = [NSApp getNextEvent: 
 			NX_KEYDOWNMASK | NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK];
 	
 		if (event->type == NX_KEYDOWN)
@@ -751,9 +739,9 @@ drawentry:
 mouseDown
 ===================
 */
-- mouseDown:(NXEvent *)theEvent
+- mouseDown:(NSEvent *)theEvent
 {
-	NXPoint			pt;
+	NSPoint			pt;
 	int				i;
 	vec3_t			p1, p2;
 	float			forward, right, up;
@@ -846,9 +834,9 @@ mouseDown
 rightMouseDown
 ===================
 */
-- rightMouseDown:(NXEvent *)theEvent
+- rightMouseDown:(NSEvent *)theEvent
 {
-	NXPoint			pt;
+	NSPoint			pt;
 	int				flags;
 		
 	pt = theEvent->location;
@@ -886,7 +874,7 @@ keyDown
 #define	KEY_DOWNARROW		0xaf
 
 
-- _keyDown: (NXEvent *)theEvent
+- _keyDown: (NSEvent *)theEvent
 {
     int	ch;
 	

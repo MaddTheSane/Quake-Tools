@@ -1,11 +1,11 @@
 
 extern	id	keypairview_i;
 
-@interface KeypairView:View
+@interface KeypairView: NSView
 {
 }
 
-- calcViewSize;
+- (void)calcViewSize;
 
 #define	SPACING		4
 #define	FONTSIZE	12

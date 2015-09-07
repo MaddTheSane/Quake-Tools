@@ -1,9 +1,11 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import "mathlib.h"
 #import "SetBrush.h"
 
-extern	id xyview_i;
+@class XYView;
+
+extern	XYView *xyview_i;
 
 #define	MINSCALE	0.125
 #define	MAXSCALE	2.0
@@ -12,7 +14,7 @@ extern	id xyview_i;
 extern	vec3_t		xy_viewnormal;		// v_forward for xy view
 extern	float		xy_viewdist;		// clip behind this plane
 
-extern	NXRect	xy_draw_rect;
+extern	NSRect	xy_draw_rect;
 
 void linestart (float r, float g, float b);
 void lineflush (void);
@@ -21,13 +23,13 @@ void linecolor (float r, float g, float b);
 void XYmoveto (vec3_t pt);
 void XYlineto (vec3_t pt);
 
-typedef enum {dr_wire, dr_flat, dr_texture} drawmode_t;
+typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
 
 
-@interface XYView :  View
+@interface XYView :  NSView
 {
-	NXRect		realbounds, newrect, combinedrect;
-	NXPoint		midpoint;
+	NSRect		realbounds, newrect, combinedrect;
+	NSPoint		midpoint;
 	int			gridsize;
 	float		scale;
 
@@ -39,24 +41,23 @@ typedef enum {dr_wire, dr_flat, dr_texture} drawmode_t;
 	drawmode_t	drawmode;
 
 // UI links
-	id			mode_radio_i;	
+	IBOutlet NSMatrix		*mode_radio_i;
 }
 
 - (float)currentScale;
 
 - setModeRadio: m;
 
-- drawMode: sender;
 - setDrawMode: (drawmode_t)mode;
 
 - newSuperBounds;
-- newRealBounds: (NXRect *)nb;
+- newRealBounds: (NSRect *)nb;
 
 - addToScrollRange: (float)x :(float)y;
-- setOrigin: (NXPoint *)pt scale: (float)sc;
+- setOrigin: (NSPoint *)pt scale: (float)sc;
 - centerOn: (vec3_t)org;
 
-- drawMode: sender;
+- (IBAction)drawMode:(id) sender;
 
 - superviewChanged;
 

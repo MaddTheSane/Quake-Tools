@@ -1,5 +1,5 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #include <sys/stat.h>
 
 #define BASEPATHKEY		"basepath"
@@ -17,30 +17,32 @@
 #define	SUBDIR_MAPS		"maps"
 #define SUBDIR_GFX		"gfx"
 
-extern	id project_i;
+@class Project;
 
-@interface Project:Object
+extern	Project *project_i;
+
+@interface Project: NSObject
 {
-	id	projectInfo;		// dictionary storage of project info
+	IBOutlet id	projectInfo;		// dictionary storage of project info
 
-	id	basepathinfo_i;		// outlet to base path info textfield
-	id	mapbrowse_i;		// outlet to QuakeEd Maps browser
-	id	currentmap_i;		// outlet to current map textfield
-	id	mapList;			// list of map names (Storage)
-	id	descList;			// list of map descriptions (Storage)
-	id	wadList;			// list of wad names (Storage)
+IBOutlet id	basepathinfo_i;		// outlet to base path info textfield
+IBOutlet id	mapbrowse_i;		// outlet to QuakeEd Maps browser
+IBOutlet id	currentmap_i;		// outlet to current map textfield
+IBOutlet id	mapList;			// list of map names (Storage)
+IBOutlet id	descList;			// list of map descriptions (Storage)
+IBOutlet id	wadList;			// list of wad names (Storage)
 	
-	id	pis_panel_i;		// outlet to Project Info Settings (PIS) panel
+IBOutlet id	pis_panel_i;		// outlet to Project Info Settings (PIS) panel
 
-	id	pis_basepath_i;		// outlet to PIS->base path
-	id	pis_wads_i;			// outlet to PIS->wad browser	
-	id	pis_fullvis_i;		// outlet to PIS->full vis command
-	id	pis_fastvis_i;		// outlet to PIS->fast vis command
-	id	pis_novis_i;		// outlet to PIS->no vis command
-	id	pis_relight_i;		// outlet to PIS->relight command
-	id	pis_leaktest_i;		// outlet to PIS->leak test command
+IBOutlet id	pis_basepath_i;		// outlet to PIS->base path
+IBOutlet id	pis_wads_i;			// outlet to PIS->wad browser	
+IBOutlet id	pis_fullvis_i;		// outlet to PIS->full vis command
+IBOutlet id	pis_fastvis_i;		// outlet to PIS->fast vis command
+IBOutlet id	pis_novis_i;		// outlet to PIS->no vis command
+IBOutlet id	pis_relight_i;		// outlet to PIS->relight command
+IBOutlet id	pis_leaktest_i;		// outlet to PIS->leak test command
 
-	id	BSPoutput_i;		// outlet to Text
+IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
 	
 	char	path_projectinfo[128];	// path of QE_Project file
 
@@ -66,7 +68,7 @@ extern	id project_i;
 	time_t	lastModified;	// last time project file was modified
 }
 
-- initProject;
+- (id)initProject;
 - initVars;
 
 - (char *)currentProjectFile;
@@ -74,7 +76,7 @@ extern	id project_i;
 - setTextureWad: (char *)wf;
 
 - addToOutput:(char *)string;
-- clearBspOutput:sender;
+- (IBAction)clearBspOutput:sender;
 - initProjSettings;
 - changeChar:(char)f to:(char)t in:(id)obj;
 - (int)searchForString:(char *)str in:(id)obj;
@@ -82,8 +84,10 @@ extern	id project_i;
 - parseProjectFile;		// read defaultsdatabase for project path
 - openProjectFile:(char *)path;	// called by openProject and newProject
 - openProject;
-- clickedOnMap:sender;		// called if clicked on map in browser
-- clickedOnWad:sender;		// called if clicked on wad in browser
+- (IBAction)clickedOnMap:sender;		// called if clicked on map in browser
+- (IBAction)clickedOnWad:sender;		// called if clicked on wad in browser
+
+- (IBAction)saveSettings:(id)sender;
 
 //	methods to querie the project file
 

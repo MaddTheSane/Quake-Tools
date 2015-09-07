@@ -25,7 +25,7 @@
 //
 //	Write out list file
 //
-- writeListFile:(char *)filename
+- (void)writeListFile:(char *)filename
 {
 	FILE	*fp;
 	int		i;
@@ -33,7 +33,7 @@
 	
 	fp = fopen(filename,"w+t");
 	if (fp == NULL)
-		return NULL;
+		return;
 		
 	fprintf(fp,"// Object List written by QuakeEd\n");
 
@@ -43,8 +43,6 @@
 		[obj writeBlockTo:fp];
 	}
 	fclose(fp);
-	
-	return self;
 }
 
 //

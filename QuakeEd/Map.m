@@ -13,9 +13,9 @@ FILE METHODS
 ===============================================================================
 */
 
-- init
+- (instancetype)init
 {
-	[super init];
+	self = [super init];
 	map_i = self;
 	minz = 0;
 	maxz = 80;
@@ -31,7 +31,7 @@ FILE METHODS
 	id		o, w;
 	
 	[oldselection empty];
-	w = [self objectAt: 0];
+	w = [self objectAtIndex: 0];
 	c = [w count];
 	sb_newowner = oldselection;
 	for (i=0 ; i<c ; i++)
@@ -60,7 +60,7 @@ FILE METHODS
 
 - addSelected
 {
-	int		i, c;
+	NSInteger		i, c;
 	id		n, w;
 	
 	c = [oldselection count];

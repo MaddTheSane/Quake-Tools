@@ -103,7 +103,7 @@ void CheckCmdDone(DPSTimedEntry tag, double now, void *userData)
 init
 ===============
 */
-- initContent:(const NXRect *)contentRect
+- initContent:(const NSRect *)contentRect
 style:(int)aStyle
 backing:(int)backingType
 buttonMask:(int)mask
@@ -162,7 +162,7 @@ BOOL	updatecamera;
 
 void postappdefined (void)
 {
-	NXEvent ev;
+	NSEvent ev;
 
 	if (updateinflight)
 		return;
@@ -291,16 +291,16 @@ App delegate methods
 ==============================================================================
 */
 
-- applicationDefined:(NXEvent *)theEvent
+- applicationDefined:(NSEvent *)theEvent
 {
-	NXEvent		ev, *evp;
+	NSEvent		ev, *evp;
 	
 	updateinflight = NO;
 
 //printf ("serviced\n");
 	
 // update screen	
-	evp = [NXApp peekNextEvent:-1 into:&ev];
+	evp = [NSApp peekNextEvent:-1 into:&ev];
 	if (evp)
 	{
 		postappdefined();
@@ -351,7 +351,7 @@ App delegate methods
 	[self clear: self];
 
 // go to my second monitor
-	[NXApp getScreens:&screens count:&screencount];
+	[NSApp getScreens:&screens count:&screencount];
 	if (screencount == 2)
 		[self moveTopLeftTo:0 : screens[1].screenBounds.size.height
 		screen:screens+1];
@@ -425,7 +425,7 @@ App delegate methods
 
 - centerCamera: sender
 {
-	NXRect	sbounds;
+	NSRect	sbounds;
 	
 	[[xyview_i superview] getBounds: &sbounds];
 	
@@ -440,7 +440,7 @@ App delegate methods
 
 - centerZChecker: sender
 {
-	NXRect	sbounds;
+	NSRect	sbounds;
 	
 	[[xyview_i superview] getBounds: &sbounds];
 	
@@ -528,7 +528,7 @@ applyRegion:
 
 - setXYRegion: sender
 {
-	NXRect	bounds;
+	NSRect	bounds;
 	
 // get xy size
 	[[xyview_i superview] getBounds: &bounds];
@@ -876,7 +876,7 @@ keyDown
 #define	KEY_UPARROW			0xad
 #define	KEY_DOWNARROW		0xaf
 
-- keyDown:(NXEvent *)theEvent
+- keyDown:(NSEvent *)theEvent
 {
     int		ch;
 	

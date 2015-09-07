@@ -6,17 +6,18 @@
 #include <libc.h>
 #include <errno.h>
 #include <ctype.h>
+#include <stdbool.h>
+#include <sys/types.h>
 
 #define strcmpi strcasecmp
 #define stricmp strcasecmp
 char *strupr (char *in);
 char *strlower (char *in);
-int filelength (int handle);
-int tell (int handle);
+off_t filelength (int handle);
+off_t tell (int handle);
 
 #ifndef __BYTEBOOL__
 #define __BYTEBOOL__
-typedef enum {false, true} boolean;
 typedef unsigned char byte;
 #endif
 
@@ -49,14 +50,15 @@ long 	ParseNum (char *str);
 
 short	BigShort (short l);
 short	LittleShort (short l);
-long	BigLong (long l);
-long	LittleLong (long l);
+int		BigLong (int l);
+int		LittleLong (int l);
 float	BigFloat (float l);
 float	LittleFloat (float l);
 
 extern	char		com_token[1024];
-extern	boolean		com_eof;
-
+extern	bool		com_eof;
+
+
 char *COM_Parse (char *data);
 
 #endif

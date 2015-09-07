@@ -1,12 +1,14 @@
 
 #include "qedefs.h"
 
-@implementation Entity
+@implementation Entity {
+	NSMutableArray *_internalList;
+}
 
 vec3_t bad_mins = {-8, -8, -8};
 vec3_t bad_maxs = {8, 8, 8};
 
-- createFixedBrush: (vec3_t)org
+- (void)createFixedBrush: (vec3_t)org
 {
 	vec3_t	emins, emaxs;
 	float	*v, *v2, *color;
@@ -39,13 +41,16 @@ vec3_t bad_maxs = {8, 8, 8};
 	[new setEntityColor: color];
 
 	[self addObject: new];
-	
-	return self;
 }
 
-- copyFromZone:(NXZone *)zone
+- (void)addObject:(id)obj
 {
-	id	new, nb;
+	
+}
+
+- (instancetype)copyFromZone:(NSZone *)zone
+{
+	Entity *new;
 	epair_t	*e;
 	int	i;
 		
@@ -58,11 +63,10 @@ vec3_t bad_maxs = {8, 8, 8};
 			[new setKey: e->key toValue: e->value];
 	}
 
-	for (i=0 ; i<numElements ; i++)
-	{
-		nb = [[self objectAt: i] copy];
-		[nb setParent: new];
-		[new addObject: nb];
+	for (id nb in _internalList) {
+		id newObj = [nb copy];
+		[newObj setParent:new];
+		[new addObject:newObj];
 	}
 	
 	return new;
@@ -76,7 +80,8 @@ vec3_t bad_maxs = {8, 8, 8};
 	vec3_t	min, max;
 	float	*v;
 	
-	[super init];
+	self = [super init];
+	_internalList = [[NSMutableArray alloc] init];
 	
 	modifiable = YES;
 
@@ -108,7 +113,7 @@ vec3_t bad_maxs = {8, 8, 8};
 }
 
 
-- free
+- (void)dealloc;
 {
 	epair_t	*e, *n;
 	
@@ -117,7 +122,9 @@ vec3_t bad_maxs = {8, 8, 8};
 		n = e->next;
 		free (e);
 	}
-	return [super free];
+	
+	[_internalList release];
+	[super dealloc];
 }
 
 - (BOOL)modifiable
@@ -131,19 +138,16 @@ vec3_t bad_maxs = {8, 8, 8};
 	return self;
 }
 
-- removeObject: o
+- (void)removeObject:(id) o
 {
-	o = [super removeObject: o];
-	if (numElements)
-		return o;
+	[_internalList removeObject: o];
+	if ([_internalList count])
+		return;
 // the entity is empty, so remove the entire thing
-	if ( self == [map_i objectAt: 0])
-		return o;	// never remove the world
+	if ( self == [map_i objectAtIndex: 0])
+		return;	// never remove the world
 		
 	[map_i removeObject: self];
-	[self free];
-
-	return o;
 }
 
 
@@ -273,7 +277,7 @@ If the entity does not have a "targetname" key, a unique one is generated
 - (char *)targetname
 {
 	char	*t;
-	int		i, count;
+	NSInteger i, count;
 	id		ent;
 	int		tval, maxt;
 	char	name[20];
@@ -287,7 +291,7 @@ If the entity does not have a "targetname" key, a unique one is generated
 	maxt = 0;
 	for (i=1 ; i<count ; i++)
 	{
-		ent = [map_i objectAt: i];
+		ent = [map_i objectAtIndex: i];
 		t = [ent valueForQKey: "targetname"];
 		if (!t || t[0] != 't')
 			continue;
@@ -397,7 +401,7 @@ int	nument;
 	c = [self count];
 	for (i=0 ; i<c ; i++)
 	{
-		brush = [self objectAt: i];
+		brush = [self objectAtIndex: i];
 		[brush setEntityColor: color];
 	}
 	

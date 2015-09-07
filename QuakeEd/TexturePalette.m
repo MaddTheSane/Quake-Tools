@@ -89,7 +89,7 @@ TEX_ImageFromMiptex
 */
 void TEX_ImageFromMiptex (miptex_t *qtex)
 {
-	NXBitmapImageRep	*bm;
+	NSBitmapImageRep	*bm;
 	byte		*source;
 	unsigned	*dest;
 	int			width, height, i, count;
@@ -99,19 +99,19 @@ void TEX_ImageFromMiptex (miptex_t *qtex)
 	width = LittleLong(qtex->width);
 	height = LittleLong(qtex->height);
 
-	bm = [[NXBitmapImageRep alloc]	
-			initData:		NULL 
+	bm = [[NSBitmapImageRep alloc]
+			initWithBitmapDataPlanes:		NULL
 			pixelsWide:		width 
 			pixelsHigh:		height 
 			bitsPerSample:	8 
 			samplesPerPixel:3 
 			hasAlpha:		NO
 			isPlanar:		NO 
-			colorSpace:		NX_RGBColorSpace 
+			colorSpaceName:	NSDeviceRGBColorSpace
 			bytesPerRow:	width*4 
 			bitsPerPixel:	32];
 	
-	dest = (unsigned *)[bm data];
+	dest = (unsigned *)[bm bitmapData];
 	count = width*height;
 	source = (byte *)qtex + LittleLong(qtex->offsets[0]);
 	
@@ -184,7 +184,7 @@ void	TEX_InitFromWad (char *path)
 	
 // free any textures
 	for (i=0 ; i<tex_count ; i++)
-		[qtextures[i].rep free];
+		[qtextures[i].rep release];
 	tex_count = 0;
 
 // try and use the cached wadfile	
@@ -372,10 +372,10 @@ qtexture_t *TEX_ForName (char *name)
 	texpal_t *t;
 	int		y;
 	id		view;
-	NXRect	b;
+	NSRect	b;
 	int		maxwidth;
 	int		maxheight;
-	NXPoint	pt;
+	NSPoint	pt;
 	
 	max = [textureList_i count];
 	y = 0;
@@ -408,7 +408,7 @@ qtexture_t *TEX_ForName (char *name)
 	viewHeight = y + TEX_SPACING;
 	[textureView_i sizeTo:viewWidth :viewHeight];
 	pt.x = pt.y = 0;
-	[textureView_i scrollPoint:&pt];
+	[textureView_i scrollPoint:pt];
 
 	return self;
 }
@@ -454,7 +454,7 @@ qtexture_t *TEX_ForName (char *name)
 - setSelectedTexture:(int)which
 {
 	texpal_t *t;
-	NXRect	r;
+	NSRect	r;
 	char	string[16];
 
 // wipe the fields

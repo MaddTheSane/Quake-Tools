@@ -1,12 +1,12 @@
 
 
-@interface TextureView:View
+@interface TextureView: NSView
 {
 	id	parent_i;
 	int	deselectIndex;
 }
 
-- setParent:(id)from;
-- deselect;
+- (void)setParent:(id)from;
+- (void)deselect;
 
 @end

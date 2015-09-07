@@ -15,10 +15,9 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	return self;
 }
 
-- setParent:(id)from
+- (void)setParent:(id)from
 {
 	parent_i = from;
-	return self;
 }
 
 - (BOOL)acceptsFirstMouse
@@ -26,16 +25,16 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	return YES;
 }
 
-- drawSelf:(const NXRect *)rects :(int)rectCount
+- drawSelf:(const NSRect *)rects :(int)rectCount
 {
 	int		i;
 	int		max;
-	id		list_i;
+	List	*list_i;
 	texpal_t *t;
 	int		x;
 	int		y;
-	NXPoint	p;
-	NXRect	r;
+	NSPoint	p;
+	NSRect	r;
 	int		selected;
 	
 	selected = [parent_i getSelectedTexture];
@@ -111,25 +110,24 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	return self;
 }
 
-- deselect
+- (void)deselect
 {
 	deselectIndex = [parent_i getSelectedTexture];
-	return self;
 }
 
-- mouseDown:(NXEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
-	NXPoint	loc;
+	NSPoint	loc;
 	int		i;
-	int		max;
+	NSInteger		max;
 	int		oldwindowmask;
 	texpal_t *t;
-	id		list;
-	NXRect	r;
+	List	*list;
+	NSRect	r;
 
-	oldwindowmask = [window addToEventMask:NX_LMOUSEDRAGGEDMASK];
-	loc = theEvent->location;
-	[self convertPoint:&loc	fromView:NULL];
+	//oldwindowmask = [window addToEventMask:NX_LMOUSEDRAGGEDMASK];
+	loc = theEvent.locationInWindow;
+	loc =[self convertPoint:loc fromView:NULL];
 	
 	list = [parent_i getList];
 	max = [list count];
@@ -137,7 +135,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	{
 		t = [list elementAt:i];
 		r = t->r;
-		if (NXPointInRect(&loc,&r) == YES)
+		if (NSPointInRect(loc, r) == YES)
 		{
 			[self deselect]; 
 			[parent_i	setSelectedTexture:i];
@@ -145,8 +143,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		}
 	}
 	
-	[window	setEventMask:oldwindowmask];
-	return self;
+	[[self window] setEventMask:oldwindowmask];
 }
 
 @end

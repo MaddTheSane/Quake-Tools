@@ -316,7 +316,7 @@ id	project_i;
 			, "Open Project", NULL, NULL);
 		if ([self openProject] == nil)
 			while (1)		// can't run without a project
-				[NXApp terminate: self];
+				[NSApp terminate: self];
 		return self;	
 	}
 

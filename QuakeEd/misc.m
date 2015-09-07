@@ -3,7 +3,7 @@
 
 
 char	token[MAXTOKEN];
-boolean	unget;
+bool	unget;
 char	*script_p;
 int		scriptline;
 
@@ -14,7 +14,7 @@ void	StartTokenParsing (char *data)
 	unget = false;
 }
 
-boolean GetToken (boolean crossline)
+bool GetToken (bool crossline)
 {
 	char    *token_p;
 
@@ -124,7 +124,7 @@ void Error (char *error, ...)
 	static char		string[1024];
 	
 	if (in_error)
-		[NXApp terminate: NULL];
+		[NSApp terminate: NULL];
 	in_error = YES;
 	
 	va_start (argptr,error);
@@ -134,9 +134,9 @@ void Error (char *error, ...)
 	strcat (string, "\nmap saved to "FN_CRASHSAVE);
 
 	[map_i writeMapFile: FN_CRASHSAVE useRegion: NO];
-	NXRunAlertPanel ("Error",string,NULL,NULL,NULL);
+	NSRunAlertPanel (@"Error",@"%@",NULL,NULL,NULL, @(string));
 		
-	[NXApp terminate: NULL];
+	[NSApp terminate: NULL];
 }
 
 
@@ -158,7 +158,7 @@ void CleanupName (char *in, char *out)
 }
 
 
-void PrintRect (NXRect *r)
+void PrintRect (NSRect *r)
 {
 	printf ("(%4.0f, %4.0f) + (%4.0f, %4.0f) = (%4.0f,%4.0f)\n"
 		,r->origin.x,r->origin.y,
@@ -174,7 +174,7 @@ FileTime
 returns -1 if not present
 ============
 */
-int	FileTime (char *path)
+time_t	FileTime (char *path)
 {
 	struct	stat	buf;
 	
@@ -245,7 +245,7 @@ Copies a more recent net file to the local drive
 */
 void Sys_UpdateFile (char *path, char *netpath)
 {
-	int		ltime, ntime;
+	time_t		ltime, ntime;
 	int		in, out, size;
 	char	*buf;
 	

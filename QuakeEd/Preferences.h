@@ -6,7 +6,7 @@ extern	float		lightaxis[3];
 // these are personal preferences saved in NeXT defaults, not project
 // parameters saved in the quake.qe_project file
 
-@interface Preferences:Object
+@interface Preferences: NSObject
 {
 	id		bspSound_i;			// actual sound object
 
@@ -38,7 +38,7 @@ extern	float		lightaxis[3];
 	id	zlight_i;				// Z-side lighting	
 }
 
-- readDefaults;
+- (void)readDefaults;
 
 //
 // validate and set methods called by UI or defaults
@@ -55,9 +55,9 @@ extern	float		lightaxis[3];
 //
 // UI targets
 //
-- setBspSound:sender;			// use OpenPanel to select sound
-- setCurrentProject:sender;		// make current roject the default
-- UIChanged: sender;			// target for all checks and fields
+- (IBAction)setBspSound:(id)sender;			// use OpenPanel to select sound
+- (IBAction)setCurrentProject:(id)sender;		// make current roject the default
+- (IBAction)UIChanged:(id) sender;			// target for all checks and fields
 
 //
 // methods used by other objects to retreive defaults

@@ -90,9 +90,9 @@ id		inspcontrol_i;
 - changeInspectorTo:(insp_e)which
 {
 	id		newView;
-	NXRect	r;
+	NSRect	r;
 	id		cell;
-	NXRect	f;
+	NSRect	f;
 	
 	if (which == currentInspectorType)
 		return self;

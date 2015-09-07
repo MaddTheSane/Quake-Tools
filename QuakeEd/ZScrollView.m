@@ -10,7 +10,7 @@ Initizes a scroll view with a button at it's lower right corner
 ====================
 */
 
-- initFrame:(const NXRect *)frameRect button1:b1
+- initFrame:(const NSRect *)frameRect button1:b1
 {
 	[super  initFrame: frameRect];	
 
@@ -37,7 +37,7 @@ Adjust the size for the pop up scale menu
 
 - tile
 {
-	NXRect	scrollerframe;
+	NSRect	scrollerframe;
 	
 	[super tile];
 	[hScroller getFrame: &scrollerframe];
