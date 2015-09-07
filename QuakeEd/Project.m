@@ -388,8 +388,8 @@ id	project_i;
 //
 - (int)searchForString:(char *)str in:(id)obj
 {
-	int	i;
-	int	max;
+	NSInteger	i;
+	NSInteger	max;
 	char	*s;
 
 	max = [obj count];

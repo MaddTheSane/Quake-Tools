@@ -8,16 +8,14 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 */
 
 @implementation TextureView
-
+@synthesize parent = parent_i;
 - init
 {
-	deselectIndex = -1;
-	return self;
-}
+	if (self = [super init]) {
+		deselectIndex = -1;
 
-- (void)setParent:(id)from
-{
-	parent_i = from;
+	}
+	return self;
 }
 
 - (BOOL)acceptsFirstMouse
@@ -25,7 +23,8 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	return YES;
 }
 
-- drawSelf:(const NSRect *)rects :(int)rectCount
+
+-(void)drawRect:(NSRect)dirtyRect
 {
 	int		i;
 	int		max;
@@ -39,15 +38,15 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	
 	selected = [parent_i getSelectedTexture];
 	list_i = [parent_i getList];
+	NSBezierPath *path = [NSBezierPath bezierPath];
 	PSselectfont("Helvetica-Medium",FONTSIZE);
 	PSrotate(0);
 	
-	PSsetgray(NX_LTGRAY);
-	PSrectfill(rects->origin.x, rects->origin.y, 
-		rects->size.width, rects->size.height);
+	[[NSColor lightGrayColor] set];
+	NSRectFill(dirtyRect);
 
 	if (!list_i)		// WADfile didn't init
-		return self;
+		return;
 
 	if (deselectIndex != -1)
 	{
@@ -106,8 +105,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 			PSshow(t->name);
 		}
 	}
-	PSstroke();
-	return self;
+	[path stroke];
 }
 
 - (void)deselect

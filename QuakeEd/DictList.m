@@ -10,14 +10,13 @@
 {
 	id	d;
 	
-	[super init];
-	do
-	{
+	self = [super init];
+	do {
 		d = [(Dict *)[Dict alloc] initFromFile:fp];
 		if (d != NULL)
 			[self addObject:d];
+		[d release];
 	} while(d != NULL);
-	[d free];
 	
 	return self;
 }

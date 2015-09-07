@@ -2,10 +2,10 @@
 
 @interface ZScrollView : NSScrollView
 {
-	id	button1;
+	NSButton	*button1;
 }
 
 - (instancetype)initWithFrame:(NSRect)frameRect button1: b1;
-- tile;
+- (void)tile;
 
 @end

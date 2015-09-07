@@ -1,6 +1,7 @@
+#include <tgmath.h>
 #import "qedefs.h"
 
-id xyview_i;
+XYView *xyview_i;
 
 id	scalemenu_i, gridmenu_i, scrollview_i, gridbutton_i, scalebutton_i;
 
@@ -14,12 +15,12 @@ float		xy_viewdist;		// clip behind this plane
 initFrame:
 ==================
 */
-- initFrame:(const NSRect *)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
-	[super initFrame:frameRect];
+	self = [super initWithFrame:frameRect];
 	[self allocateGState];
 	
-	NXSetRect (&realbounds, 0,0,0,0);
+	realbounds = NSMakeRect(0, 0, 0, 0);
 	
 	gridsize = 16;
 	scale = 1.0;
@@ -31,7 +32,7 @@ initFrame:
 //		
 // initialize the pop up menus
 //
-	scalemenu_i = [[PopUpList alloc] init];
+	scalemenu_i = [[NSPopUpButton alloc] init];
 	[scalemenu_i setTarget: self];
 	[scalemenu_i setAction: @selector(scaleMenuTarget:)];
 
@@ -47,7 +48,7 @@ initFrame:
 	scalebutton_i = NXCreatePopUpListButton(scalemenu_i);
 
 
-	gridmenu_i = [[PopUpList alloc] init];
+	gridmenu_i = [[NSPopUpButton alloc] init];
 	[gridmenu_i setTarget: self];
 	[gridmenu_i setAction: @selector(gridMenuTarget:)];
 
@@ -59,23 +60,23 @@ initFrame:
 	[gridmenu_i addItem: "grid 32"];
 	[gridmenu_i addItem: "grid 64"];
 	
-	[[gridmenu_i itemList] selectCellAt: 4 : 0];
+	[[gridmenu_i itemList] selectCellAtRow:4 column:0];
 	
 	gridbutton_i = NXCreatePopUpListButton(gridmenu_i);
 
 // initialize the scroll view
 	scrollview_i = [[PopScrollView alloc] 
-		initFrame: 		frameRect 
+		initWithFrame: 		frameRect
 		button1: 		scalebutton_i
 		button2:		gridbutton_i
 	];
 	[scrollview_i setLineScroll: 64];
-	[scrollview_i setAutosizing: NX_WIDTHSIZABLE | NX_HEIGHTSIZABLE];
+	[scrollview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	
 // link objects together
-	[[scrollview_i setDocView: self] free];
+	[scrollview_i setDocumentView: self];
 	
-	return scrollview_i;
+	return self;
 
 }
 
@@ -84,28 +85,27 @@ initFrame:
 	return YES;
 }
 
-- setModeRadio: m
+@synthesize modeRadio = mode_radio_i;
+
+- (void)setModeRadio: m
 { // this should be set from IB, but because I toss myself in a popscrollview
 // the connection gets lost
 	mode_radio_i = m;
 	[mode_radio_i setTarget: self];
 	[mode_radio_i setAction: @selector(drawMode:)];
-	return self;
 }
 
-- drawMode: sender
+- (IBAction)drawMode: sender
 {
-	drawmode = [sender selectedCol];
+	drawmode = [sender selectedColumn];
 	[quakeed_i updateXY];
-	return self;
 }
 
-- setDrawMode: (drawmode_t)mode
+- (void)setDrawMode: (drawmode_t)mode
 {
 	drawmode = mode;
-	[mode_radio_i selectCellAt:0: mode];
+	[mode_radio_i selectCellAtRow:0 column:mode];
 	[quakeed_i updateXY];
-	return self;
 }
 
 
@@ -129,6 +129,7 @@ setOrigin:scale:
 //
 	scale = sc;
 	
+	sframe = newbounds = [[self superview] frame];
 	[superview getFrame: &sframe];
 	[superview getFrame: &newbounds];
 	newbounds.origin = *pt;
@@ -171,7 +172,7 @@ setOrigin:scale:
 	NSRect	sbounds;
 	NSPoint	mid, delta;
 	
-	[[xyview_i superview] getBounds: &sbounds];
+	sbounds = [[xyview_i superview] bounds];
 	
 	mid.x = sbounds.origin.x + sbounds.size.width/2;
 	mid.y = sbounds.origin.y + sbounds.size.height/2;
@@ -195,9 +196,8 @@ When superview is resized
 */
 - newSuperBounds
 {
-	NSRect	r;
+	NSRect	r = [self superview].bounds;
 	
-	[superview getBounds: &r];
 	[self newRealBounds: &r];
 	
 	return self;
@@ -212,17 +212,17 @@ Should only change the scroll bars, not cause any redraws.
 If realbounds has shrunk, nothing will change.
 ===================
 */
-- newRealBounds: (NSRect *)nb
+- newRealBounds: (NSRect)nb
 {
 	NSRect		sbounds;
 	
-	realbounds = *nb;
+	realbounds = nb;
 	
 //
 // calculate the area visible in the cliprect
 //
-	[superview getBounds: &sbounds];
-	NXUnionRect (nb, &sbounds);
+	sbounds = [self superview].bounds;
+	sbounds = NSUnionRect(nb, sbounds);
 
 //
 // size this view
@@ -235,11 +235,11 @@ If realbounds has shrunk, nothing will change.
 	[self moveTo: sbounds.origin.x : sbounds.origin.y];
 	[self suspendNotifyAncestorWhenFrameChanged:NO];
 
-	[scrollview_i reflectScroll: superview];
+	[scrollview_i reflectScroll: [self superview]];
 	[quakeed_i reenableDisplay];
 	
-	[[scrollview_i horizScroller] display];
-	[[scrollview_i vertScroller] display];
+	[[scrollview_i horizontalScroller] display];
+	[[scrollview_i verticalScroller] display];
 	
 	return self;
 }
@@ -253,7 +253,7 @@ Called when the scaler popup on the window is used
 ====================
 */
 
-- scaleMenuTarget: sender
+- (IBAction)scaleMenuTarget: sender
 {
 	char	const	*item;
 	NSRect		visrect, sframe;
@@ -372,13 +372,13 @@ Called when the scaler popup on the window is used
 ====================
 */
 
-- gridMenuTarget: sender
+- (IBAction)gridMenuTarget: sender
 {
-	char	const	*item;
+	NSString	*item;
 	int			grid;
 	
 	item = [[sender selectedCell] title];
-	sscanf (item,"grid %d",&grid);
+	sscanf ([item UTF8String],"grid %d",&grid);
 
 	if (grid == gridsize)
 		return NULL;

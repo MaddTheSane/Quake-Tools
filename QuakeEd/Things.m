@@ -7,7 +7,7 @@ id	things_i;
 
 - init
 {
-	[super init];
+	self = [super init];
 
 	things_i = self;
 	lastSelected = 0;
@@ -27,9 +27,9 @@ id	things_i;
 }
 
 
-- initEntities
+- (void)initEntities
 {	
-	char	*path;
+	NSString	*path;
 
 	path = [project_i getProgDirectory];
 
@@ -39,14 +39,12 @@ id	things_i;
 
 	[self loadEntityComment:[entity_classes_i objectAt:lastSelected]];
 	[entity_browser_i loadColumnZero];
-	[[entity_browser_i matrixInColumn:0] selectCellAt:lastSelected :0];
+	[[entity_browser_i matrixInColumn:0] selectCellAtRow:lastSelected column:0];
 
 	[entity_browser_i setDoubleAction: @selector(doubleClickEntity:)];
-	
-	return self;
 }
 
-- selectEntity: sender
+- (IBAction)selectEntity: sender
 {
 	id		matr;
 	
@@ -54,15 +52,12 @@ id	things_i;
 	lastSelected = [matr selectedRow];
 	[self loadEntityComment:[entity_classes_i objectAt:lastSelected]];
 	[quakeed_i makeFirstResponder: quakeed_i];
-	
-	return self;
 }
 
-- doubleClickEntity: sender
+- (IBAction)doubleClickEntity: sender
 {
 	[map_i makeEntity: sender];
 	[quakeed_i makeFirstResponder: quakeed_i];
-	return self;
 }
 
 - (char *)spawnName
@@ -74,7 +69,7 @@ id	things_i;
 //
 //	Flush entity classes & reload them!
 //
-- reloadEntityClasses: sender
+- (IBAction)reloadEntityClasses: sender
 {
 	EntityClass *ent;
 	char	*path;
@@ -101,32 +96,28 @@ id	things_i;
 	[[entity_browser_i matrixInColumn:0] selectCellAt:lastSelected :0];
 
 	[self newCurrentEntity];	// in case flags changed
-	
-	return self;
 }
 
 
-- selectClass: (char *)class
+- (IBAction)selectClass: (char *)class
 {
 	id		classent;
 		
 	classent = [entity_classes_i classForName:class];
 	if (!classent)
-		return self;
+		return;
 	lastSelected = [entity_classes_i indexOf: classent];
 	
 	if (lastSelected < 0)
 		lastSelected = 0;
 		
 	[self loadEntityComment:classent];
-	[[entity_browser_i matrixInColumn:0] selectCellAt:lastSelected :0];
-	[[entity_browser_i matrixInColumn:0] scrollCellToVisible:lastSelected :0];
-
-	return self;
+	[[entity_browser_i matrixInColumn:0] selectCellAtRow:lastSelected column:0];
+	[[entity_browser_i matrixInColumn:0] scrollCellToVisibleAtRow:lastSelected column:0];
 }
 
 
-- newCurrentEntity
+- (void)newCurrentEntity
 {
 	id		ent, classent, cell;
 	char	*classname;
@@ -149,7 +140,7 @@ id	things_i;
 	for (r=0 ; r<4 ; r++)
 		for (c=0 ; c<3 ; c++)
 		{
-			cell = [flags_i cellAt: r : c];
+			cell = [flags_i cellAtRow:r column:c];
 			if (c < 2)
 			{
 				flagname = [classent flagName: c*4 + r];
@@ -167,7 +158,6 @@ id	things_i;
 	[keypairview_i display];
 	
 	[quakeed_i makeFirstResponder: quakeed_i];
-	return self;
 }
 
 //
@@ -175,26 +165,25 @@ id	things_i;
 //
 - setSelectedKey:(epair_t *)ep;
 {
-	[keyInput_i setStringValue:ep->key];
-	[valueInput_i setStringValue:ep->value];
+	[keyInput_i setStringValue:@(ep->key)];
+	[valueInput_i setStringValue:@(ep->value)];
 	[valueInput_i	selectText:self];
 	return self;
 }
 
-- clearInputs
+- (void)clearInputs
 {
 //	[keyInput_i setStringValue: ""];
 //	[valueInput_i setStringValue: ""];
 	
 	[quakeed_i makeFirstResponder: quakeed_i];
-	return self;
 }
 
 //
 //	Action methods
 //
 
--addPair:sender
+-(IBAction)addPair:sender
 {
 	char	*key, *value;
 	
@@ -208,11 +197,9 @@ id	things_i;
 
 	[self clearInputs];
 	[quakeed_i updateXY];
-	
-	return self;
 }
 
--delPair:sender
+-(IBAction)delPair:sender
 {
 	[quakeed_i makeFirstResponder: quakeed_i];
 
@@ -224,39 +211,36 @@ id	things_i;
 	[self clearInputs];
 
 	[quakeed_i updateXY];
-
-	return self;
 }
 
 
 //
 //	Set the key/value fields to "angle <button value>"
 //
-- setAngle:sender
+- (IBAction)setAngle:sender
 {
-	const char *title;
-	char	value[10];
+	NSString	*title;
+	NSString	*value;
 	
 	title = [[sender selectedCell] title];
-	if (!strcmp(title,"Up"))
-		strcpy (value, "-1");
-	else if (!strcmp(title,"Dn"))
-		strcpy (value, "-2");
+	if (![title isEqualToString:@"Up"])
+		value = @"-1";
+	else if (![title isEqualToString:@"Dn"])
+		value = @"-2";
 	else
-		strcpy (value, title);
+		value = title;
+		//strcpy (value, title);
 	
-	[keyInput_i setStringValue:"angle"];
+	[keyInput_i setStringValue:@"angle"];
 	[valueInput_i setStringValue:value];
 	[self addPair:NULL];
 	
 	[self clearInputs];
 
 	[quakeed_i updateXY];
-	
-	return self;
 }
 
-- setFlags:sender
+- (IBAction)setFlags:sender
 {
 	int		flags;
 	int		r, c, i;
@@ -269,7 +253,7 @@ id	things_i;
 	for (r=0 ; r<4 ; r++)
 		for (c=0 ; c<3 ; c++)
 		{
-			cell = [flags_i cellAt: r : c];
+			cell = [flags_i cellAtRow:r column:c];
 			i = ([cell intValue] > 0);
 			flags |= (i<< ((c*4)+r));
 		}
@@ -284,8 +268,6 @@ id	things_i;
 	
 	[keypairview_i calcViewSize];
 	[keypairview_i display];
-
-	return self;
 }
 
 
@@ -293,12 +275,12 @@ id	things_i;
 //	Fill the Entity browser
 //	(Delegate method - delegated in Interface Builder)
 //
-- (int)browser:sender fillMatrix:matrix inColumn:(int)column
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(NSInteger)column inMatrix:(NSMatrix *)matrix;
 {
-	id		cell;
-	int		max;
-	int		i;
-	id		object;
+	id			cell;
+	NSInteger	max;
+	int			i;
+	id			object;
 	
 	max = [entity_classes_i count];
 	i = 0;
@@ -306,12 +288,11 @@ id	things_i;
 	{
 		object = [entity_classes_i objectAt:i];
 		[matrix addRow];
-		cell = [matrix cellAt:i++ :0];
+		cell = [matrix cellAtRow:i++ column:0];
 		[cell setStringValue:[object classname]];
 		[cell setLeaf:YES];
 		[cell setLoaded:YES];
 	}
-	return i;
 }
 
 @end

@@ -4,8 +4,7 @@
 #import "SetBrush.h"
 
 @class XYView;
-
-extern	XYView *xyview_i;
+extern XYView *xyview_i;
 
 #define	MINSCALE	0.125
 #define	MAXSCALE	2.0
@@ -43,10 +42,11 @@ typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
 // UI links
 	IBOutlet NSMatrix		*mode_radio_i;
 }
+@property (nonatomic, assign) NSMatrix *modeRadio;
 
 - (float)currentScale;
 
-- setModeRadio: m;
+//- setModeRadio: m;
 
 - setDrawMode: (drawmode_t)mode;
 

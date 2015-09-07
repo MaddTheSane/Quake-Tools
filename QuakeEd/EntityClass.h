@@ -18,7 +18,7 @@ typedef enum {esize_model, esize_fixed} esize_t;
 
 - (id)initFromText: (char *)text;
 - (char *)classname;
-- (esize_t)esize;
+@property (readonly) esize_t esize;
 - (float *)mins;		// only for esize_fixed
 - (float *)maxs;		// only for esize_fixed
 - (float *)drawColor;
@@ -27,7 +27,8 @@ typedef enum {esize_model, esize_fixed} esize_t;
 
 @end
 
-extern	id	entity_classes_i;
+@class EntityClassList;
+extern EntityClassList *entity_classes_i;
 
 @interface EntityClassList : List
 {

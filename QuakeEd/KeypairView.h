@@ -1,5 +1,6 @@
 
-extern	id	keypairview_i;
+@class KeypairView;
+extern KeypairView *keypairview_i;
 
 @interface KeypairView: NSView
 {

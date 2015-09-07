@@ -59,29 +59,26 @@ winding_t *NewWinding (int points);
 	face_t		faces[MAX_FACES];
 }
 
-- initOwner: own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex;
-- initFromTokens: own;
+- (instancetype)initWithOwner:(id) own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex;
+- (instancetype)initFromTokens: own;
 - setMins:(float *)mins maxs:(float *)maxs;
 
-- parent;
-- setParent: (id)p;
+@property (assign) id parent;
 
 - setEntityColor: (vec3_t)color;
 
 - calcWindings;
 
-- writeToFILE: (FILE *)f region: (BOOL)reg;
+- (void)writeToFILE: (FILE *)f region: (BOOL)reg;
 
-- (BOOL)selected;
-- (BOOL)regioned;
-- setSelected: (BOOL)s;
-- setRegioned: (BOOL)s;
+@property BOOL selected;
+@property BOOL regioned;
 
 - getMins: (vec3_t)mins maxs: (vec3_t)maxs;
 
 - (BOOL)containsPoint: (vec3_t)pt;
 
-- freeWindings;
+- (void)freeWindings;
 - removeIfInvalid;
 
 extern	vec3_t	region_min, region_max;

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8187.4" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <development version="6300" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8187.4"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -55,7 +55,7 @@
                     <box title="Current Entity" id="125">
                         <rect key="frame" x="0.0" y="0.0" width="308" height="384"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="NMn-KN-ryw">
                             <rect key="frame" x="2" y="2" width="304" height="366"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -78,7 +78,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" id="87">
-                                    <rect key="frame" x="46.000000438094148" y="77" width="240" height="21"/>
+                                    <rect key="frame" x="46.000000903760629" y="77" width="240" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="453">
                                         <font key="font" size="12" name="Helvetica"/>
@@ -90,7 +90,7 @@
                                     </connections>
                                 </textField>
                                 <textField verticalHuggingPriority="750" id="77">
-                                    <rect key="frame" x="45.000000438094133" y="8" width="241" height="66"/>
+                                    <rect key="frame" x="45.000000903760657" y="8" width="241" height="66"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="454">
                                         <font key="font" size="12" name="Helvetica"/>
@@ -245,61 +245,61 @@
                                     <size key="intercellSpacing" width="4" height="4"/>
                                     <buttonCell key="prototype" type="check" title="Switch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="503">
                                         <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" size="12" name="Helvetica"/>
+                                        <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <cells>
                                         <column>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="232">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="127">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="121">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="81">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </column>
                                         <column>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="188">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" tag="1" imageScaling="proportionallyDown" inset="2" id="143">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" tag="2" imageScaling="proportionallyDown" inset="2" id="107">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="Switch" imagePosition="right" alignment="right" tag="3" imageScaling="proportionallyDown" inset="2" id="73">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </column>
                                         <column>
                                             <buttonCell type="check" title="!easy" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="174">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="!medium" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="134">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="!hard" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="96">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <buttonCell type="check" title="!deathmatch" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="65">
                                                 <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" size="12" name="Helvetica"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </column>
                                     </cells>
@@ -338,7 +338,7 @@ Entry</string>
                     <box title="New Entity" id="181">
                         <rect key="frame" x="4" y="384" width="292" height="344"/>
                         <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="A6v-oi-Qtj">
                             <rect key="frame" x="2" y="2" width="288" height="326"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -394,20 +394,20 @@ Entry</string>
                                     </textFieldCell>
                                 </textField>
                                 <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="407">
-                                    <rect key="frame" x="8" y="6" width="272" height="83"/>
+                                    <rect key="frame" x="8" y="6" width="278" height="83"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <clipView key="contentView" id="ZqP-zB-ZRK">
-                                        <rect key="frame" x="1" y="1" width="255" height="81"/>
+                                        <rect key="frame" x="1" y="1" width="261" height="81"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textView importsGraphics="NO" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="408">
-                                                <rect key="frame" x="0.0" y="0.0" width="254" height="81"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="260" height="81"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <size key="minSize" width="255" height="81"/>
+                                                <size key="minSize" width="261" height="81"/>
                                                 <size key="maxSize" width="272" height="10000000"/>
                                                 <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <size key="minSize" width="255" height="81"/>
+                                                <size key="minSize" width="261" height="81"/>
                                                 <size key="maxSize" width="272" height="10000000"/>
                                             </textView>
                                         </subviews>
@@ -418,7 +418,7 @@ Entry</string>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="513">
-                                        <rect key="frame" x="256" y="1" width="15" height="81"/>
+                                        <rect key="frame" x="262" y="1" width="15" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
@@ -462,11 +462,11 @@ Entry</string>
                         </connections>
                     </textField>
                     <button verticalHuggingPriority="750" id="171">
-                        <rect key="frame" x="249" y="241" width="40" height="24"/>
+                        <rect key="frame" x="223" y="226" width="73" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Set..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="414">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="12" name="Helvetica"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="setBspSound:" target="5" id="273"/>
@@ -486,7 +486,7 @@ Entry</string>
                     <box title="Camera Lighting" id="88">
                         <rect key="frame" x="83" y="46" width="117" height="90"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="r06-Mo-chA">
                             <rect key="frame" x="2" y="2" width="113" height="72"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -581,7 +581,7 @@ Entry</string>
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" id="64">
-                        <rect key="frame" x="232" y="336" width="56" height="24"/>
+                        <rect key="frame" x="216" y="327" width="78" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="current" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="410">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -611,7 +611,7 @@ Entry</string>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView importsGraphics="NO" baseWritingDirection="leftToRight" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="1DX-IE-v0P">
-                                    <rect key="frame" x="0.0" y="0.0" width="241" height="3547"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="241" height="3231"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <size key="minSize" width="241" height="653"/>
@@ -3164,7 +3164,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="24">
                         <rect key="frame" x="12" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="419">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" inset="2" id="419">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3175,7 +3175,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="208">
                         <rect key="frame" x="33" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="438">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" inset="2" id="438">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3228,7 +3228,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="197">
                         <rect key="frame" x="60" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="437">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" inset="2" id="437">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3239,7 +3239,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="176">
                         <rect key="frame" x="81" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="434">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" inset="2" id="434">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3282,7 +3282,7 @@ Obscure commands are entered by typing the command into the command field (under
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="In Use" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="418">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="12" name="Helvetica"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="onlyShowMapTextures:" target="173" id="384"/>
@@ -3291,7 +3291,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="136">
                         <rect key="frame" x="109" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="428">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" inset="2" id="428">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3302,7 +3302,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="53">
                         <rect key="frame" x="130" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="421">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" inset="2" id="421">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3355,7 +3355,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="170">
                         <rect key="frame" x="157" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="433">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" inset="2" id="433">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3366,7 +3366,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="152">
                         <rect key="frame" x="178" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="430">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" inset="2" id="430">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3398,7 +3398,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="80">
                         <rect key="frame" x="205" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="422">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="UpArrow" imagePosition="above" alignment="center" inset="2" id="422">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3409,7 +3409,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <button verticalHuggingPriority="750" id="221">
                         <rect key="frame" x="226" y="28" width="19" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="440">
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="DownArrow" imagePosition="above" alignment="center" inset="2" id="440">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="12" name="Helvetica"/>
                         </buttonCell>
@@ -3422,7 +3422,7 @@ Obscure commands are entered by typing the command into the command field (under
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Clear" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="436">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="12" name="Helvetica"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="clearTexinfo:" target="173" id="396"/>
@@ -3612,7 +3612,7 @@ Obscure commands are entered by typing the command into the command field (under
             <rect key="contentRect" x="113" y="18" width="1022" height="736"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
             <view key="contentView" id="200">
-                <rect key="frame" x="1" y="9" width="1022" height="736"/>
+                <rect key="frame" x="0.0" y="0.0" width="1022" height="736"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView id="179" customClass="CameraView">
@@ -3633,7 +3633,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="Flip/Rotate" id="133">
                         <rect key="frame" x="323" y="632" width="101" height="104"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="sVu-iS-2Zm">
                             <rect key="frame" x="2" y="2" width="97" height="86"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -3741,7 +3741,7 @@ Obscure commands are entered by typing the command into the command field (under
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Show coordinates" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="444">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="12" name="Helvetica"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="updateAll:" target="166" id="354"/>
@@ -3803,7 +3803,7 @@ Obscure commands are entered by typing the command into the command field (under
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Show names" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="443">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="12" name="Helvetica"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="updateAll:" target="166" id="355"/>
@@ -3814,7 +3814,7 @@ Obscure commands are entered by typing the command into the command field (under
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="XY look up" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="447">
                             <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" size="12" name="Helvetica"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="changeXYLookUp:" target="166" id="356"/>
@@ -3846,7 +3846,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="Camera" id="156">
                         <rect key="frame" x="428" y="697" width="164" height="39"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="aPV-IA-d4q">
                             <rect key="frame" x="2" y="2" width="160" height="21"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -3893,7 +3893,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="XY" id="194">
                         <rect key="frame" x="428" y="657" width="164" height="39"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="vP6-lr-bsN">
                             <rect key="frame" x="2" y="2" width="160" height="21"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -3931,7 +3931,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="Entities" id="58">
                         <rect key="frame" x="326" y="589" width="90" height="43"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="kZy-Nd-tbi">
                             <rect key="frame" x="2" y="2" width="86" height="25"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -3953,7 +3953,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="Brushes" id="117">
                         <rect key="frame" x="326" y="541" width="90" height="43"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="cG7-It-6x8">
                             <rect key="frame" x="2" y="2" width="86" height="25"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -3975,7 +3975,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="Region" id="216">
                         <rect key="frame" x="426" y="569" width="291" height="86"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="RiZ-4X-CJ6">
                             <rect key="frame" x="2" y="2" width="287" height="68"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -3984,7 +3984,7 @@ Obscure commands are entered by typing the command into the command field (under
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <buttonCell key="cell" type="check" title="Active" imagePosition="right" alignment="right" imageScaling="proportionallyDown" inset="2" id="482">
                                         <behavior key="behavior" pushIn="YES" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" size="12" name="Helvetica"/>
+                                        <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <connections>
                                         <action selector="applyRegion:" target="166" id="326"/>
@@ -4198,7 +4198,7 @@ Obscure commands are entered by typing the command into the command field (under
                     <box title="BSP commadns" id="52">
                         <rect key="frame" x="7" y="2" width="289" height="302"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
-                        <view key="contentView">
+                        <view key="contentView" id="ts8-k8-7bo">
                             <rect key="frame" x="2" y="2" width="285" height="284"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>

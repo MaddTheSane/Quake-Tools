@@ -73,17 +73,17 @@ IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
 
 - (char *)currentProjectFile;
 
-- setTextureWad: (char *)wf;
+- (void)setTextureWad: (char *)wf;
 
-- addToOutput:(char *)string;
+- (void)addToOutput:(char *)string;
 - (IBAction)clearBspOutput:sender;
 - initProjSettings;
 - changeChar:(char)f to:(char)t in:(id)obj;
 - (int)searchForString:(char *)str in:(id)obj;
 
-- parseProjectFile;		// read defaultsdatabase for project path
-- openProjectFile:(char *)path;	// called by openProject and newProject
-- openProject;
+- (void)parseProjectFile;		// read defaultsdatabase for project path
+- (void)openProjectFile:(char *)path;	// called by openProject and newProject
+- (void)openProject;
 - (IBAction)clickedOnMap:sender;		// called if clicked on map in browser
 - (IBAction)clickedOnWad:sender;		// called if clicked on wad in browser
 

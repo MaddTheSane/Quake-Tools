@@ -94,12 +94,9 @@ FILE METHODS
 	return self;
 }
 
-- currentEntity
-{
-	return currentEntity;
-}
+@synthesize currentEntity;
 
-- setCurrentEntity: ent
+- (void)setCurrentEntity: ent
 {
 	id	old;
 	
@@ -110,8 +107,6 @@ FILE METHODS
 		[things_i newCurrentEntity];	// update inspector
 		[inspcontrol_i changeInspectorTo:i_things];
 	}
-	
-	return self;
 }
 
 - (float)currentMinZ
@@ -123,11 +118,10 @@ FILE METHODS
 	return minz;
 }
 
-- setCurrentMinZ: (float)m
+- (void)setCurrentMinZ: (float)m
 {
 	if (m > -2048)
 		minz = m;
-	return self;
 }
 
 - (float)currentMaxZ
@@ -144,11 +138,10 @@ FILE METHODS
 	return maxz;
 }
 
-- setCurrentMaxZ: (float)m
+- (void)setCurrentMaxZ: (float)m
 {
 	if (m < 2048)
 		maxz = m;
-	return self;
 }
 
 - removeObject: o
@@ -192,12 +185,10 @@ FILE METHODS
 	return num;
 }
 
-- selectedBrush
+- (SetBrush*)selectedBrush
 {
-	int		i, c;
-	int		num;
+	NSInteger	i, c;
 	
-	num = 0;
 	c = [currentEntity count];
 	for (i=0 ; i<c ; i++)
 		if ( [[currentEntity objectAt: i] selected] )
@@ -382,13 +373,13 @@ If ef is true, any entity brush along the ray will be selected in preference
 to intervening world brushes
 =================
 */
-- selectRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)ef
+- (void)selectRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)ef
 {
-	int		i, j, c, c2;
-	id		ent, bestent;
-	id		brush, bestbrush;
-	int		face, bestface;
-	float	time, besttime;
+	NSInteger	i, j, c, c2;
+	id			ent, bestent;
+	id			brush, bestbrush;
+	int			face, bestface;
+	float		time, besttime;
 	texturedef_t	*td;
 	
 	bestent = nil;
@@ -419,13 +410,13 @@ to intervening world brushes
 	if (besttime == 99999)
 	{
 		qprintf ("trace missed");
-		return self;
+		return;
 	}
 
 	if ( [bestbrush regioned] )
 	{
 		qprintf ("WANRING: clicked on regioned brush");
-		return self;
+		return;
 	}
 	
 	if (bestent != currentEntity)
@@ -454,8 +445,6 @@ to intervening world brushes
 
 	[quakeed_i reenableFlushWindow];
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
 /*
@@ -466,13 +455,13 @@ only checks the selected brushes
 Returns the brush hit, or nil if missed.
 =================
 */
-- grabRay: (vec3_t)p1 : (vec3_t)p2
+- (SetBrush*)grabRay: (vec3_t)p1 : (vec3_t)p2
 {
-	int		i, j, c, c2;
-	id		ent;
-	id		brush, bestbrush;
-	int		face;
-	float	time, besttime;
+	NSInteger	i, j, c, c2;
+	id			ent;
+	id			brush, bestbrush;
+	int			face;
+	float		time, besttime;
 	
 	bestbrush = nil;
 	besttime = 99999;
@@ -506,9 +495,9 @@ Returns the brush hit, or nil if missed.
 getTextureRay
 =================
 */
-- getTextureRay: (vec3_t)p1 : (vec3_t)p2
+- (SetBrush*)getTextureRay: (vec3_t)p1 : (vec3_t)p2
 {
-	int		i, j, c, c2;
+	NSInteger	i, j, c, c2;
 	id		ent, bestent;
 	id		brush, bestbrush;
 	int		face, bestface;
@@ -545,7 +534,7 @@ getTextureRay
 	if ( ![bestent modifiable])
 	{
 		qprintf ("can't modify spawned entities");
-		return self;
+		return nil;
 	}
 	
 	td = [bestbrush texturedefForFace: bestface];
@@ -566,13 +555,13 @@ getTextureRay
 setTextureRay
 =================
 */
-- setTextureRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)allsides;
+- (void)setTextureRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)allsides;
 {
-	int		i, j, c, c2;
-	id		ent, bestent;
-	id		brush, bestbrush;
-	int		face, bestface;
-	float	time, besttime;
+	NSInteger	i, j, c, c2;
+	id			ent, bestent;
+	id			brush, bestbrush;
+	int			face, bestface;
+	float		time, besttime;
 	texturedef_t	td;
 		
 	bestent = nil;
@@ -601,19 +590,19 @@ setTextureRay
 	if (besttime == 99999)
 	{
 		qprintf ("trace missed");
-		return self;
+		return;
 	}
 
 	if ( ![bestent modifiable])
 	{
 		qprintf ("can't modify spawned entities");
-		return self;
+		return;
 	}
 	
 	if ( [bestbrush regioned] )
 	{
 		qprintf ("WANRING: clicked on regioned brush");
-		return self;
+		return;
 	}
 	
 	[texturepalette_i getTextureDef: &td];
@@ -632,8 +621,6 @@ setTextureRay
 	[quakeed_i reenableFlushWindow];
 		
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
 
@@ -645,10 +632,11 @@ OPERATIONS ON SELECTIONS
 ==============================================================================
 */
 
-- makeSelectedPerform: (SEL)sel
+- (void)makeSelectedPerform: (SEL)sel
 {
-	int	i,j, c, c2;
-	id	ent, brush;
+	NSInteger	i,j, c, c2;
+	SetBrush	*brush;
+	id ent;
 	int	total;
 	
 	total = 0;
@@ -665,20 +653,18 @@ OPERATIONS ON SELECTIONS
 			if ([brush regioned])
 				continue;
 			total++;
-			[brush perform:sel];
+			[brush performSelector:sel];
 		}
 	}
 
 //	if (!total)
 //		qprintf ("nothing selected");
-		
-	return self;	
 }
 
-- makeUnselectedPerform: (SEL)sel
+- (void)makeUnselectedPerform: (SEL)sel
 {
-	int	i,j, c, c2;
-	id	ent, brush;
+	NSInteger	i,j, c, c2;
+	id			ent, brush;
 	
 	c = [self count];
 	for (i=c-1 ; i>=0 ; i--)
@@ -692,17 +678,15 @@ OPERATIONS ON SELECTIONS
 				continue;
 			if ([brush regioned])
 				continue;
-			[brush perform:sel];
+			[brush performSelector:sel];
 		}
 	}
-
-	return self;	
 }
 
-- makeAllPerform: (SEL)sel
+- (void)makeAllPerform: (SEL)sel
 {
-	int	i,j, c, c2;
-	id	ent, brush;
+	NSInteger	i,j, c, c2;
+	id			ent, brush;
 	
 	c = [self count];
 	for (i=c-1 ; i>=0 ; i--)
@@ -714,16 +698,14 @@ OPERATIONS ON SELECTIONS
 			brush = [ent objectAt: j];
 			if ([brush regioned])
 				continue;
-			[brush perform:sel];
+			[brush performSelector:sel];
 		}
 	}
-
-	return self;	
 }
 
-- makeGlobalPerform: (SEL)sel	// in and out of region
+- (void)makeGlobalPerform: (SEL)sel	// in and out of region
 {
-	int	i,j, c, c2;
+	NSInteger	i,j, c, c2;
 	id	ent, brush;
 	
 	c = [self count];
@@ -734,11 +716,9 @@ OPERATIONS ON SELECTIONS
 		for (j = c2-1 ; j >=0 ; j--)
 		{
 			brush = [ent objectAt: j];
-			[brush perform:sel];
+			[brush performSelector:sel];
 		}
 	}
-
-	return self;	
 }
 
 
@@ -749,12 +729,12 @@ void sel_identity (void)
 	sel_z[0]=0; sel_z[1]=0; sel_z[2]=1;
 }
 
-- transformSelection
+- (void)transformSelection
 {
 	if ( ![currentEntity modifiable])
 	{
 		qprintf ("can't modify spawned entities");
-		return self;
+		return;
 	}
 
 // find an origin to apply the transformation to
@@ -769,7 +749,6 @@ void sel_identity (void)
 	[self makeSelectedPerform: @selector(transform)];
 
 	[quakeed_i updateAll];
-	return self;
 }
 
 
@@ -790,61 +769,55 @@ UI operations
 ===============================================================================
 */
 
-- rotate_x: sender
+- (IBAction)rotate_x: sender
 {
 	sel_identity ();
 	swapvectors(sel_y, sel_z);
 	[self transformSelection];
-	return self;
 }
 
-- rotate_y: sender
+- (IBAction)rotate_y: sender
 {
 	sel_identity ();
 	swapvectors(sel_x, sel_z);
 	[self transformSelection];
-	return self;
 }
 
-- rotate_z: sender
+- (IBAction)rotate_z: sender
 {
 	sel_identity ();
 	swapvectors(sel_x, sel_y);
 	[self transformSelection];
-	return self;
 }
 
 
-- flip_x: sender
+- (IBAction)flip_x: sender
 {
 	sel_identity ();
 	sel_x[0] = -1;
 	[self transformSelection];
 	[map_i makeSelectedPerform: @selector(flipNormals)];
-	return self;
 }
 
-- flip_y: sender
+- (IBAction)flip_y: sender
 {
 	sel_identity ();
 	sel_y[1] = -1;
 	[self transformSelection];
 	[map_i makeSelectedPerform: @selector(flipNormals)];
-	return self;
 }
 
 
-- flip_z: sender
+- (IBAction)flip_z: sender
 {
 	sel_identity ();
 	sel_z[2] = -1;
 	[self transformSelection];
 	[map_i makeSelectedPerform: @selector(flipNormals)];
-	return self;
 }
 
 
-- cloneSelection: sender
+- (IBAction)cloneSelection: sender
 {
 	int		i,j , c, originalElements;
 	id		o, b;
@@ -895,21 +868,19 @@ UI operations
 	}
 
 	[quakeed_i updateAll];
-
-	return self;
 }
 
 
-- selectCompleteEntity: sender
+- (IBAction)selectCompleteEntity: sender
 {
-	id	o;
-	int	i, c;
+	id			o;
+	NSInteger	i, c;
 	
 	o = [self selectedBrush];
 	if (!o)
 	{
 		qprintf ("nothing selected");
-		return self;
+		return;
 	}
 	o = [o parent];
 	c = [o count];
@@ -919,23 +890,23 @@ UI operations
 
 	[quakeed_i updateAll];
 
-	return self;
+	return;
 }
 
-- makeEntity: sender
+- (IBAction)makeEntity: sender
 {
 	if (currentEntity != [self objectAt: 0])
 	{
 		qprintf ("ERROR: can't makeEntity inside an entity");
-		NXBeep ();
-		return self;
+		NSBeep ();
+		return;
 	}
 	
 	if ( [self numSelected] == 0)
 	{
 		qprintf ("ERROR: must have a seed brush to make an entity");
-		NXBeep ();
-		return self;
+		NSBeep ();
+		return;
 	}
 	
 	sb_newowner = [[Entity alloc] initClass: [things_i spawnName]];
@@ -952,19 +923,17 @@ UI operations
 	[self setCurrentEntity: sb_newowner];
 	
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
 
-- selbox: (SEL)selector
+- (void)selbox: (SEL)selector
 {
 	id	b;
 	
 	if ([self numSelected] != 1)
 	{
 		qprintf ("must have a single brush selected");
-		return self;
+		return;
 	} 
 
 	b = [self selectedBrush];
@@ -975,22 +944,20 @@ UI operations
 	
 	qprintf ("identified contents");
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
-- selectCompletelyInside: sender
+- (IBAction)selectCompletelyInside: sender
 {
-	return [self selbox:  @selector(selectComplete)];
+	[self selbox:  @selector(selectComplete)];
 }
 
-- selectPartiallyInside: sender
+- (IBAction)selectPartiallyInside: sender
 {
-	return [self selbox:  @selector(selectPartial)];
+	[self selbox:  @selector(selectPartial)];
 }
 
 
-- tallBrush: sender
+- (IBAction)tallBrush: sender
 {
 	id		b;
 	vec3_t	mins, maxs;
@@ -999,7 +966,7 @@ UI operations
 	if ([self numSelected] != 1)
 	{
 		qprintf ("must have a single brush selected");
-		return self;
+		return;
 	} 
 
 	b = [self selectedBrush];
@@ -1014,11 +981,9 @@ UI operations
 	[[map_i objectAt: 0] addObject: b];
 	[b setSelected: YES];
 	[quakeed_i updateAll];
-		
-	return self;
 }
 
-- shortBrush: sender
+- (IBAction)shortBrush: sender
 {
 	id		b;
 	vec3_t	mins, maxs;
@@ -1027,7 +992,7 @@ UI operations
 	if ([self numSelected] != 1)
 	{
 		qprintf ("must have a single brush selected");
-		return self;
+		return;
 	} 
 
 	b = [self selectedBrush];
@@ -1042,8 +1007,6 @@ UI operations
 	[[map_i objectAt: 0] addObject: b];
 	[b setSelected: YES];
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
 /*
@@ -1051,11 +1014,11 @@ UI operations
 subtractSelection
 ==================
 */
-- subtractSelection: semder
+- (IBAction)subtractSelection: semder
 {
-	int		i, j, c, c2;
-	id		o, o2;
-	id		sellist, sourcelist;
+	NSInteger	i, j, c, c2;
+	id			o, o2;
+	id			sellist, sourcelist;
 	
 	qprintf ("performing brush subtraction...");
 
@@ -1113,8 +1076,6 @@ subtractSelection
 
 	qprintf ("subtracted selection");
 	[quakeed_i updateAll];
-	
-	return self;
 }
 
 

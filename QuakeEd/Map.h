@@ -23,21 +23,15 @@ extern	id	map_i;
 
 - entityConnect: (vec3_t)p1 : (vec3_t)p2;
 
-- selectRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)ef;
-- grabRay: (vec3_t)p1 : (vec3_t)p2;
-- setTextureRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)allsides;
-- getTextureRay: (vec3_t)p1 : (vec3_t)p2;
+- (void)selectRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)ef;
+- (SetBrush*)grabRay: (vec3_t)p1 : (vec3_t)p2;
+- (void)setTextureRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)allsides;
+- (SetBrush*)getTextureRay: (vec3_t)p1 : (vec3_t)p2;
 
-- currentEntity;
-- setCurrentEntity: ent;
+@property (assign, nonatomic) id currentEntity;
 
 @property (nonatomic) float currentMinZ;
 @property (nonatomic) float currentMaxZ;
-
-- (float)currentMinZ;
-- (void)setCurrentMinZ: (float)m;
-- (float)currentMaxZ;
-- (void)setCurrentMaxZ: (float)m;
 
 - (int)numSelected;
 - (SetBrush*)selectedBrush;			// returns the first selected brush
@@ -45,10 +39,10 @@ extern	id	map_i;
 //
 // operations on current selection
 //
-- makeSelectedPerform: (SEL)sel;
-- makeUnselectedPerform: (SEL)sel;
-- makeAllPerform: (SEL)sel;
-- makeGlobalPerform: (SEL)sel;	// in and out of region
+- (void)makeSelectedPerform: (SEL)sel;
+- (void)makeUnselectedPerform: (SEL)sel;
+- (void)makeAllPerform: (SEL)sel;
+- (void)makeGlobalPerform: (SEL)sel;	// in and out of region
 
 - (IBAction)cloneSelection: sender;
 

@@ -409,8 +409,6 @@ qtexture_t *TEX_ForName (char *name)
 	[textureView_i sizeTo:viewWidth :viewHeight];
 	pt.x = pt.y = 0;
 	[textureView_i scrollPoint:pt];
-
-	return self;
 }
 
 - windowResized

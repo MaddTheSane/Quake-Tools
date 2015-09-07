@@ -10,19 +10,18 @@ Initizes a scroll view with a button at it's lower right corner
 ====================
 */
 
-- initFrame:(const NSRect *)frameRect button1:b1
+- (instancetype)initWithFrame:(NSRect)frameRect button1:b1
 {
-	[super  initFrame: frameRect];	
+	self = [super initWithFrame: frameRect];
 
 	[self addSubview: b1];
 
 	button1 = b1;
 
-	[self setHorizScrollerRequired: YES];
-	[self setVertScrollerRequired: YES];
-
-	[self setBorderType: NX_BEZEL];
-		
+	[self setHorizontalScrollerRequired: YES];
+	[self setVerticalScrollerRequired: YES];
+	self.borderType = NSBezelBorder;
+	
 	return self;
 }
 
@@ -35,18 +34,17 @@ Adjust the size for the pop up scale menu
 =================
 */
 
-- tile
+- (void)tile
 {
 	NSRect	scrollerframe;
 	
 	[super tile];
-	[hScroller getFrame: &scrollerframe];
-	[button1 setFrame: &scrollerframe];
+	scrollerframe = [self horizontalScroller].frame;
+	//button1
+	[button1 setFrame: scrollerframe];
 	
 	scrollerframe.size.width = 0;
-	[hScroller setFrame: &scrollerframe];
-
-	return self;
+	[[self horizontalScroller] setFrame: scrollerframe];
 }
 
 
@@ -56,11 +54,11 @@ Adjust the size for the pop up scale menu
     return YES;
 }
 
-- superviewSizeChanged:(const NXSize *)oldSize
+- superviewSizeChanged:(const NSSize *)oldSize
 {
 	[super superviewSizeChanged: oldSize];
 	
-	[[self docView] newSuperBounds];
+	[[self documentView] newSuperBounds];
 	
 	return self;
 }

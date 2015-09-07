@@ -59,11 +59,11 @@ extern	id texturepalette_i;
 	IBOutlet id	searchField_i;
 	IBOutlet id	sizeField_i;
 	
-	id	field_Xshift_i;
-	id	field_Yshift_i;
-	id	field_Xscale_i;
-	id	field_Yscale_i;
-	id	field_Rotate_i;
+	IBOutlet id	field_Xshift_i;
+	IBOutlet id	field_Yshift_i;
+	IBOutlet id	field_Xscale_i;
+	IBOutlet id	field_Yscale_i;
+	IBOutlet id	field_Rotate_i;
 	
 	int	viewWidth;
 	int	viewHeight;
@@ -72,44 +72,45 @@ extern	id texturepalette_i;
 
 - (char*)currentWad;
 - (id)initPaletteFromWadfile:(char *)wf;
-- computeTextureViewSize;
-- alphabetize;
-- getList;
+- (void)computeTextureViewSize;
+- (void)alphabetize;
+- (id)getList;
+@property (getter=getSelectedTexture) int selectedTexture;
 - (int)getSelectedTexture;
-- setSelectedTexture:(int)which;
+- (void)setSelectedTexture:(int)which;
 - (int)getSelectedTexIndex;
 
 // Called externally
-- (char *)getSelTextureName;
-- setTextureByName:(char *)name;
+- (NSString *)getSelTextureName;
+- (void)setTextureByName:(NSString *)name;
 
 // New methods to replace the 2 above ones
 - setTextureDef:(texturedef_t *)td;
 - getTextureDef:(texturedef_t *)td;
 
 // Action methods
-- (IBAction)searchForTexture:sender;
+- (IBAction)searchForTexture:(id)sender;
 
-- (IBAction)clearTexinfo: sender;
+- (IBAction)clearTexinfo:(id) sender;
 
-- (IBAction)incXShift:sender;
-- (IBAction)decXShift:sender;
+- (IBAction)incXShift:(id)sender;
+- (IBAction)decXShift:(id)sender;
 
-- (IBAction)incYShift:sender;
-- (IBAction)decYShift:sender;
+- (IBAction)incYShift:(id)sender;
+- (IBAction)decYShift:(id)sender;
 
-- (IBAction)incRotate: sender;
-- (IBAction)decRotate: sender;
+- (IBAction)incRotate:(id) sender;
+- (IBAction)decRotate:(id) sender;
 
-- (IBAction)incXScale:sender;
-- (IBAction)decXScale:sender;
+- (IBAction)incXScale:(id)sender;
+- (IBAction)decXScale:(id)sender;
 
-- (IBAction)incYScale:sender;
-- (IBAction)decYScale:sender;
+- (IBAction)incYScale:(id)sender;
+- (IBAction)decYScale:(id)sender;
 
-- (IBAction)texturedefChanged: sender;
-- (IBAction)onlyShowMapTextures:sender;
+- (IBAction)texturedefChanged:(id) sender;
+- (IBAction)onlyShowMapTextures:(id)sender;
 - (int) searchForTextureInPalette:(char *)texture;
-- setDisplayFlag:(int)index to:(int)value;
+- (void)setDisplayFlag:(int)index to:(int)value;
 
 @end

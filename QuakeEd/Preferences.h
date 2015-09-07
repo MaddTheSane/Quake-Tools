@@ -11,8 +11,8 @@ extern	float		lightaxis[3];
 	id		bspSound_i;			// actual sound object
 
 // internal state
-	char	projectpath[1024];
-	char	bspSound[1024];
+	NSString	*projectpath;
+	NSString	*bspSound;
 	
 	BOOL	brushOffset;
 	BOOL	showBSP;
@@ -24,18 +24,18 @@ extern	float		lightaxis[3];
 	int		startwad;			// 0 - 2
 	
 // UI targets
-	id	startproject_i;			// TextField	
+	IBOutlet id	startproject_i;			// TextField
 
-	id	bspSoundField_i;		// TextField of bspSound	
+	IBOutlet id	bspSoundField_i;		// TextField of bspSound
 
-	id	brushOffset_i;			// Brush Offset checkbox
-	id	showBSP_i;				// Show BSP Output checkbox
+	IBOutlet id	brushOffset_i;			// Brush Offset checkbox
+	IBOutlet id	showBSP_i;				// Show BSP Output checkbox
 	
-	id	startwad_i;				// which wad to load at startup
+	IBOutlet id	startwad_i;				// which wad to load at startup
 
-	id	xlight_i;				// X-side lighting
-	id	ylight_i;				// Y-side lighting
-	id	zlight_i;				// Z-side lighting	
+	IBOutlet id	xlight_i;				// X-side lighting
+	IBOutlet id	ylight_i;				// Y-side lighting
+	IBOutlet id	zlight_i;				// Z-side lighting	
 }
 
 - (void)readDefaults;
@@ -43,14 +43,17 @@ extern	float		lightaxis[3];
 //
 // validate and set methods called by UI or defaults
 //
-- setProjectPath:(char *)path;
-- setBspSoundPath:(char *)path;	// set the path of the soundfile externally
-- setShowBSP:(int)state;		// set the state of ShowBSP
-- setBrushOffset:(int)state;	// set the state of BrushOffset
-- setStartWad:(int)value;		// set start wad (0-2)
-- setXlight:(float)value;		// set Xlight value for CameraView
-- setYlight:(float)value;		// set Ylight value for CameraView
-- setZlight:(float)value;		// set Zlight value for CameraView
+- (void)setProjectPath:(NSString *)path;
+- (void)setBspSoundPath:(NSString *)path;	// set the path of the soundfile externally
+- (void)setShowBSP:(BOOL)state;		// set the state of ShowBSP
+- (void)setBrushOffset:(BOOL)state;	// set the state of BrushOffset
+- (void)setStartWad:(int)value;		// set start wad (0-2)
+@property (nonatomic, getter=getXlight) float xlight;
+@property (nonatomic, getter=getYlight) float ylight;
+@property (nonatomic, getter=getZlight) float zlight;
+- (void)setXlight:(float)value;		// set Xlight value for CameraView
+- (void)setYlight:(float)value;		// set Ylight value for CameraView
+- (void)setZlight:(float)value;		// set Zlight value for CameraView
 
 //
 // UI targets
@@ -62,11 +65,14 @@ extern	float		lightaxis[3];
 //
 // methods used by other objects to retreive defaults
 //
-- playBspSound;
+- (void)playBspSound;
 
-- (char *)getProjectPath;
-- (int)getBrushOffset;			// get the state
-- (int)getShowBSP;				// get the state
+- (NSString *)getProjectPath;
+@property (nonatomic, getter=getBrushOffset) BOOL brushOffset;
+@property (nonatomic, getter=getShowBSP) BOOL showBSP;
+@property (nonatomic, getter=getProjectPath, copy) NSString *projectPath;
+- (BOOL)getBrushOffset;			// get the state
+- (BOOL)getShowBSP;				// get the state
 
 - (float)getXlight;				// get Xlight value
 - (float)getYlight;				// get Ylight value

@@ -10,8 +10,9 @@ id		inspcontrol_i;
 
 @implementation InspectorControl
 
-- awakeFromNib
+- (void)awakeFromNib
 {
+	[super awakeFromNib];
 	inspcontrol_i = self;
 		
 	currentInspectorType = -1;
@@ -66,8 +67,6 @@ id		inspcontrol_i;
 
 	currentInspectorType = -1;
 	[self changeInspectorTo:i_project];
-
-	return self;
 }
 
 
@@ -75,19 +74,18 @@ id		inspcontrol_i;
 //	Sent by the PopUpList in the Inspector
 //	Each cell in the PopUpList must have the correct tag
 //
-- changeInspector:sender
+- (IBAction)changeInspector:sender
 {
 	id	cell;
 
 	cell = [sender selectedCell];
 	[self changeInspectorTo:[cell tag]];
-	return self;
 }
 
 //
 //	Change to specific Inspector
 //
-- changeInspectorTo:(insp_e)which
+- (void)changeInspectorTo:(insp_e)which
 {
 	id		newView;
 	NSRect	r;
@@ -95,7 +93,7 @@ id		inspcontrol_i;
 	NSRect	f;
 	
 	if (which == currentInspectorType)
-		return self;
+		return;
 	
 	currentInspectorType = which;
 	newView = [contentList objectAt:which];
@@ -104,25 +102,22 @@ id		inspcontrol_i;
 	[popUpButton_i setTitle:[cell title]];
 	
 	[inspectorView_i replaceSubview:inspectorSubview_i with:newView];
-	[inspectorView_i getFrame:&r];
+	r = inspectorView_i.frame;
 	inspectorSubview_i = newView;
-	[inspectorSubview_i setAutosizing:NX_WIDTHSIZABLE | NX_HEIGHTSIZABLE];
+	[inspectorSubview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	[inspectorSubview_i sizeTo:r.size.width - 4 :r.size.height - 4];
 	
 	[inspectorSubview_i lockFocus];
-	[inspectorSubview_i getBounds:&f];
-	PSsetgray(NX_LTGRAY);
-	NXRectFill(&f);
+	
+	f = inspectorSubview_i.bounds;
+	[[NSColor lightGrayColor] set];
+	NSRectFill(f);
 	[inspectorSubview_i unlockFocus];
 	[inspectorView_i display];
 	
-	return self;
 }
 
-- (insp_e)getCurrentInspector
-{
-	return currentInspectorType;
-}
+@synthesize inspector = currentInspectorType;
 
 
 @end

@@ -26,7 +26,7 @@ char	*leakcmd = "rsh satan \"/LocalApps/qbsp -mark -notjunc $1 $2\"";
 
 void NopSound (void)
 {
-	NXBeep ();
+	NSBeep ();
 }
 
 UserPath	*upath;
@@ -332,10 +332,10 @@ App delegate methods
 	return self;
 }
 
-- appDidInit:sender
+-(void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-	NXScreen	const *screens;
-	int			screencount;
+	NSArray<NSScreen*>	*screens = [NSScreen screens];
+	NSInteger	screencount;
 	
 	running = YES;
 	g_cmd_out_i = cmd_out_i;	// for qprintf
@@ -347,14 +347,15 @@ App delegate methods
 											// scrollview and can't be
 											// connected directly in IB
 	
-	[self setFrameAutosaveName:"EditorWinFrame"];
+	[self setFrameAutosaveName:@"EditorWinFrame"];
 	[self clear: self];
 
 // go to my second monitor
-	[NSApp getScreens:&screens count:&screencount];
-	if (screencount == 2)
-		[self moveTopLeftTo:0 : screens[1].screenBounds.size.height
-		screen:screens+1];
+	if ([screens count] >= 2) {
+		//[self moveTopLeftTo:0 : screens[1].screenBounds.size.height
+		//screen:screens+1];
+		[self constrainFrameRect:self.frame toScreen:screens[1]];
+	}
 	
 	[self makeKeyAndOrderFront: self];
 
@@ -364,8 +365,6 @@ App delegate methods
 	qprintf ("ready.");
 
 //malloc_debug(-1);		// DEBUG
-	
-	return self;
 }
 
 - appWillTerminate:sender
@@ -377,83 +376,70 @@ App delegate methods
 
 //===========================================================================
 
-- textCommand: sender
+- (IBAction)textCommand: sender
 {
-	char	const *t;
+	NSString *t;
 	
 	t = [sender stringValue];
 	
-	if (!strcmp (t, "texname"))
-	{
+	if ([t isEqualToString:@"texname"]) {
 		texturedef_t	*td;
 		id				b;
 		
 		b = [map_i selectedBrush];
-		if (!b)
-		{
+		if (!b) {
 			qprintf ("nothing selected");
-			return self;
+			return;
 		}
 		td = [b texturedef];
 		qprintf (td->texture);
-		return self;
-	}
-	else
+		return;
+	} else
 		qprintf ("Unknown command\n");
-	return self;
+	return;
 }
 
 
-- openProject:sender
+- (IBAction)openProject:sender
 {
 	[project_i	openProject];
-	return self;
 }
 
 
-- clear: sender
+- (IBAction)clear: sender
 {	
 	[map_i newMap];
 
 	[self updateAll];
 	[regionbutton_i setIntValue: 0];
 	[self setDefaultFilename];
-
-	return self;
 }
 
 
-- centerCamera: sender
+- (IBAction)centerCamera: sender
 {
 	NSRect	sbounds;
-	
-	[[xyview_i superview] getBounds: &sbounds];
+	sbounds = [xyview_i superview].bounds;
 	
 	sbounds.origin.x += sbounds.size.width/2;
 	sbounds.origin.y += sbounds.size.height/2;
 	
-	[cameraview_i setXYOrigin: &sbounds.origin];
+	[cameraview_i setXYOrigin: sbounds.origin];
 	[self updateAll];
-	
-	return self;
 }
 
-- centerZChecker: sender
+- (IBAction)centerZChecker: sender
 {
-	NSRect	sbounds;
-	
-	[[xyview_i superview] getBounds: &sbounds];
+	NSRect	sbounds = xyview_i.superview.bounds;
 	
 	sbounds.origin.x += sbounds.size.width/2;
 	sbounds.origin.y += sbounds.size.height/2;
 	
 	[zview_i setPoint: &sbounds.origin];
 	[self updateAll];
-	
-	return self;
 }
 
-- changeXYLookUp: sender
+- (IBAction)changeXYLookUp: sender
 {
 	if ([sender intValue])
 	{
@@ -464,7 +450,6 @@ App delegate methods
 		xy_viewnormal[2] = -1;
 	}
 	[self updateAll];
-	return self;
 }
 
 /*
@@ -481,7 +466,7 @@ REGION MODIFICATION
 applyRegion:
 ==================
 */
-- applyRegion: sender
+- (IBAction)applyRegion: sender
 {
 	filter_clip_brushes = [filter_clip_i intValue];
 	filter_water_brushes = [filter_water_i intValue];
@@ -499,11 +484,9 @@ applyRegion:
 	[map_i makeGlobalPerform: @selector(newRegion)];
 	
 	[self updateAll];
-
-	return self;
 }
 
-- setBrushRegion: sender
+- (IBAction)setBrushRegion: sender
 {
 	id		b;
 
@@ -512,7 +495,7 @@ applyRegion:
 	if ([map_i numSelected] != 1)
 	{
 		qprintf ("must have a single brush selected");
-		return self;
+		return;
 	} 
 
 	b = [map_i selectedBrush];
@@ -522,16 +505,13 @@ applyRegion:
 // turn region on
 	[regionbutton_i setIntValue: 1];
 	[self applyRegion: self];
-	
-	return self;
 }
 
-- setXYRegion: sender
+- (IBAction)setXYRegion: sender
 {
-	NSRect	bounds;
+	NSRect	bounds = xyview_i.superview.bounds;
 	
 // get xy size
-	[[xyview_i superview] getBounds: &bounds];
 
 	region_min[0] = bounds.origin.x;
 	region_min[1] = bounds.origin.y;
@@ -610,7 +590,7 @@ saveBSP
 	
 	if (bsppid)
 	{
-		NXBeep();
+		NSBeep();
 		return self;
 	}
 
@@ -723,7 +703,7 @@ saveBSP
 {
 	if (!bsppid)
 	{
-		NXBeep();
+		NSBeep();
 		return self;
 	}
 	

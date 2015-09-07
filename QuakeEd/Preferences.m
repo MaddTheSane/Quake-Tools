@@ -30,22 +30,32 @@ int _atof (char *c)
 	return atof(c);
 }
 
-void WriteNumericDefault (char *name, float value)
+void WriteNumericDefault (NSString *name, float value)
 {
-	char	str[128];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
-	sprintf (str,"%f", value);
-	NXWriteDefault (DEFOWNER, name, str);
+	[defaults setFloat:value forKey:name];
 }
-void WriteStringDefault (char *name, char *value)
+
+void WriteNSStringDefault (NSString *name, NSString *value)
 {
-	NXWriteDefault (DEFOWNER, name, value);
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	[defaults setValue:value forKey:name];
+}
+
+
+void WriteStringDefault (NSString *name, const char *value)
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+	[defaults setValue:@(value) forKey:name];
 }
 
 //
 //	Read in at start of program
 //
-- readDefaults
+- (void)readDefaults
 {
 	char *string;
 	float	value;
@@ -73,31 +83,22 @@ void WriteStringDefault (char *name, char *value)
 
 	value = _atof((char *)NXGetDefaultValue(DEFOWNER,"Zlight"));
 	[self setZlight:value];
-
-	return self;
 }
 
-
-- setProjectPath:(char *)path
+@synthesize projectPath = projectpath;
+- (void)setProjectPath:(NSString *)path
 {
 	if (!path)
-		path = "";
-	strcpy (projectpath, path);
+		path = @"";
+	projectpath = [path copy];
 	[startproject_i setStringValue: path];
-	WriteStringDefault ("ProjectPath", path);
-	return self;
+	WriteNSStringDefault (@"ProjectPath", path);
 }
 
-- setCurrentProject:sender
+- (IBAction)setCurrentProject:sender
 {
 	[startproject_i setStringValue: [project_i currentProjectFile]];
 	[self UIChanged: self];
-	return self;
-}
-
-- (char *)getProjectPath
-{
-	return projectpath;
 }
 
 
@@ -108,71 +109,61 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the BSP sound using an OpenPanel
 //
-- setBspSound:sender
+- (IBAction)setBspSound:sender
 {
-	id	panel;
-	char	*types[]={"snd",NULL};
-	int	rtn;
-	char	**filename;
-	char	path[1024], file[64];
+	NSOpenPanel	*panel;
+	NSInteger	rtn;
+	NSString *path;
+	NSString *file;
 	
-	panel = [OpenPanel new];
+	panel = [NSOpenPanel openPanel];
+	panel.allowedFileTypes = [NSSound soundUnfilteredTypes];
 
-	ExtractFilePath (bspSound, path);
-	ExtractFileBase (bspSound, file);
+	path = [bspSound stringByDeletingLastPathComponent];
+	file = [bspSound lastPathComponent];
+	panel.directoryURL = [NSURL fileURLWithPath:path];
+	panel.nameFieldStringValue = file;
 	
-	rtn = [panel 
-			runModalForDirectory:path 
-			file: file
-			types: types];
+	rtn = [panel runModal];
 
-	if (rtn)
-	{
-		filename = (char **)[panel filenames];
-		strcpy(bspSound,[panel directory]);
-		strcat(bspSound,"/");
-		strcat(bspSound,filename[0]);
-		[self setBspSoundPath:bspSound];
+	if (rtn) {
+		NSString *fullFile = [[panel URL] path];
+		[self setBspSoundPath:fullFile];
 		[self playBspSound];
 	}
-
-	return self;
 }
 
 
 //
 //	Play the BSP sound
 //
-- playBspSound
+- (void)playBspSound
 {
 	[bspSound_i play];	
-	return self;
 }
 
 
 //
 //	Set the bspSound path
 //
-- setBspSoundPath:(char *)path
+- (void)setBspSoundPath:(NSString *)path
 {
 	if (!path)
-		path = "";
-	strcpy(bspSound,path);
-
+		path = @"";
+	bspSound = [path copy];
+	
 	if (bspSound_i)
 		[bspSound_i free];
-	bspSound_i = [[Sound alloc] initFromSoundfile:bspSound];
+	bspSound_i = [[NSSound alloc] initWithContentsOfFile:bspSound byReference:NO];
 	if (!bspSound_i)
 	{
-		strcpy (bspSound, "/NextLibrary/Sounds/Funk.snd");
-		bspSound_i = [[Sound alloc] initFromSoundfile:bspSound];
+		bspSound = [@"Funk" retain];
+		bspSound_i = [[NSSound soundNamed:@"Funk"] retain];
 	}
-
+	
 	[bspSoundField_i setStringValue:bspSound];
 	
-	WriteStringDefault ("BspSoundPath", bspSound);
-	
-	return self;
+	WriteNSStringDefault (@"BspSoundPath", bspSound);
 }
 
 //===============================================
@@ -182,23 +173,19 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the state
 //
-- setShowBSP:(int)state
+- (void)setShowBSP:(BOOL)state
 {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	showBSP = state;
 	[showBSP_i setIntValue:state];
-	WriteNumericDefault ("ShowBSPOutput", showBSP);
-
-	return self;
+	[defaults setBool:state forKey:@"ShowBSPOutput"];
 }
 
 //
 //	Get the state
 //
-- (int)getShowBSP
-{
-	return showBSP;
-}
-
+@synthesize showBSP;
+@synthesize brushOffset;
 
 //===============================================
 //	"Offset Brush ..." management
@@ -207,36 +194,30 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the state
 //
-- setBrushOffset:(int)state
+- (void)setBrushOffset:(BOOL)state
 {
 	brushOffset = state;
 	[brushOffset_i setIntValue:state];
-	WriteNumericDefault ("OffsetBrushCopy", state);
-	return self;
+	WriteNumericDefault (@"OffsetBrushCopy", state);
 }
 
 //
 //	Get the state
 //
-- (int)getBrushOffset
-{
-	return brushOffset;
-}
 
 //===============================================
 //	StartWad
 //===============================================
 
-- setStartWad:(int)value		// set start wad (0-2)
+- (void)setStartWad:(int)value		// set start wad (0-2)
 {
 	startwad = value;
 	if (startwad<0 || startwad>2)
 		startwad = 0;
 	
-	[startwad_i selectCellAt:startwad : 0];
+	[startwad_i selectCellAtRow:startwad column:0];
 
-	WriteNumericDefault ("StartWad", value);
-	return self;
+	WriteNumericDefault (@"StartWad", value);
 }
 
 - (int)getStartWad
@@ -251,35 +232,32 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the state
 //
-- setXlight:(float)value
+- (void)setXlight:(float)value
 {
 	xlight = value;
 	if (xlight < 0.25 || xlight > 1)
 		xlight = 0.6;
 	lightaxis[1] = xlight;
 	[xlight_i setFloatValue:xlight];
-	WriteNumericDefault ("Xlight", xlight);
-	return self;
+	WriteNumericDefault (@"Xlight", xlight);
 }
-- setYlight:(float)value
+- (void)setYlight:(float)value
 {
 	ylight = value;
 	if (ylight < 0.25 || ylight > 1)
 		ylight = 0.75;
 	lightaxis[2] = ylight;
 	[ylight_i setFloatValue:ylight];
-	WriteNumericDefault ("Ylight", ylight);
-	return self;
+	WriteNumericDefault (@"Ylight", ylight);
 }
-- setZlight:(float)value
+- (void)setZlight:(float)value
 {
 	zlight = value;
 	if (zlight < 0.25 || zlight > 1)
 		zlight = 1;
 	lightaxis[0] = zlight;
 	[zlight_i setFloatValue:zlight];
-	WriteNumericDefault ("Zlight", zlight);
-	return self;
+	WriteNumericDefault (@"Zlight", zlight);
 }
 
 //
@@ -307,12 +285,12 @@ UIChanged
 Grab all the current UI state
 ============
 */
--UIChanged: sender
+-(IBAction)UIChanged: sender
 {
 	qprintf ("defaults updated");
 	
-	[self setProjectPath: (char *)[startproject_i stringValue]];
-	[self setBspSoundPath: (char *)[bspSoundField_i stringValue]];
+	[self setProjectPath: [startproject_i stringValue]];
+	[self setBspSoundPath: [bspSoundField_i stringValue]];
 	[self setShowBSP: [showBSP_i intValue]];
 	[self setBrushOffset: [brushOffset_i intValue]];
 	[self setStartWad: [startwad_i selectedRow]];
@@ -322,8 +300,6 @@ Grab all the current UI state
 
 	[map_i makeGlobalPerform: @selector(flushTextures)];
 	[quakeed_i updateAll];
-		
-	return self;
 }
 
 

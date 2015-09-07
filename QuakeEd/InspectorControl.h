@@ -15,12 +15,13 @@ typedef NS_ENUM(NSInteger, insp_e)
 	i_end
 };
 
-extern	id		inspcontrol_i;
+@class InspectorControl;
+extern InspectorControl *inspcontrol_i;
 
 @interface InspectorControl: NSObject
 {
-	IBOutlet id	inspectorView_i;	// inspector view
-	IBOutlet id	inspectorSubview_i;	// inspector view's current subview (gets replaced)
+	IBOutlet NSView	*inspectorView_i;	// inspector view
+	NSView	*inspectorSubview_i;	// inspector view's current subview (gets replaced)
 
 	IBOutlet id	contentList;		// List of contentviews (corresponds to
 							// insp_e enum order)
@@ -41,13 +42,13 @@ extern	id		inspcontrol_i;
 	//  corresponds to the enums above!
 	
 	// Windows
-	IBOutlet id	win_project_i;		// project
-	IBOutlet id	win_textures_i;		// textures
-	IBOutlet id	win_things_i;		// things
-	IBOutlet id	win_prefs_i;		// preferences
-	IBOutlet id	win_settings_i;		// project settings
-	IBOutlet id	win_output_i;		// bsp output
-	IBOutlet id	win_help_i;			// documentation
+	IBOutlet NSWindow	*win_project_i;		// project
+	IBOutlet NSWindow	*win_textures_i;	// textures
+	IBOutlet NSWindow	*win_things_i;		// things
+	IBOutlet NSWindow	*win_prefs_i;		// preferences
+	IBOutlet NSWindow	*win_settings_i;		// project settings
+	IBOutlet NSWindow	*win_output_i;		// bsp output
+	IBOutlet NSWindow	*win_help_i;			// documentation
 	
 	// PopUpList objs
 	IBOutlet id	itemProject_i;		// project
@@ -60,12 +61,11 @@ extern	id		inspcontrol_i;
 }
 
 - (void)awakeFromNib;
-- changeInspector:sender;
-- changeInspectorTo:(insp_e)which;
-- (insp_e)getCurrentInspector;
+- (IBAction)changeInspector:sender;
+@property (setter=changeInspectorTo:, getter=getCurrentInspector, nonatomic) insp_e inspector;
 
 @end
 
-@protocol InspectorControl
-- windowResized;
+@protocol InspectorControl <NSObject>
+- (void)windowResized;
 @end

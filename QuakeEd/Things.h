@@ -6,38 +6,38 @@ extern	Things *things_i;
 
 #define	ENTITYNAMEKEY	"spawn"
 
-@interface Things: NSObject
+@interface Things: NSObject <NSBrowserDelegate>
 {
-	id	entity_browser_i;	// browser
+	IBOutlet id	entity_browser_i;	// browser
 	IBOutlet NSTextView	*entity_comment_i;	// scrolling text window
 	
-	id	prog_path_i;
+	IBOutlet id	prog_path_i;
 	
-	int	lastSelected;	// last row selected in browser
+	NSInteger	lastSelected;	// last row selected in browser
 
-	id	keyInput_i;
-	id	valueInput_i;
-	id	flags_i;
+	IBOutlet id	keyInput_i;
+	IBOutlet id	valueInput_i;
+	IBOutlet id	flags_i;
 }
 
-- initEntities;
+- (void)initEntities;
 
 - newCurrentEntity;
 - setSelectedKey:(epair_t *)ep;
 
-- clearInputs;
+- (void)clearInputs;
 - (char *)spawnName;
 
 // UI targets
-- reloadEntityClasses: sender;
-- selectEntity: sender;
-- doubleClickEntity: sender;
+- (IBAction)reloadEntityClasses: sender;
+- (IBAction)selectEntity: sender;
+- (IBAction)doubleClickEntity: sender;
 
 // Action methods
-- addPair:sender;
-- delPair:sender;
-- setAngle:sender;
-- setFlags:sender;
+- (IBAction)addPair:sender;
+- (IBAction)delPair:sender;
+- (IBAction)setAngle:sender;
+- (IBAction)setFlags:sender;
 
 
 @end

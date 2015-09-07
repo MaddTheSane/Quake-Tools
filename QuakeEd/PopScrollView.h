@@ -6,6 +6,6 @@
 }
 
 - (id)initWithFrame:(NSRect)frameRect button1: b1 button2: b2;
-- tile;
+- (void)tile;
 
 @end

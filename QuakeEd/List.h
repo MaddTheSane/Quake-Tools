@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define maxElements [self count]
+
 ///Simple wrapper around the NeXTStep `List` class.
 @interface List : NSObject {
 	NSMutableArray *internalList;

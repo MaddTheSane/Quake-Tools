@@ -18,7 +18,7 @@ void NopSound (void);
 
 void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 
-@interface QuakeEd : NSWindow
+@interface QuakeEd : NSWindow <NSApplicationDelegate>
 {
 	BOOL	dirty;
 	char	filename[1024];		// full path with .map extension
@@ -47,18 +47,15 @@ void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 - setDefaultFilename;
 - (char *)currentFilename;
 
-- updateAll;		// when a model has been changed
-- updateCamera;		// when the camera has moved
-- updateXY;
-- updateZ;
+- (void)updateAll;		// when a model has been changed
+- (void)updateCamera;		// when the camera has moved
+- (void)updateXY;
+- (void)updateZ;
 
 - (IBAction)updateAll:sender;
 
-- newinstance;		// force next flushwindow to clear all instance drawing
-- redrawInstance;	// erase and redraw all instance now
-
-- appDidInit:sender;
-- appWillTerminate:sender;
+- (void)newinstance;		// force next flushwindow to clear all instance drawing
+- (void)redrawInstance;	// erase and redraw all instance now
 
 - (IBAction)openProject:sender;
 

@@ -1,6 +1,9 @@
 #import "qedefs.h"
 
 @implementation SetBrush
+@synthesize selected;
+@synthesize regioned;
+
 
 /*
 ==================
@@ -496,14 +499,15 @@ can be removed.
 initOwner:::
 ===========
 */
-- initOwner: own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex
+- initWithOwner: own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex
 {
-	[super	init];
+	if (self = [super init]) {
 
 	parent = own;
 	
 	[self setTexturedef: tex];
 	[self setMins: mins maxs: maxs];
+	}
 	return self;
 }
 
@@ -591,16 +595,7 @@ initOwner:::
 	return self;
 }
 
-- parent
-{
-	return parent;
-}
-
-- setParent: (id)p
-{
-	parent = p;
-	return self;
-}
+@synthesize parent;
 
 - setEntityColor: (vec3_t)color
 {
@@ -608,7 +603,7 @@ initOwner:::
 	return self;
 }
 
-- freeWindings
+- (void)freeWindings
 {
 	int		i;
 	
@@ -618,15 +613,14 @@ initOwner:::
 			free (faces[i].w);
 			faces[i].w = NULL;
 		}
-	return self;
 }
 
-- copyFromZone:(NSZone *)zone
+- (id)copyFromZone:(NSZone *)zone
 {
 	id	new;
 	
 	[self freeWindings];
-	new = [super copyFromZone: zone];
+	new = [[[self class] alloc] init];
 	
 	[self calcWindings];
 	[new calcWindings];
@@ -634,10 +628,10 @@ initOwner:::
 	return new;
 }
 
-- free
+- (void)dealloc
 {
 	[self freeWindings];
-	return [super free];
+	[super dealloc];
 }
 
 /*
@@ -740,7 +734,7 @@ int		numsb;
 writeToFILE
 ===========
 */
-- writeToFILE: (FILE *)f region: (BOOL)reg
+- (void)writeToFILE: (FILE *)f region: (BOOL)reg
 {
 	int		i,j;
 	face_t	*fa;
@@ -748,7 +742,7 @@ writeToFILE
 	
 
 	if (reg && regioned)
-		return self;
+		return;
 
 	fprintf (f, "{\n");
 	for (i=0 ; i<numfaces ; i++)
@@ -760,8 +754,6 @@ writeToFILE
 		fprintf (f,"%s %d %d %d %f %f\n", td->texture, (int)td->shift[0], (int)td->shift[1], (int)td->rotate, td->scale[0], td->scale[1]);
 	}
 	fprintf (f, "}\n");
-	
-	return self;
 }
 
 
@@ -778,29 +770,6 @@ INTERACTION
 {
 	VectorCopy (bmins, mins);
 	VectorCopy (bmaxs, maxs);
-	return self;
-}
-
-
-- (BOOL)selected
-{
-	return selected;
-}
-
-- setSelected: (BOOL)s
-{
-	selected = s;
-	return self;
-}
-
-- (BOOL)regioned
-{
-	return regioned;
-}
-
-- setRegioned: (BOOL)s
-{
-	regioned = s;
 	return self;
 }
 
