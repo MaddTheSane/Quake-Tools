@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 ///Simple wrapper around the NeXTStep `List` class.
-@interface List : NSObject {
+@interface List : NSObject <NSFastEnumeration> {
 	NSMutableArray *internalList;
 }
 
@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)removeObjectAt:(int)idx DEPRECATED_ATTRIBUTE;
 - (void)removeObjectAtIndex:(NSInteger)idx;
+
+- (NSEnumerator*)objectEnumerator;
 
 @end
 

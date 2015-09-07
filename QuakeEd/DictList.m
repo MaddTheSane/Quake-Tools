@@ -28,7 +28,7 @@
 {
 	FILE	*fp;
 	int		i;
-	id		obj;
+	Dict	*obj;
 	
 	fp = fopen(filename,"w+t");
 	if (fp == NULL)
@@ -38,7 +38,7 @@
 
 	for (i = 0;i < maxElements;i++)
 	{
-		obj = [self objectAt:i];
+		obj = [self objectAtIndex:i];
 		[obj writeBlockTo:fp];
 	}
 	fclose(fp);

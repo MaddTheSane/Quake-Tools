@@ -1,4 +1,6 @@
 
+#import <AppKit/NSView.h>
+
 @class KeypairView;
 extern KeypairView *keypairview_i;
 

@@ -30,44 +30,56 @@ initFrame:
 	ent = [map_i currentEntity];
 	count = [ent numPairs];
 
-	[superview setFlipped: YES];
+	[[self superview] setFlipped: YES];
 	
-	[superview getBounds:&b];
+	b = [[self superview] bounds];
 	w = b.size.width;
 	h = LINEHEIGHT*count + SPACING;
-	[self	sizeTo:w :h];
+	//[self	sizeTo:w :h];
 	pt.x = pt.y = 0;
-	[self scrollPoint: &pt];
+	[self scrollPoint: pt];
 }
 
-- drawSelf:(const NSRect *)rects :(int)rectCount
+- (void)drawRect:(NSRect)dirtyRect
 {
 	epair_t	*pair;
 	int		y;
+	//NSBezierPath *bPath = [NSBezierPath bezierPath];
 	
-	PSsetgray(NXGrayComponent(NX_COLORLTGRAY));
-	PSrectfill(0,0,bounds.size.width,bounds.size.height);
-		
-	PSselectfont("Helvetica-Bold",FONTSIZE);
-	PSrotate(0);
-	PSsetgray(0);
+#if 1
+	[super drawRect:dirtyRect];
+#else
+	[[NSColor lightGrayColor] set];
+	NSRect aFillRect;
+	aFillRect.size = self.bounds.size;
+	aFillRect.origin = NSZeroPoint;
+	NSRectFill(aFillRect);
+#endif
+	NSFont *sysFont = [NSFont boldSystemFontOfSize:FONTSIZE];
+	NSDictionary *fDict = @{NSFontAttributeName: sysFont};
+	//PSselectfont("Helvetica-Bold",FONTSIZE);
+	//PSrotate(0);
+	//PSsetgray(0);
+	[[NSColor blackColor] set];
 	
 	pair = [[map_i currentEntity] epairs];
-	y = bounds.size.height - LINEHEIGHT;
+	y = [self bounds].size.height - LINEHEIGHT;
 	for ( ; pair ; pair=pair->next)
 	{
-		PSmoveto(SPACING, y);
-		PSshow(pair->key);
-		PSmoveto(100, y);
-		PSshow(pair->value);
+		//[bPath moveToPoint:NSMakePoint(SPACING, y)];
+		//PSmoveto(SPACING, y);
+		[@(pair->key) drawAtPoint:NSMakePoint(SPACING, y) withAttributes:fDict];
+		//PSshow(pair->key);
+		[@(pair->value) drawAtPoint:NSMakePoint(100, y) withAttributes:fDict];
+		//PSmoveto(100, y);
+		//PSshow(pair->value);
 		y -= LINEHEIGHT;
 	}
-	PSstroke();
-	
-	return self;
+	//PSstroke();
+	//[bPath stroke];
 }
 
-- mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
 	NSPoint	loc;
 	int		i;
@@ -83,13 +95,11 @@ initFrame:
 	{
 		p=p->next;
 		if (!p)
-			return self;
+			return;
 		i--;
 	}
 	if (p)
 		[things_i setSelectedKey: p];
-	
-	return self;
 }
 
 @end

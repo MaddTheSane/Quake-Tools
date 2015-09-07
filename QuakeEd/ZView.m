@@ -61,7 +61,7 @@ initFrame:
 
 	[zscrollview_i setDocumentView: self];
 
-//	[superview setDrawOrigin: 0 : 0];
+//	[[self superview] setDrawOrigin: 0 : 0];
 
 	minheight = 0;
 	maxheight = 64;
@@ -635,7 +635,7 @@ void ZControlCallback (float dy)
 	if ([map_i numSelected] != 1)
 		return NO;
 
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	dragpoint[0] = origin[0];
@@ -648,7 +648,7 @@ void ZControlCallback (float dy)
 	
 	qprintf ("dragging brush plane");
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	[self	dragFrom:	theEvent 
@@ -676,7 +676,7 @@ mouseDown
 	int		flags;
 	vec3_t	p1;
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	p1[0] = origin[0];
@@ -751,7 +751,7 @@ rightMouseDown
 	NSPoint	pt;
 	int		flags;
 		
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);

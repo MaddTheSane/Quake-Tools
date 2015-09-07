@@ -3,7 +3,9 @@
 
 XYView *xyview_i;
 
-id	scalemenu_i, gridmenu_i, scrollview_i, gridbutton_i, scalebutton_i;
+PopScrollView *scrollview_i;
+NSPopUpButton *scalebutton_i, *gridbutton_i;
+NSMenu *scalemenu_i, *gridmenu_i;
 
 vec3_t		xy_viewnormal;		// v_forward for xy view
 float		xy_viewdist;		// clip behind this plane
@@ -18,7 +20,6 @@ initFrame:
 - (instancetype)initWithFrame:(NSRect)frameRect
 {
 	self = [super initWithFrame:frameRect];
-	[self allocateGState];
 	
 	realbounds = NSMakeRect(0, 0, 0, 0);
 	
@@ -32,7 +33,8 @@ initFrame:
 //		
 // initialize the pop up menus
 //
-	scalemenu_i = [[NSPopUpButton alloc] init];
+	scalebutton_i = [[NSPopUpButton alloc] init];
+	scalemenu_i = scalebutton_i.menu;
 	[scalemenu_i setTarget: self];
 	[scalemenu_i setAction: @selector(scaleMenuTarget:)];
 
@@ -130,8 +132,6 @@ setOrigin:scale:
 	scale = sc;
 	
 	sframe = newbounds = [[self superview] frame];
-	[superview getFrame: &sframe];
-	[superview getFrame: &newbounds];
 	newbounds.origin = *pt;
 	newbounds.size.width /= scale; 
 	newbounds.size.height /= scale; 
@@ -139,7 +139,7 @@ setOrigin:scale:
 //
 // union with the realbounds
 //
-	NXUnionRect (&realbounds, &newbounds);
+	newbounds = NSUnionRect (realbounds, newbounds);
 
 //
 // redisplay everything
@@ -156,10 +156,10 @@ setOrigin:scale:
 //
 // scroll and scale the clip view
 //
-	[superview setDrawSize
+	[[self superview] setDrawSize
 		: sframe.size.width/scale 
 		: sframe.size.height/scale];
-	[superview setDrawOrigin: pt->x : pt->y];
+	[[self superview] setDrawOrigin: pt->x : pt->y];
 
 	[quakeed_i reenableDisplay];
 	[scrollview_i display];
@@ -778,14 +778,14 @@ drawSelf
 ===================
 */
 NSRect	xy_draw_rect;
-- drawSelf:(const NSRect *)rects :(int)rectCount
+-(void)drawRect:(NSRect)rects
 {
 	static float	drawtime;	// static to shut up compiler warning
 
 	if (timedrawing)
 		drawtime = I_FloatTime ();
 
-	xy_draw_rect = *rects;
+	xy_draw_rect = rects;
 	newrect.origin.x = newrect.origin.y = 99999;
 	newrect.size.width = newrect.size.height = -2*99999;
 
@@ -800,12 +800,10 @@ NSRect	xy_draw_rect;
 	
 	if (timedrawing)
 	{
-		NXPing ();
+		//NXPing ();
 		drawtime = I_FloatTime() - drawtime;
 		printf ("CameraView drawtime: %5.3f\n", drawtime);
 	}
-
-	return self;
 }
 
 
@@ -833,7 +831,7 @@ static	NSPoint		oldreletive;
 	NSPoint		reletive, delta;
 
 	startpt = startevent.locationInWindow;
-	[self convertPoint:&startpt  fromView:NULL];
+	startpt = [self convertPoint:startpt fromView:nil];
 	
 	oldreletive.x = oldreletive.y = 0;
 	
@@ -843,8 +841,7 @@ static	NSPoint		oldreletive;
 		startpt.y = [self snapToGrid: startpt.y];
 	}
 	
-	while (1)
-	{
+	while (1) {
 		event = [NSApp getNextEvent: NSLeftMouseUpMask | NSLeftMouseDraggedMask
 			| NSRightMouseUpMask | NSRightMouseDraggedMask | NSApplicationDefinedMask];
 
@@ -856,11 +853,10 @@ static	NSPoint		oldreletive;
 			continue;
 		}
 		
-		newpt = event->location;
-		[self convertPoint:&newpt  fromView:NULL];
+		newpt = event.locationInWindow;
+		newpt = [self convertPoint:newpt fromView:nil];
 
-		if (ug)
-		{
+		if (ug) {
 			newpt.x = [self snapToGrid: newpt.x];
 			newpt.y = [self snapToGrid: newpt.y];
 		}
@@ -969,7 +965,7 @@ void DirectionCallback (float dx, float dy)
 
 	qprintf ("changing camera direction");
 
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	direction[0] = pt.x;
@@ -1016,7 +1012,7 @@ void NewCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- newBrushDragFrom: (NSEvent*)theEvent	
+- (void)newBrushDragFrom: (NSEvent*)theEvent
 {
 	id				owner;
 	texturedef_t	td;
@@ -1024,7 +1020,7 @@ void NewCallback (float dx, float dy)
 
 	qprintf ("sizing new brush");
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	neworg[0] = [self snapToGrid: pt.x];
@@ -1081,7 +1077,7 @@ void ControlCallback (float dx, float dy)
 	if ([map_i numSelected] != 1)
 		return NO;
 		
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	dragpoint[0] = pt.x;
@@ -1094,7 +1090,7 @@ void ControlCallback (float dx, float dy)
 	
 	qprintf ("dragging brush plane");
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	[self	dragFrom:	theEvent 
@@ -1122,7 +1118,7 @@ void ControlCallback (float dx, float dy)
 		return NO;
 	br = [map_i selectedBrush];
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 // if the XY point is inside the brush, make the point on top
@@ -1153,7 +1149,7 @@ void ControlCallback (float dx, float dy)
 	
 	qprintf ("dragging brush plane");
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	[self	dragFrom:	theEvent 
@@ -1182,14 +1178,14 @@ void ControlCallback (float dx, float dy)
 mouseDown
 ===================
 */
-- mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
 	NSPoint	pt;
 	id		ent;
 	vec3_t	p1, p2;
-	int		flags;
+	NSEventModifierFlags		flags;
 	
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	p1[0] = p2[0] = pt.x;
@@ -1334,35 +1330,33 @@ return self;
 rightMouseDown
 ===================
 */
-- rightMouseDown:(NSEvent *)theEvent
+- (void)rightMouseDown:(NSEvent *)theEvent
 {
-	NSPoint	pt;
-	int		flags;
+	NSPoint					pt;
+	NSEventModifierFlags	flags;
 		
-	pt= theEvent->location;
+	pt= theEvent.locationInWindow;
 	[self convertPoint:&pt  fromView:NULL];
 
 	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 	if (flags == NSCommandKeyMask)
 	{
-		return [self scrollDragFrom: theEvent];		
+		[self scrollDragFrom: theEvent];
 	}
 
 	if (flags == NSAlternateKeyMask)
 	{
-		return [clipper_i XYClick: pt];
+		[clipper_i XYClick: pt];
 	}
 	
 	if (flags == 0 || flags == NSControlKeyMask)
 	{
-		return [self directionDragFrom: theEvent];
+		[self directionDragFrom: theEvent];
 	}
 	
 	qprintf ("bad flags for click");
 	NopSound ();
-
-	return self;
 }
 
 

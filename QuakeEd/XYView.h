@@ -25,7 +25,7 @@ void XYlineto (vec3_t pt);
 typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
 
 
-@interface XYView :  NSView
+@interface XYView :  NSView <NSDraggingSource>
 {
 	NSRect		realbounds, newrect, combinedrect;
 	NSPoint		midpoint;

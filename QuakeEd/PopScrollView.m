@@ -42,34 +42,30 @@ Adjust the size for the pop up scale menu
 	NSRect	newframe;
 	
 	[super tile];
-	[button1 getFrame: &buttonframe];
-	[button2 getFrame: &buttonframe2];
-	[hScroller getFrame: &scrollerframe];
+	buttonframe = [button1 frame];
+	buttonframe2 = [button2 frame];
+	scrollerframe = [[self horizontalScroller] frame];
 
 	newframe.origin.y = scrollerframe.origin.y;
-	newframe.origin.x = frame.size.width - buttonframe.size.width;
+	newframe.origin.x = _frame.size.width - buttonframe.size.width;
 	newframe.size.width = buttonframe.size.width;
 	newframe.size.height = scrollerframe.size.height;
 	scrollerframe.size.width -= newframe.size.width;
-	[button1 setFrame: &newframe];
+	[button1 setFrame: newframe];
 	newframe.size.width = buttonframe2.size.width;
 	newframe.origin.x -= newframe.size.width;
-	[button2 setFrame: &newframe];
+	[button2 setFrame: newframe];
 	scrollerframe.size.width -= newframe.size.width;
 
-	[hScroller setFrame: &scrollerframe];
-
-	return self;
+	[[self horizontalScroller] setFrame: scrollerframe];
 }
 
-
-- superviewSizeChanged:(const NSSize *)oldSize
+- (void)superviewSizeChanged:(const NSSize *)oldSize
 {
-	[super superviewSizeChanged: oldSize];
+	//TODO:Update!
+	//[super superviewSizeChanged: oldSize];
 	
-	[[self docView] newSuperBounds];
-	
-	return self;
+	[[self documentView] newSuperBounds];
 }
 
 

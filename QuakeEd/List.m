@@ -79,6 +79,16 @@
 	[internalList removeObjectAtIndex:idx];
 }
 
+- (NSEnumerator*)objectEnumerator
+{
+	return [internalList objectEnumerator];
+}
+
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len
+{
+	return [internalList countByEnumeratingWithState:state objects:buffer count:len];
+}
+
 - (void)dealloc
 {
 	[internalList release];
