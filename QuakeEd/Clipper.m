@@ -1,7 +1,7 @@
 
 #include "qedefs.h"
 
-id	clipper_i;
+Clipper *clipper_i;
 
 @implementation Clipper
 
@@ -127,7 +127,7 @@ XYDrag
 	
 	for (i=0 ; i<3 ; i++)
 	{
-		if (fabs(pt.x - pos[i][0] > 10) || fabs(pt.y - pos[i][1] > 10) )
+		if ((fabs(pt.x - pos[i][0]) > 10) || (fabs(pt.y - pos[i][1]) > 10) )
 			continue;
 	// drag this point
 	

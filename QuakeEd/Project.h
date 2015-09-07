@@ -17,12 +17,14 @@
 #define	SUBDIR_MAPS		"maps"
 #define SUBDIR_GFX		"gfx"
 
+@class Dict;
+
 @class Project;
 extern Project *project_i;
 
-@interface Project: NSObject
+@interface Project: NSObject <NSBrowserDelegate>
 {
-	IBOutlet id	projectInfo;		// dictionary storage of project info
+	NSMutableDictionary	*projectInfo;		// dictionary storage of project info
 
 	IBOutlet id	basepathinfo_i;		// outlet to base path info textfield
 	IBOutlet id	mapbrowse_i;		// outlet to QuakeEd Maps browser
@@ -43,7 +45,7 @@ extern Project *project_i;
 	
 	IBOutlet NSTextView	*BSPoutput_i;		// outlet to Text
 	
-	char	path_projectinfo[128];	// path of QE_Project file
+	char	path_projectinfo[PATH_MAX];	// path of QE_Project file
 
 	char	path_basepath[128];		// base path of heirarchy
 
@@ -70,7 +72,7 @@ extern Project *project_i;
 - (void)initProject;
 - (void)initVars;
 
-- (char *)currentProjectFile;
+- (const char *)currentProjectFile;
 
 - (void)setTextureWad: (char *)wf;
 
@@ -83,8 +85,9 @@ extern Project *project_i;
 /// read defaultsdatabase for project path
 - (void)parseProjectFile;
 /// called by openProject and newProject
-- (void)openProjectFile:(char *)path;
-- (void)openProject;
+- (BOOL)openProjectFile:(const char *)path;
+- (BOOL)openProjectFileAtURL:(NSURL*)aURL error:(NSError**)error;
+- (BOOL)openProject;
 /// called if clicked on map in browser
 - (IBAction)clickedOnMap:(id)sender;
 /// called if clicked on wad in browser
@@ -94,6 +97,7 @@ extern Project *project_i;
 
 //	methods to querie the project file
 
+//@property
 - (char *)getMapDirectory;
 - (char *)getFinalMapDirectory;
 - (char *)getProgDirectory;

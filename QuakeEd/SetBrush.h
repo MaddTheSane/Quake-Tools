@@ -1,4 +1,6 @@
 
+#import <Cocoa/Cocoa.h>
+#import "XYZDrawable.h"
 
 #define		MAX_FACES		16
 
@@ -45,7 +47,7 @@ winding_t	*CopyWinding (winding_t *w);
 winding_t *NewWinding (int points);
 
 
-@interface SetBrush : NSObject <NSCopying>
+@interface SetBrush : NSObject <NSCopying, XYZDrawable>
 {
 	BOOL		regioned;		// not active
 	BOOL		selected;

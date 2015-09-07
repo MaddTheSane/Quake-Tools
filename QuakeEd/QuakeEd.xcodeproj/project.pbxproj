@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5509C3A71B9E35780002FFC0 /* QDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5509C3A61B9E35780002FFC0 /* QDict.swift */; settings = {ASSET_TAGS = (); }; };
 		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; settings = {ASSET_TAGS = (); }; };
 		5531411E1B98E5C400390795 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5531411D1B98E5C400390795 /* Info.plist */; settings = {ASSET_TAGS = (); }; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; settings = {ASSET_TAGS = (); }; };
@@ -53,6 +54,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5509C3A41B9E2B980002FFC0 /* XYZDrawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYZDrawable.h; sourceTree = "<group>"; };
+		5509C3A51B9E35770002FFC0 /* QuakeEd-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QuakeEd-Bridging-Header.h"; sourceTree = "<group>"; };
+		5509C3A61B9E35780002FFC0 /* QDict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QDict.swift; sourceTree = "<group>"; };
 		552A27021B9D402E0055D5D9 /* QuakeEd.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuakeEd.xib; sourceTree = "<group>"; };
 		553141091B98E46B00390795 /* QuakeEd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuakeEd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5531411D1B98E5C400390795 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 				553141241B98E61F00390795 /* Clipper.m */,
 				553141251B98E61F00390795 /* cmdlib.c */,
 				553141261B98E61F00390795 /* cmdlib.h */,
+				5509C3A61B9E35780002FFC0 /* QDict.swift */,
 				553141271B98E61F00390795 /* Dict.h */,
 				553141281B98E61F00390795 /* Dict.m */,
 				553141291B98E61F00390795 /* DictList.h */,
@@ -227,8 +232,10 @@
 				553141661B98E61F00390795 /* ZScrollView.m */,
 				553141671B98E61F00390795 /* ZView.h */,
 				553141681B98E61F00390795 /* ZView.m */,
+				5509C3A41B9E2B980002FFC0 /* XYZDrawable.h */,
 				5531419B1B99100500390795 /* List.h */,
 				5531419C1B99100500390795 /* List.m */,
+				5509C3A51B9E35770002FFC0 /* QuakeEd-Bridging-Header.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -282,6 +289,7 @@
 		553141011B98E46B00390795 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "C.W. Betts";
 				TargetAttributes = {
@@ -367,6 +375,7 @@
 				553141931B98E61F00390795 /* ZView.m in Sources */,
 				5531417E1B98E61F00390795 /* mathlib.c in Sources */,
 				553141911B98E61F00390795 /* XYView.m in Sources */,
+				5509C3A71B9E35780002FFC0 /* QDict.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,22 +462,27 @@
 		5531411B1B98E46B00390795 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.id.quake.QuakeEd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QuakeEd-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		5531411C1B98E46B00390795 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.id.quake.QuakeEd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QuakeEd-Bridging-Header.h";
 			};
 			name = Release;
 		};

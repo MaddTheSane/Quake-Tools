@@ -38,45 +38,45 @@ void qprintf (const char *fmt, ...);		// prints text to cmd_out_i
         IBOutlet id		filter_water_i;
         IBOutlet id		filter_world_i;
 	
-        IBOutlet id		cmd_in_i;		// text fields
+        IBOutlet NSTextField	*cmd_in_i;		// text fields
         IBOutlet id		cmd_out_i;	
 	
         IBOutlet id		xy_drawmode_i;	// passed over to xyview after init
 }
 
 - (void)setDefaultFilename;
-- (char *)currentFilename;
+- (const char *)currentFilename NS_RETURNS_INNER_POINTER;
 
 - (void)updateAll;		// when a model has been changed
 - (void)updateCamera;		// when the camera has moved
 - (void)updateXY;
 - (void)updateZ;
 
-- (IBAction)updateAll:sender;
+- (IBAction)updateAll:(id)sender;
 
 - (void)newinstance;		// force next flushwindow to clear all instance drawing
 - (void)redrawInstance;	// erase and redraw all instance now
 
-- (IBAction)openProject:sender;
+- (IBAction)openProject:(id)sender;
 
-- (IBAction)textCommand: sender;
+- (IBAction)textCommand:(id)sender;
 
-- (IBAction)applyRegion: sender;
+- (IBAction)applyRegion:(id)sender;
 
 - (BOOL)dirty;
 
-- (IBAction)clear: sender;
-- (IBAction)centerCamera: sender;
-- (IBAction)centerZChecker: sender;
+- (IBAction)clear:(id) sender;
+- (IBAction)centerCamera:(id) sender;
+- (IBAction)centerZChecker:(id) sender;
 
-- (IBAction)changeXYLookUp: sender;
+- (IBAction)changeXYLookUp:(id) sender;
 
-- (IBAction)setBrushRegion: sender;
-- (IBAction)setXYRegion: sender;
+- (IBAction)setBrushRegion:(id) sender;
+- (IBAction)setXYRegion:(id) sender;
 
-- (IBAction)open: sender;
-- (IBAction)save: sender;
-- (IBAction)saveAs: sender;
+- (IBAction)open:(id) sender;
+- (IBAction)save:(id) sender;
+- (IBAction)saveAs:(id) sender;
 
 - doOpen: (char *)fname;
 

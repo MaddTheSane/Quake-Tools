@@ -5,8 +5,6 @@
 extern KeypairView *keypairview_i;
 
 @interface KeypairView: NSView
-{
-}
 
 - (void)calcViewSize;
 

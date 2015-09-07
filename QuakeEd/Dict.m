@@ -378,9 +378,10 @@ char	item[4096];
 	char	string[1024];
 	
 	c = FindBrace(fp);
-	if (c == -1)
+	if (c == -1) {
 		return NULL;
-		
+	}
+	
 	while((c = FindBrace(fp)) != '}')
 	{
 		if (c == -1)
@@ -392,13 +393,13 @@ char	item[4096];
 
 // JDC: fixed to allow quoted keys
 		c = FindNonwhitespc(fp);
-		if (c == -1)
+		if (c == -1) {
 			return NULL;
+		}
 		c = fgetc(fp);
-		if ( c == '\"')		
+		if ( c == '\"') {
 			CopyUntilQuote(fp,string);
-		else
-		{
+		} else {
 			ungetc (c,fp);
 			CopyUntilWhitespc(fp,string);
 		}

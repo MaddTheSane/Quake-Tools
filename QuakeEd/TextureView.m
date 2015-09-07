@@ -82,7 +82,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		r.origin.x -= TEX_INDENT/2;
 		r.size.width += TEX_INDENT;
 		r.origin.y += 4;
-		if (NXIntersectsRect(&rects[0],&r) == YES &&
+		if (NSIntersectsRect(dirtyRect,r) == YES &&
 			t->display)
 		{
 			if (selected == i)
@@ -115,13 +115,13 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	NSPoint	loc;
-	int		i;
-	NSInteger		max;
-	int		oldwindowmask;
-	texpal_t *t;
-	List	*list;
-	NSRect	r;
+	NSPoint		loc;
+	int			i;
+	NSInteger	max;
+	int			oldwindowmask;
+	texpal_t	*t;
+	List		*list;
+	NSRect		r;
 
 	//oldwindowmask = [window addToEventMask:NSLeftMouseDraggedMask];
 	loc = theEvent.locationInWindow;

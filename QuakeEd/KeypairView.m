@@ -1,7 +1,7 @@
 
 #import "qedefs.h"
 
-id	keypairview_i;
+KeypairView *keypairview_i;
 
 @implementation KeypairView
 
@@ -56,11 +56,12 @@ initFrame:
 	NSRectFill(aFillRect);
 #endif
 	NSFont *sysFont = [NSFont boldSystemFontOfSize:FONTSIZE];
-	NSDictionary *fDict = @{NSFontAttributeName: sysFont};
+	NSColor *textClr = [NSColor controlTextColor];
+	NSDictionary *fDict = @{NSFontAttributeName: sysFont,
+							NSForegroundColorAttributeName: textClr};
 	//PSselectfont("Helvetica-Bold",FONTSIZE);
 	//PSrotate(0);
 	//PSsetgray(0);
-	[[NSColor blackColor] set];
 	
 	pair = [[map_i currentEntity] epairs];
 	y = [self bounds].size.height - LINEHEIGHT;

@@ -1,7 +1,7 @@
 
 #include "qedefs.h"
-
-id	map_i;
+#import "Entity.h"
+Map *map_i;
 
 @implementation Map
 
@@ -36,20 +36,20 @@ FILE METHODS
 	sb_newowner = oldselection;
 	for (i=0 ; i<c ; i++)
 	{
-		o = [w objectAt: 0];
+		o = [w objectAtIndex: 0];
 		if ([o selected])
 			[o moveToEntity];
 		else
 		{
 			[w removeObjectAt: 0];
-			[o free];
+			[o release];
 		}
 	}
 	
 	c = [self count];
 	for (i=0 ; i<c ; i++)
 	{
-		o = [self objectAt: 0];
+		o = [self objectAtIndex: 0];
 		[self removeObjectAt: 0];
 		[o release];
 	}
@@ -57,40 +57,36 @@ FILE METHODS
 	return self;
 }
 
-- addSelected
+- (void)addSelected
 {
 	NSInteger	i, c;
 	id			n, w;
 	
 	c = [oldselection count];
-	w = [self objectAt: 0];	// world object
+	w = [self objectAtIndex: 0];	// world object
 
 	sb_newowner = w;
 	for (i=0 ; i<c ; i++)
 	{
-		n = [oldselection objectAt:i];
+		n = [oldselection objectAtIndex:i];
 		[n moveToEntity];
 		i--;
 		c--;
 	}
 	[oldselection empty];
-	
-	return self;
 }
 
 
-- newMap
+- (void)newMap
 {
 	id	ent;
 	
 	[self saveSelected];
-	ent = [[Entity alloc] initClass: "worldspawn"];
+	ent = [[Entity alloc] initWithClass: "worldspawn"];
 	[self addObject: ent];
 	currentEntity = NULL;
 	[self setCurrentEntity: ent];
 	[self addSelected];
-
-	return self;
 }
 
 @synthesize currentEntity;
@@ -149,13 +145,13 @@ FILE METHODS
 	
 	if (o == currentEntity)
 	{	// select the world
-		[self setCurrentEntity: [self objectAt: 0]];
+		[self setCurrentEntity: [self objectAtIndex: 0]];
 	}
 
 	return o;
 }
 
-- writeStats
+- (void)writeStats
 {
 	FILE	*f;
 	extern	int	c_updateall;
@@ -168,30 +164,28 @@ FILE METHODS
 	fprintf (f,"%i %i\n", (int)tp.tv_sec, c_updateall);
 	c_updateall = 0;
 	fclose (f);
-	return self;
 }
 
-- (int)numSelected
+- (NSInteger)numSelected
 {
-	int		i, c;
-	int		num;
+	NSInteger	i, c;
+	NSInteger	num;
 	
 	num = 0;
 	c = [currentEntity count];
 	for (i=0 ; i<c ; i++)
-		if ( [[currentEntity objectAt: i] selected] )
+		if ( [[currentEntity objectAtIndex: i] selected] )
 			num++;
 	return num;
 }
 
 - (SetBrush*)selectedBrush
 {
-	NSInteger	i, c;
-	
-	c = [currentEntity count];
-	for (i=0 ; i<c ; i++)
-		if ( [[currentEntity objectAt: i] selected] )
-			return [currentEntity objectAt: i];
+	for (SetBrush *aBrush in currentEntity) {
+		if ([aBrush selected]) {
+			return aBrush;
+		}
+	}
 	return nil;
 }
 
@@ -201,14 +195,14 @@ FILE METHODS
 readMapFile
 =================
 */
-- readMapFile: (char *)fname
+- (void)readMapFile: (char *)fname
 {
-	char	*dat, *cl;
-	id		new;
-	id		ent;
-	int		i, c;
-	vec3_t	org;
-	float	angle;
+	char		*dat, *cl;
+	id			new;
+	id			ent;
+	NSInteger	i, c;
+	vec3_t		org;
+	float		angle;
 	
 	[self saveSelected];
 	
@@ -227,7 +221,7 @@ readMapFile
 
 	free (dat);
 
-	[self setCurrentEntity: [self objectAt: 0]];
+	[self setCurrentEntity: [self objectAtIndex: 0]];
 
 	[self addSelected];
 		
@@ -248,7 +242,7 @@ readMapFile
 	c = [self count];
 	for (i=1 ; i<c ; i++)
 	{
-		ent = [self objectAt: i];
+		ent = [self objectAtIndex: i];
 		cl = [ent valueForQKey: "classname"];
 		if (cl && !strcasecmp (cl,"info_player_start"))
 		{
@@ -260,8 +254,6 @@ readMapFile
 			break;
 		}
 	}
-	
-	return self;
 }
 
 /*
@@ -269,7 +261,7 @@ readMapFile
 writeMapFile
 =================
 */
-- writeMapFile: (char *)fname useRegion: (BOOL)reg
+- (void)writeMapFile: (char *)fname useRegion: (BOOL)reg
 {
 	FILE	*f;
 	int		i;
@@ -281,11 +273,9 @@ writeMapFile
 		Error ("couldn't write %s", fname);
 	
 	for (i=0 ; i<numElements ; i++)
-		[[self objectAt: i] writeToFILE: f region: reg];
+		[[self objectAtIndex: i] writeToFILE: f region: reg];
 			
 	fclose (f);
-	
-	return self;
 }
 
 /*
@@ -296,28 +286,23 @@ DRAWING
 ==============================================================================
 */
 
-- ZDrawSelf
+- (void)ZDrawSelf
 {
-	int		i, count;
+	NSInteger	i, count;
 	
 	count = [self count];
 
 	for (i=0 ; i<count ; i++)
-		[[self objectAt: i] ZDrawSelf];
-
-	return self;
+		[[self objectAtIndex: i] ZDrawSelf];
 }
 
-- RenderSelf: (void (*) (face_t *))callback
+- (void)RenderSelf: (void (*) (face_t *))callback
 {
-	int		i, count;
+	NSInteger	i, count;
 	
 	count = [self count];
-
 	for (i=0 ; i<count ; i++)
-		[[self objectAt: i] RenderSelf: callback];
-
-	return self;
+		[[self objectAtIndex: i] RenderSelf: callback];
 }
 
 

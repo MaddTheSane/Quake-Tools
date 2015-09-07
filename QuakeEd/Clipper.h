@@ -1,10 +1,11 @@
 
 #import <AppKit/AppKit.h>
+#import "XYZDrawable.h"
 
 @class Clipper;
 extern	Clipper	*clipper_i;
 
-@interface Clipper : NSObject
+@interface Clipper : NSObject <XYZDrawable>
 {
 	int			num;
 	vec3_t		pos[3];

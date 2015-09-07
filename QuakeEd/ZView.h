@@ -1,6 +1,7 @@
 
 #import <AppKit/AppKit.h>
 #import "mathlib.h"
+#import "XYZDrawable.h"
 
 @class ZView;
 extern ZView *zview_i;
@@ -9,7 +10,7 @@ extern ZView *zview_i;
 extern	float	zplane;
 extern	float	zplanedir;
 
-@interface ZView : NSView
+@interface ZView : NSView <XYZDrawable>
 {
 	float		minheight, maxheight;
 	float		oldminheight, oldmaxheight;

@@ -26,7 +26,7 @@ void VectorMA (vec3_t va, double scale, vec3_t vb, vec3_t vc)
 	vc[2] = va[2] + scale*vb[2];
 }
 
-boolean VectorCompare (vec3_t v1, vec3_t v2)
+bool VectorCompare (vec3_t v1, vec3_t v2)
 {
 	int		i;
 	

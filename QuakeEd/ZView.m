@@ -525,7 +525,7 @@ static	NSPoint		oldreletive;
 
 	gridsize = [xyview_i gridsize];
 	
-	startpt = startevent->location;
+	startpt = startevent.locationInWindow;
 	[self convertPoint:&startpt  fromView:NULL];
 	
 	oldreletive.x = oldreletive.y = 0;
@@ -535,10 +535,10 @@ static	NSPoint		oldreletive;
 		event = [NSApp getNextEvent: 
 			NSLeftMouseUpMask | NSLeftMouseDraggedMask
 			| NSRightMouseUpMask | NSRightMouseDraggedMask];
-		if (event->type == NSLeftMouseUp || event->type == NSRightMouseUp)
+		if (event.type == NSLeftMouseUp || event.type == NSRightMouseUp)
 			break;
 			
-		newpt = event->location;
+		newpt = event.locationInWindow;
 		[self convertPoint:&newpt  fromView:NULL];
 
 		reletive.y = newpt.y - startpt.y;
@@ -806,7 +806,7 @@ modalMoveLoop
 		//
 		// calculate new point
 		//
-		newpt = event->location;
+		newpt = event.locationInView;
 		[converter convertPoint:&newpt  fromView:NULL];
 				
 		delta[0] = newpt.x-basept->x;

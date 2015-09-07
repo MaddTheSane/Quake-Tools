@@ -226,15 +226,15 @@ flushWindow
 instance draw the brush after each flush
 ===============
 */
--flushWindow
+-(void)flushWindow
 {
 	[super flushWindow];
 	
 	if (!running || in_error)
-		return self;		// don't lock focus before nib is finished loading
+		return;		// don't lock focus before nib is finished loading
 		
 	if (_flushDisabled)
-		return self;
+		return;
 		
 	[cameraview_i lockFocus];	
 	if (clearinstance)
@@ -269,8 +269,6 @@ instance draw the brush after each flush
 	[clipper_i ZDrawSelf];
 	PSsetinstance (0);
 	[zview_i unlockFocus];
-
-	return self;
 }
 
 
@@ -282,9 +280,9 @@ App delegate methods
 ==============================================================================
 */
 
-- applicationDefined:(NSEvent *)theEvent
+- (void)applicationDefined:(NSEvent *)theEvent
 {
-	NSEvent		ev, *evp;
+	NSEvent		*ev, *evp;
 	
 	updateinflight = NO;
 
@@ -295,7 +293,7 @@ App delegate methods
 	if (evp)
 	{
 		postappdefined();
-		return self;
+		return;
 	}
 
 		
@@ -319,8 +317,6 @@ App delegate methods
 	[self flushWindow];
 	
 //	NXPing ();
-	
-	return self;
 }
 
 -(void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -514,8 +510,6 @@ applyRegion:
 // turn region on
 	[regionbutton_i setIntValue: 1];
 	[self applyRegion: self];
-	
-	return self;
 }
 
 //
@@ -785,12 +779,12 @@ save:
 saveAs
 ==============
 */
-- saveAs: sender;
+- (IBAction)saveAs: sender;
 {
-	id		panel_i;
-	char	dir[1024];
+	NSSavePanel	panel_i;
+	char		dir[1024];
 	
-	panel_i = [SavePanel new];
+	panel_i = [NSSavePanel new];
 	ExtractFileBase (filename, dir);
 	[panel_i setRequiredFileType: "map"];
 	if ( [panel_i runModalForDirectory:[project_i getMapDirectory] file: dir] != NX_OKTAG)
@@ -800,9 +794,7 @@ saveAs
 	
 	[self setTitleAsFilename:filename];
 	
-	[self save: self];	
-	
-	return self;
+	[self save: sender];
 }
 
 
@@ -818,15 +810,15 @@ saveAs
 //
 //	AJR - added this for Project info
 //
-- (char *)currentFilename
+- (const char *)currentFilename
 {
 	return filename;
 }
 
-- deselect: sender
+- (IBAction)deselect: sender
 {
 	if ([clipper_i hide])	// first click hides clipper only
-		return [self updateAll];
+		[self updateAll];
 
 	[map_i setCurrentEntity: [map_i objectAt: 0]];	// make world selected
 	[map_i makeSelectedPerform: @selector(deselect)];

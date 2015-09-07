@@ -2,14 +2,16 @@
 // Map is a list of Entity objects
 
 #import "List.h"
+#import "XYZDrawable.h"
 
 @class SetBrush;
 @class Map;
+@class Entity;
 extern Map *map_i;
 
-@interface Map : List
+@interface Map : List <XYZDrawable>
 {
-	id		currentEntity;
+	Entity	*currentEntity;
 	List	*oldselection;	// temp when loading a new map
 	float	minz, maxz;
 }
@@ -33,7 +35,7 @@ extern Map *map_i;
 @property (nonatomic) float currentMinZ;
 @property (nonatomic) float currentMaxZ;
 
-- (int)numSelected;
+@property (readonly) NSInteger numSelected;
 - (SetBrush*)selectedBrush;			// returns the first selected brush
 
 //

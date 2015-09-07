@@ -21,19 +21,19 @@ extern InspectorControl *inspcontrol_i;
 @interface InspectorControl: NSObject
 {
 	IBOutlet NSView	*inspectorView_i;	// inspector view
-	NSView	*inspectorSubview_i;	// inspector view's current subview (gets replaced)
+	__unsafe_unretained NSView	*inspectorSubview_i;	// inspector view's current subview (gets replaced)
 
-	IBOutlet id	contentList;		// List of contentviews (corresponds to
-							// insp_e enum order)
-	IBOutlet id	windowList;			// List of Windows (corresponds to
-							// insp_e enum order)
+	NSArray	*contentList;		// List of contentviews (corresponds to
+								// insp_e enum order)
+	NSArray	*windowList;			// List of Windows (corresponds to
+									// insp_e enum order)
 
-	IBOutlet id	obj_textures_i;		// TexturePalette object (for delegating)
-	IBOutlet id	obj_genkeypair_i;	// GenKeyPair object
+	id	obj_textures_i;		// TexturePalette object (for delegating)
+	id	obj_genkeypair_i;	// GenKeyPair object
 
 	IBOutlet id	popUpButton_i;		// PopUpList title button
 	IBOutlet id	popUpMatrix_i;		// PopUpList matrix
-	IBOutlet id	itemList;			// List of popUp buttons
+	NSArray	*itemList;			// List of popUp buttons
 		
 	insp_e	currentInspectorType;	// keep track of current inspector
 	//
@@ -51,17 +51,17 @@ extern InspectorControl *inspcontrol_i;
 	IBOutlet NSWindow	*win_help_i;			// documentation
 	
 	// PopUpList objs
-	IBOutlet id	itemProject_i;		// project
-	IBOutlet id	itemTextures_i;		// textures
-	IBOutlet id	itemThings_i;		// things
-	IBOutlet id	itemPrefs_i;		// preferences
-	IBOutlet id	itemSettings_i;		// project settings
-	IBOutlet id	itemOutput_i;		// bsp output
-	IBOutlet id	itemHelp_i;			// docs
+	IBOutlet NSPopUpButton *itemProject_i;		// project
+	IBOutlet NSPopUpButton *itemTextures_i;		// textures
+	IBOutlet NSPopUpButton *itemThings_i;		// things
+	IBOutlet NSPopUpButton *itemPrefs_i;		// preferences
+	IBOutlet NSPopUpButton *itemSettings_i;		// project settings
+	IBOutlet NSPopUpButton *itemOutput_i;		// bsp output
+	IBOutlet NSPopUpButton *itemHelp_i;			// docs
 }
 
 - (void)awakeFromNib;
-- (IBAction)changeInspector:sender;
+- (IBAction)changeInspector:(id)sender;
 @property (setter=changeInspectorTo:, getter=getCurrentInspector, nonatomic) insp_e inspector;
 
 @end

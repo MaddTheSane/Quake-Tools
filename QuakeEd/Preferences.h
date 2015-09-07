@@ -24,11 +24,11 @@ extern	float		lightaxis[3];
 	int		startwad;			// 0 - 2
 	
 // UI targets
-	IBOutlet id	startproject_i;			// TextField
+	IBOutlet NSTextField	*startproject_i;			// TextField
 
-	IBOutlet id	bspSoundField_i;		// TextField of bspSound
+	IBOutlet NSTextField	*bspSoundField_i;		// TextField of bspSound
 
-	IBOutlet id	brushOffset_i;			// Brush Offset checkbox
+	IBOutlet NSButton		*brushOffset_i;			// Brush Offset checkbox
 	IBOutlet id	showBSP_i;				// Show BSP Output checkbox
 	
 	IBOutlet id	startwad_i;				// which wad to load at startup

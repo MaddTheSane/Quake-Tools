@@ -1,7 +1,7 @@
 #import <AppKit/AppKit.h>
 #import "mathlib.h"
 #import "SetBrush.h"
-
+#import "XYZDrawable.h"
 //TODO: PORT TO OPENGL!
 
 @class CameraView;
@@ -14,7 +14,7 @@ void CameraLineto(vec3_t p);
 
 extern	BOOL	timedrawing;
 
-@interface CameraView :  NSView
+@interface CameraView :  NSView <XYZDrawable>
 {
 	float		xa, ya, za;
 	float		move;

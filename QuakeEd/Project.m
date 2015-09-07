@@ -5,15 +5,17 @@
 //======================================
 
 #import "qedefs.h"
-
+#import "QuakeEd-Swift.h"
 
 id	project_i;
 
 @implementation Project
 
-- init
+- (instancetype)init
 {
-	project_i = self;
+	if (self = [super init]) {
+		project_i = self;
+	}
 
 	return self;
 }
@@ -23,7 +25,7 @@ id	project_i;
 //	Project code
 //
 //===========================================================
-- initVars
+- (void)initVars
 {
 	NSString	*s;
 	
@@ -105,14 +107,12 @@ id	project_i;
 	[self changeChar:'_' to:' ' in:descList];
 	
 	[self initProjSettings];
-
-	return self;
 }
 
 //
 //	Init Project Settings fields
 //
-- initProjSettings
+- (void)initProjSettings
 {
 	[pis_basepath_i	setStringValue:path_basepath];
 	[pis_fullvis_i	setStringValue:string_fullvis];
@@ -120,14 +120,12 @@ id	project_i;
 	[pis_novis_i	setStringValue:string_novis];
 	[pis_relight_i	setStringValue:string_relight];
 	[pis_leaktest_i	setStringValue:string_leaktest];
-	
-	return self;
 }
 
 //
 //	Add text to the BSP Output window
 //
-- addToOutput:(char *)string
+- (void)addToOutput:(char *)string
 {
 	int	end;
 	
@@ -138,30 +136,25 @@ id	project_i;
 	end = [BSPoutput_i textLength];
 	[BSPoutput_i setSel:end :end];
 	[BSPoutput_i scrollSelToVisible];
-	
-	return self;
 }
 
-- clearBspOutput:sender
+- (IBAction)clearBspOutput:sender
 {
 	[BSPoutput_i	selectAll:self];
 	[BSPoutput_i	replaceSel:"\0"];
-	
-	return self;
 }
 
-- print
+- (void)print
 {
 	[BSPoutput_i	printPSCode:self];
-	return self;
 }
 
 
-- initProject
+- (void)initProject
 {
 	[self parseProjectFile];
 	if (projectInfo == NULL)
-		return self;
+		return;
 	[self initVars];
 	[mapbrowse_i reuseColumns:YES];
 	[mapbrowse_i loadColumnZero];
@@ -169,14 +162,12 @@ id	project_i;
 	[pis_wads_i loadColumnZero];
 
 	[things_i		initEntities];
-	
-	return self;
 }
 
 //
 //	Change a character to another in a Storage list of strings
 //
-- changeChar:(char)f to:(char)t in:(id)obj
+- (void)changeChar:(char)f to:(char)t in:(id)obj
 {
 	int	i;
 	int	max;
@@ -188,19 +179,19 @@ id	project_i;
 		string = [obj elementAt:i];
 		changeString(f,t,string);
 	}
-	return self;
 }
 
 //
 //	Fill the QuakeEd Maps or wads browser
 //	(Delegate method - delegated in Interface Builder)
 //
-- (int)browser:sender fillMatrix:matrix inColumn:(int)column
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(NSInteger)column inMatrix:(NSMatrix *)matrix
 {
-	id		cell, list;
-	int		max;
-	char	*name;
-	int		i;
+	NSArray			*list;
+	NSBrowserCell	*cell;
+	NSInteger		max;
+	NSString		*name;
+	int				i;
 
 	if (sender == mapbrowse_i)
 		list = mapList;
@@ -215,46 +206,44 @@ id	project_i;
 	max = [list count];
 	for (i = 0 ; i<max ; i++)
 	{
-		name = [list elementAt:i];
+		name = [list objectAtIndex:i];
 		[matrix addRow];
-		cell = [matrix cellAt:i :0];
+		cell = [matrix cellAtRow:i column:0];
 		[cell setStringValue:name];
 		[cell setLeaf:YES];
 		[cell setLoaded:YES];
 	}
-	return i;
 }
 
 //
 //	Clicked on a map name or description!
 //
-- clickedOnMap:sender
+- (IBAction)clickedOnMap:sender
 {
-	id	matrix;
-	int	row;
-	char	fname[1024];
-	id	panel;
+	id			matrix;
+	NSInteger	row;
+	char		fname[1024];
+	id			panel;
 	
 	matrix = [sender matrixInColumn:0];
 	row = [matrix selectedRow];
 	sprintf(fname,"%s/%s.map",path_mapdirectory,
 		(char *)[mapList elementAt:row]);
 	
-	panel = NXGetAlertPanel("Loading...",
-		"Loading map. Please wait.",NULL,NULL,NULL);
+	panel = NSGetAlertPanel(@"Loading...",
+		@"Loading map. Please wait.",NULL,NULL,NULL);
 	[panel orderFront:NULL];
 
 	[quakeed_i doOpen:fname];
 
 	[panel performClose:NULL];
-	NXFreeAlertPanel(panel);
-	return self;
+	//NXFreeAlertPanel(panel);
 }
 
 
 - setTextureWad: (char *)wf
 {
-	int		i, c;
+	NSInteger	i, c;
 	char	*name;
 	
 	qprintf ("loading %s", wf);
@@ -286,8 +275,8 @@ id	project_i;
 //
 - clickedOnWad:sender
 {
-	id		matrix;
-	int		row;
+	NSMatrix	*matrix;
+	NSInteger	row;
 	char	*name;
 	
 	matrix = [sender matrixInColumn:0];
@@ -303,31 +292,30 @@ id	project_i;
 //
 //	Read in the <name>.QE_Project file
 //
-- parseProjectFile
+- (void)parseProjectFile
 {
-	char	*path;
-	int		rtn;
+	NSString	*path;
+	int			rtn;
 	
 	path = [preferences_i getProjectPath];
-	if (!path || !path[0] || access(path,0))
+	if (!path || access([path fileSystemRepresentation],0))
 	{
-		rtn = NXRunAlertPanel("Project Error!",
-			"A default project has not been found.\n"
-			, "Open Project", NULL, NULL);
-		if ([self openProject] == nil)
+		rtn = NSRunAlertPanel(@"Project Error!",
+			@"A default project has not been found.\n"
+			, @"Open Project", NULL, NULL);
+		if ([self openProject] == NO)
 			while (1)		// can't run without a project
 				[NSApp terminate: self];
-		return self;	
+		return;
 	}
 
-	[self openProjectFile:path];
-	return self;
+	[self openProjectFile:[path fileSystemRepresentation]];
 }
 
 //
 //	Loads and parses a project file
 //
-- openProjectFile:(char *)path
+- (BOOL)openProjectFile:(const char *)path
 {		
 	FILE	*fp;
 	struct	stat s;
@@ -337,18 +325,23 @@ id	project_i;
 	projectInfo = NULL;
 	fp = fopen(path,"r+t");
 	if (fp == NULL)
-		return self;
+		return NO;
 
 	stat(path,&s);
 	lastModified = s.st_mtime;
 
-	projectInfo = [(Dict *)[Dict alloc] initFromFile:fp];
+	projectInfo = [[QDict dictionaryFromFile:fp] retain];
 	fclose(fp);
 	
-	return self;
+	return YES;
 }
 
-- (char *)currentProjectFile
+//- (BOOL)openProjectFileAtURL:(NSURL*)aURL error:(NSError**)error
+//{
+//
+//}
+
+- (const char *)currentProjectFile
 {
 	return path_projectinfo;
 }
@@ -356,30 +349,22 @@ id	project_i;
 //
 //	Open a project file
 //
-- openProject
+- (BOOL)openProject
 {
-	char	path[128];
-	id		openpanel;
-	int		rtn;
-	char	*projtypes[2] = {"qpr",NULL};
-	char	**filenames;
-	char	*dir;
+	NSOpenPanel	*openpanel;
+	NSInteger	rtn;
 	
-	openpanel = [OpenPanel new];
-	[openpanel allowMultipleFiles:NO];
-	[openpanel chooseDirectories:NO];
-	rtn = [openpanel runModalForTypes:projtypes];
-	if (rtn == NX_OKTAG)
-	{
-		 (const char *const *)filenames = [openpanel filenames];
-		 dir = (char *)[openpanel directory];
-		 sprintf(path,"%s/%s",dir,filenames[0]);
-		 strcpy(path_projectinfo,path);
-		 [self openProjectFile:path];
-		 return self;
+	openpanel = [NSOpenPanel openPanel];
+	openpanel.allowsMultipleSelection = NO;
+	openpanel.canChooseDirectories = NO;
+	openpanel.allowedFileTypes = @[@"qpr"];
+	rtn = [openpanel runModal];
+	if (rtn == NSModalResponseOK) {
+		NSURL *selURL = [openpanel URL];
+		strcpy(path_projectinfo, [selURL fileSystemRepresentation]);
+		return [self openProjectFile:[selURL fileSystemRepresentation]];
 	}
-	
-	return nil;
+	return NO;
 }
 
 
