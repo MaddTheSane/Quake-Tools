@@ -11,8 +11,9 @@ double VectorLength(vec3_t v)
 	return vector_length(v);
 }
 
-vec3_t VectorMA (vec3_t va, double scale, vec3_t vb, vec3_t vc)
+vec3_t VectorMA (vec3_t va, double scale, vec3_t vb)
 {
+	vec3_t vc;
 	vc[0] = va[0] + scale*vb[0];
 	vc[1] = va[1] + scale*vb[1];
 	vc[2] = va[2] + scale*vb[2];
@@ -31,11 +32,9 @@ bool VectorCompare (vec3_t v1, vec3_t v2)
 }
 
 
-void CrossProduct (vec3_t v1, vec3_t v2, vec3_t cross)
+vec3_t CrossProduct (vec3_t v1, vec3_t v2)
 {
-	cross[0] = v1[1]*v2[2] - v1[2]*v2[1];
-	cross[1] = v1[2]*v2[0] - v1[0]*v2[2];
-	cross[2] = v1[0]*v2[1] - v1[1]*v2[0];
+	return vector_cross(v1, v2);
 }
 
 vec_t _DotProduct (vec3_t v1, vec3_t v2)
@@ -64,7 +63,7 @@ void _VectorCopy (vec3_t in, vec3_t out)
 	out[2] = in[2];
 }
 
-void VectorNormalize (vec3_t v)
+vec3_t VectorNormalize (vec3_t v)
 {
 	int		i;
 	float	length;
@@ -75,13 +74,15 @@ void VectorNormalize (vec3_t v)
 	length = sqrt (length);
 
 	for (i=0 ; i< 3 ; i++)
-		v[i] /= length;	
+		v[i] /= length;
+	
+	return v;
 }
 
-void VectorScale (vec3_t v, vec_t scale, vec3_t out)
+vec3_t VectorScale (vec3_t v, vec_t scale)
 {
-	out[0] = v[0] * scale;
-	out[1] = v[1] * scale;
-	out[2] = v[2] * scale;
+	vec3_t out = v;
+	out *= scale;
+	return out;
 }
 
