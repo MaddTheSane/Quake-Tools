@@ -38,7 +38,7 @@ extern	float	zplanedir;
 
 - (void)setXYOrigin: (NSPoint *)pt;
 
-- (void)setOrigin: (NSPoint *)pt scale: (float)sc;
+- (void)setOrigin: (NSPoint)pt scale: (float)sc;
 
 @end
 

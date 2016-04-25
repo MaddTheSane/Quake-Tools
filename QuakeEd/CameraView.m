@@ -139,7 +139,7 @@ TRANSFORMATION METHODS
 ===============================================================================
 */
 
-- matrixFromAngles
+- (void)matrixFromAngles
 {
 	if (xa > M_PI*0.4)
 		xa = M_PI*0.4;
@@ -158,8 +158,6 @@ TRANSFORMATION METHODS
 
 // vright
 	CrossProduct (matrix[2], matrix[1], matrix[0]);
-
-	return self;
 }
 
 
@@ -404,7 +402,7 @@ drawSolid
 	);
 
 	NXPing ();
-	[[self window] setBackingType:NX_BUFFERED];
+	//[[self window] setBackingType:NX_BUFFERED];
 	
 	
 	

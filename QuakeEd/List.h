@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-///Simple wrapper around the NeXTStep `List` class.
+///Simple wrapper emulating the NeXTStep `List` class.
 @interface List : NSObject <NSFastEnumeration> {
 	NSMutableArray *internalList;
 }

@@ -153,7 +153,7 @@ BOOL	updatecamera;
 
 void postappdefined (void)
 {
-	NSEvent ev;
+	NSEvent *ev;
 
 	if (updateinflight)
 		return;
@@ -168,55 +168,48 @@ void postappdefined (void)
 
 
 int	c_updateall;
-- updateAll			// when a model has been changed
+- (void)updateAll			// when a model has been changed
 {
 	updatecamera = updatexy = updatez = YES;
 	c_updateall++;
 	postappdefined ();
-	return self;
 }
 
-- updateAll:sender
+- (void)updateAll:sender
 {
 	[self updateAll];
-	return self;
 }
 
-- updateCamera		// when the camera has moved
+- (void)updateCamera		// when the camera has moved
 {
 	updatecamera = YES;
 	clearinstance = YES;
 	
 	postappdefined ();
-	return self;
 }
 
-- updateXY
+- (void)updateXY
 {
 	updatexy = YES;
 	postappdefined ();
-	return self;
 }
 
-- updateZ
+- (void)updateZ
 {
 	updatez = YES;
 	postappdefined ();
-	return self;
 }
 
 
-- newinstance
+- (void)newinstance
 {
 	clearinstance = YES;
-	return self;
 }
 
-- redrawInstance
+- (void)redrawInstance
 {
 	clearinstance = YES;
 	[self flushWindow];
-	return self;
 }
 
 /*
@@ -354,10 +347,10 @@ App delegate methods
 //malloc_debug(-1);		// DEBUG
 }
 
-- appWillTerminate:sender
+-(void)applicationWillTerminate:(NSNotification *)notification
 {
-// FIXME: save dialog if dirty
-	return self;
+	// FIXME: save dialog if dirty
+
 }
 
 
@@ -654,49 +647,42 @@ saveBSP
 }
 
 
-- BSP_Full: sender
+- (IBAction)BSP_Full: sender
 {
 	[self saveBSP:[project_i getFullVisCmd] dialog: NO];
-	return self;
 }
 
-- BSP_FastVis: sender
+- (IBAction)BSP_FastVis: sender
 {
 	[self saveBSP:[project_i getFastVisCmd] dialog: NO];
-	return self;
 }
 
-- BSP_NoVis: sender
+- (IBAction)BSP_NoVis: sender
 {
 	[self saveBSP:[project_i getNoVisCmd] dialog: NO];
-	return self;
 }
 
-- BSP_relight: sender
+- (IBAction)BSP_relight: sender
 {
 	[self saveBSP:[project_i getRelightCmd] dialog: NO];
-	return self;
 }
 
-- BSP_entities: sender
+- (IBAction)BSP_entities: sender
 {
 	[self saveBSP:[project_i getEntitiesCmd] dialog: NO];
-	return self;
 }
 
-- BSP_stop: sender
+- (IBAction)BSP_stop: sender
 {
 	if (!bsppid)
 	{
 		NSBeep();
-		return self;
+		return;
 	}
 	
 	kill (bsppid, 9);
 	CheckCmdDone (cmdte, 0, NULL);
 	[project_i addToOutput: "\n\n========= STOPPED =========\n\n"];
-	
-	return self;
 }
 
 
@@ -729,22 +715,20 @@ Called by open or the project panel
 open
 ==============
 */
-- open: sender;
+- (IBAction)open: sender;
 {
 	id			openpanel;
 	static char	*suffixlist[] = {"map", 0};
 
-	openpanel = [OpenPanel new];
+	openpanel = [NSOpenPanel openPanel];
 
 	if ( [openpanel 
 			runModalForDirectory: [project_i getMapDirectory] 
 			file: ""
 			types: suffixlist] != NX_OKTAG)
-		return self;
+		return;
 
 	[self doOpen: (char *)[openpanel filename]];
-	
-	return self;
 }
 
 
@@ -753,14 +737,16 @@ open
 save:
 ==============
 */
-- save: sender;
+- (IBAction)save: sender;
 {
 	char		backup[1024];
 
 // force a name change if using tempname
-	if (!strcmp (filename, FN_TEMPSAVE) )
-		return [self saveAs: self];
-		
+	if (!strcmp (filename, FN_TEMPSAVE) ) {
+		[self saveAs: self];
+		return;
+	}
+	
 	dirty = autodirty = NO;
 
 	strcpy (backup, filename);
@@ -769,8 +755,6 @@ save:
 	rename (filename, backup);		// copy old to .bak
 
 	[map_i writeMapFile: filename useRegion: NO];
-
-	return self;
 }
 
 
@@ -781,14 +765,14 @@ saveAs
 */
 - (IBAction)saveAs: sender;
 {
-	NSSavePanel	panel_i;
+	NSSavePanel	*panel_i;
 	char		dir[1024];
 	
-	panel_i = [NSSavePanel new];
+	panel_i = [NSSavePanel savePanel];
 	ExtractFileBase (filename, dir);
-	[panel_i setRequiredFileType: "map"];
+	[panel_i setRequiredFileType: @"map"];
 	if ( [panel_i runModalForDirectory:[project_i getMapDirectory] file: dir] != NX_OKTAG)
-		return self;
+		return;
 	
 	strcpy (filename, [panel_i filename]);
 	
@@ -824,7 +808,7 @@ saveAs
 	[map_i makeSelectedPerform: @selector(deselect)];
 	[self updateAll];
 	
-	return self;
+	return;
 }
 
 
@@ -844,7 +828,7 @@ keyDown
     int		ch;
 	
 // function keys
-	switch (theEvent->data.key.keyCode)
+	switch (theEvent.keyCode)
 	{
 	case 60:	// F2
 		[cameraview_i setDrawMode: dr_wire];
@@ -889,7 +873,7 @@ keyDown
 	}
 
 // portable things
-    ch = tolower(theEvent->data.key.charCode);
+    ch = tolower([theEvent.charactersIgnoringModifiers characterAtIndex:0]);
 		
 	switch (ch)
 	{

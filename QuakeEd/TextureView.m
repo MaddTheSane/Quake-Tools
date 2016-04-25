@@ -57,7 +57,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		r.size.width += TEX_INDENT*2;
 		r.size.height += TEX_INDENT*2;
 		
-		PSsetgray(NXGrayComponent(NX_COLORLTGRAY));
+		[[NSColor lightGrayColor] set];
 		PSrectfill(r.origin.x, r.origin.y,
 			r.size.width, r.size.height);
 		p = t->r.origin;

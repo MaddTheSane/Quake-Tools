@@ -22,8 +22,8 @@ extern	Things *things_i;
 
 - (void)initEntities;
 
-- newCurrentEntity;
-- setSelectedKey:(epair_t *)ep;
+- (void)newCurrentEntity;
+- (void)setSelectedKey:(epair_t *)ep;
 
 - (void)clearInputs;
 - (char *)spawnName;

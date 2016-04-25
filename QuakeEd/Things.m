@@ -31,13 +31,13 @@ id	things_i;
 {	
 	NSString	*path;
 
-	path = [project_i getProgDirectory];
+	path = @([project_i getProgDirectory]);
 
 	[prog_path_i setStringValue: path];
 	
-	[[EntityClassList alloc] initForSourceDirectory: path];
+	[[EntityClassList alloc] initForSourceDirectory: path.fileSystemRepresentation];
 
-	[self loadEntityComment:[entity_classes_i objectAt:lastSelected]];
+	[self loadEntityComment:[entity_classes_i objectAtIndex:lastSelected]];
 	[entity_browser_i loadColumnZero];
 	[[entity_browser_i matrixInColumn:0] selectCellAtRow:lastSelected column:0];
 
@@ -72,21 +72,21 @@ id	things_i;
 - (IBAction)reloadEntityClasses: sender
 {
 	EntityClass *ent;
-	char	*path;
+	NSString	*path;
 	
-	path = (char *)[prog_path_i stringValue];
-	if (!path || !path[0])
+	path = [prog_path_i stringValue];
+	if (!path || path.length == 0)
 	{
 		path = [project_i getProgDirectory];
 		[prog_path_i setStringValue: path];
 	}
 	
 	//	Free all entity info in memory...
-	[entity_classes_i freeObjects];
-	[entity_classes_i free];
+	//[entity_classes_i freeObjects];
+	[entity_classes_i release];
 	
 	//	Now, RELOAD!
-	[[EntityClassList alloc] initForSourceDirectory: path];
+	entity_classes_i = [[EntityClassList alloc] initForSourceDirectory: path];
 
 	lastSelected = 0;
 	ent = [entity_classes_i objectAt:lastSelected];
@@ -127,7 +127,7 @@ id	things_i;
 	
 	ent = [map_i currentEntity];
 	classname = [ent valueForQKey: "classname"];
-	if (ent != [map_i objectAt: 0])
+	if (ent != [map_i objectAtIndex: 0])
 		[self selectClass: classname];	// don't reset for world
 	classent = [entity_classes_i classForName:classname];
 	flagname = [ent valueForQKey: "spawnflags"];
@@ -144,7 +144,7 @@ id	things_i;
 			if (c < 2)
 			{
 				flagname = [classent flagName: c*4 + r];
-				[cell setTitle: flagname];
+				[cell setTitle: @(flagname)];
 			}
 			[cell setIntValue: (flags & (1<< ((c*4)+r)) ) > 0];
 		}
@@ -163,12 +163,11 @@ id	things_i;
 //
 //	Clicked in the Keypair view - set as selected
 //
-- setSelectedKey:(epair_t *)ep;
+- (void)setSelectedKey:(epair_t *)ep;
 {
 	[keyInput_i setStringValue:@(ep->key)];
 	[valueInput_i setStringValue:@(ep->value)];
 	[valueInput_i	selectText:self];
-	return self;
 }
 
 - (void)clearInputs
@@ -286,10 +285,10 @@ id	things_i;
 	i = 0;
 	while(max--)
 	{
-		object = [entity_classes_i objectAt:i];
+		object = [entity_classes_i objectAtIndex:i];
 		[matrix addRow];
 		cell = [matrix cellAtRow:i++ column:0];
-		[cell setStringValue:[object classname]];
+		[cell setStringValue:@([object classname])];
 		[cell setLeaf:YES];
 		[cell setLoaded:YES];
 	}

@@ -25,7 +25,7 @@ initFrame:
 	origin[1] = 0.333;
 	
 	self = [super initWithFrame:frameRect];
-	[self allocateGState];
+	//[self allocateGState];
 	[self clearBounds];
 	
 	zview_i = self;
@@ -71,17 +71,16 @@ initFrame:
 
 	[self newRealBounds];
 	
-	[self setOrigin: &pt scale: 1];
+	[self setOrigin: pt scale: 1];
 	
 	//return zscrollview_i;
 	return self;
 }
 
-- setXYOrigin: (NSPoint *)pt
+- (void)setXYOrigin: (NSPoint *)pt
 {
 	origin[0] = pt->x + 0.333;
 	origin[1] = pt->y + 0.333;
-	return self;
 }
 
 - (float)currentScale
@@ -178,7 +177,7 @@ Called when the scaler popup on the window is used
 	visrect.origin.x -= sframe.size.width/2/nscale;
 	visrect.origin.y -= sframe.size.height/2/nscale;
 	
-	[self setOrigin: &visrect.origin scale: nscale];
+	[self setOrigin: visrect.origin scale: nscale];
 }
 
 
@@ -302,7 +301,9 @@ Rect is in global world (unscaled) coordinates
 	BOOL	showcoords;
 	
 	showcoords = [quakeed_i showCoordinates];
-		
+	
+	NSBezierPath *path = [NSBezierPath bezierPath];
+	path.lineWidth = 0;
 	PSsetlinewidth (0);
 
 	gridsize = [xyview_i gridsize];
@@ -329,11 +330,12 @@ Rect is in global world (unscaled) coordinates
 		if (y<bottom)
 			y+= gridsize;
 			
-		beginUserPath (upath,NO);
+		//beginUserPath (upath,NO);
 		
 		for ( ; y<=stopy ; y+= gridsize)
 			if (y&31)
 			{
+				
 				UPmoveto (upath, left, y);
 				UPlineto (upath, right, y);
 			}

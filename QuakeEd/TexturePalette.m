@@ -259,16 +259,15 @@ qtexture_t *TEX_ForName (char *name)
 
 - init
 {
-	[super init];
+	self = [super init];
 	texturepalette_i = self;
 	selectedTexture = -1;
 	return self;
 }
 
-- display
+- (void)display
 {
 	[[textureView_i superview] display];
-	return self;
 }
 
 
@@ -332,10 +331,10 @@ qtexture_t *TEX_ForName (char *name)
 }
 
 //	Alphabetize texture list - reverse order!
-- alphabetize
+- (void)alphabetize
 {
 	int		i;
-	int		max;
+	NSInteger		max;
 	texpal_t	*t1p;
 	texpal_t	*t2p;
 	texpal_t	t1;
@@ -361,17 +360,16 @@ qtexture_t *TEX_ForName (char *name)
 			}
 		}
 	}
-	return self;
 }
 
-- computeTextureViewSize
+- (void)computeTextureViewSize
 {
 	int		i;
-	int		max;
+	NSInteger		max;
 	int		x;
 	texpal_t *t;
 	int		y;
-	id		view;
+	NSView	*view;
 	NSRect	b;
 	int		maxwidth;
 	int		maxheight;
@@ -383,7 +381,7 @@ qtexture_t *TEX_ForName (char *name)
 	x = TEX_INDENT;
 
 	view = [textureView_i superview];
-	[view getBounds:&b];
+	b = view.bounds;
 	maxwidth = b.size.width;
 
 	for (i = 0;i < max; i++)
@@ -417,7 +415,7 @@ qtexture_t *TEX_ForName (char *name)
 	return self;
 }
 
-- texturedefChanged: sender
+- (IBAction)texturedefChanged: sender
 {
 	if ([map_i numSelected])
 	{
@@ -430,10 +428,9 @@ qtexture_t *TEX_ForName (char *name)
 			qprintf ("can't modify spawned entities");
 	}
 	[quakeed_i makeFirstResponder: quakeed_i];
-	return self;
 }
 
-- clearTexinfo: sender
+- (IBAction)clearTexinfo: sender
 {
 	[field_Xshift_i	setFloatValue:0];
 	[field_Yshift_i	setFloatValue:0];
@@ -442,14 +439,12 @@ qtexture_t *TEX_ForName (char *name)
 	[field_Rotate_i	setFloatValue:0];
 	
 	[self texturedefChanged: self];
-
-	return self;
 }
 
 //
 //	Set the selected texture
 //
-- setSelectedTexture:(int)which
+- (void)setSelectedTexture:(int)which
 {
 	texpal_t *t;
 	NSRect	r;
@@ -468,16 +463,14 @@ qtexture_t *TEX_ForName (char *name)
 		r.size.height += TEX_INDENT*2;
 		r.origin.x -= TEX_INDENT;
 		r.origin.y -= TEX_INDENT;
-		[textureView_i scrollRectToVisible:&r];
+		[textureView_i scrollRectToVisible:r];
 		[textureView_i display];
 		sprintf(string,"%d x %d",(int)t->r.size.width,
 			(int)t->r.size.height - TEX_SPACING);
-		[sizeField_i setStringValue:string];
+		[sizeField_i setStringValue:@(string)];
 	}
 
 	[self texturedefChanged:self];
-
-	return self;
 }
 
 //
@@ -518,11 +511,11 @@ qtexture_t *TEX_ForName (char *name)
 //
 //	Set selected texture by texture name
 //
-- setTextureByName:(char *)name
+- (void)setTextureByName:(char *)name
 {
 	texpal_t	*t;
 	int		i;
-	int		max;
+	NSInteger		max;
 	
 	max = [textureList_i count];
 	CleanupName(name,name);
@@ -532,10 +525,9 @@ qtexture_t *TEX_ForName (char *name)
 		if (!strcmp(t->name,name))
 		{
 			[self setSelectedTexture: i];
-			return self;
+			return;
 		}
 	}
-	return self;
 }
 
 //===================================================
@@ -548,16 +540,16 @@ qtexture_t *TEX_ForName (char *name)
 //
 //	Search for texture named in searchField
 //
-- searchForTexture:sender
+- (IBAction)searchForTexture:sender
 {
-	int		i;
-	int		max;
-	int		len;
+	NSInteger	i;
+	NSInteger	max;
+	size_t		len;
 	char	name[32];
 	texpal_t	*t;
 	
 	if (selectedTexture == -1)
-		return self;
+		return;
 
 	max = [textureList_i count];
 	strcpy(name,(const char *)[sender stringValue]);
@@ -572,7 +564,7 @@ qtexture_t *TEX_ForName (char *name)
 			[self setTextureByName:t->name];
 			[sender selectText:sender];
 			[self texturedefChanged:self];
-			return self;
+			return;
 		}
 	}
 	
@@ -584,12 +576,11 @@ qtexture_t *TEX_ForName (char *name)
 			[self setTextureByName:t->name];
 			[sender selectText:sender];
 			[self texturedefChanged:self];
-			return self;
+			return;
 		}
 	}
 	
 	[self texturedefChanged:self];
-	return self;
 }
 
 //
@@ -622,7 +613,7 @@ qtexture_t *TEX_ForName (char *name)
 		return self;
 	}
 	
-	strncpy(td->texture,[self getSelTextureName],16);
+	strncpy(td->texture,[self getSelTextureName].UTF8String,16);
 
 	td->shift[0] = [field_Xshift_i floatValue];
 	td->shift[1] = [field_Yshift_i floatValue];
@@ -654,75 +645,65 @@ qtexture_t *TEX_ForName (char *name)
 //
 //	Inc/Dec the XShift field
 //
-- incXShift:sender
+- (IBAction)incXShift:sender
 {
 	[self changeField:field_Xshift_i by:8];
-	return self;
 }
-- decXShift:sender
+- (IBAction)decXShift:sender
 {
 	[self changeField:field_Xshift_i by:-8];
-	return self;
 }
 
 //
 //	Inc/Dec the YShift field
 //
-- incYShift:sender
+- (IBAction)incYShift:sender
 {
 	[self changeField:field_Yshift_i by:8];
-	return self;
 }
-- decYShift:sender
+- (IBAction)decYShift:sender
 {
 	[self changeField:field_Yshift_i by:-8];
-	return self;
 }
 
 //
 //	Inc/Dec the Rotate field
 //
-- incRotate:sender
+- (IBAction)incRotate:sender
 {
 	[self changeField:field_Rotate_i by:90];
-	return self;
 }
-- decRotate:sender
+- (IBAction)decRotate:sender
 {
 	[self changeField:field_Rotate_i by:-90];
-	return self;
 }
 
 //
 //	Inc/Dec the Xscale field
 //
-- incXScale:sender
+- (IBAction)incXScale:sender
 {
 	[field_Xscale_i setIntValue: 1];
 	[self texturedefChanged:self];
-	return self;
 }
-- decXScale:sender
+- (IBAction)decXScale:sender
 {
 	[field_Xscale_i setIntValue: -1];
 	[self texturedefChanged:self];
-	return self;
 }
 
 //
 //	Inc/Dec the Yscale field
 //
-- incYScale:sender
+- (IBAction)incYScale:sender
 {
 	[field_Yscale_i setIntValue: 1];
 	[self texturedefChanged:self];
-	return self;
 }
-- decYScale:sender
+- (IBAction)decYScale:sender
 {
 	[field_Yscale_i setIntValue: -1];
 	[self texturedefChanged:self];
-	return self;
 }
 
 
@@ -758,11 +739,11 @@ qtexture_t *TEX_ForName (char *name)
 //
 // Scan thru map & only display textures that are in map
 //
-- onlyShowMapTextures:sender
+- (IBAction)onlyShowMapTextures:sender
 {
-	int		max;
-	int		i;
-	int		j;
+	NSInteger		max;
+	NSInteger		i;
+	NSInteger		j;
 	id		brushes;
 	SetBrush	*b;
 	int		numfaces;
@@ -800,17 +781,14 @@ qtexture_t *TEX_ForName (char *name)
 	}
 	
 	[textureView_i display];
-	
-	return self;
 }
 
-- setDisplayFlag:(int)index to:(int)value
+- (void)setDisplayFlag:(int)index to:(int)value
 {
 	texpal_t	*tp;
 	
 	tp = [textureList_i elementAt:index];
 	tp->display = value;
-	return self;
 };
 
 @end

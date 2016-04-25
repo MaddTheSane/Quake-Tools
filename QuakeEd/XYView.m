@@ -1078,7 +1078,7 @@ void ControlCallback (float dx, float dy)
 		return NO;
 		
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	dragpoint[0] = pt.x;
 	dragpoint[1] = pt.y;
@@ -1091,7 +1091,7 @@ void ControlCallback (float dx, float dy)
 	qprintf ("dragging brush plane");
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	[self	dragFrom:	theEvent 
 			useGrid:	YES
@@ -1119,7 +1119,7 @@ void ControlCallback (float dx, float dy)
 	br = [map_i selectedBrush];
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 // if the XY point is inside the brush, make the point on top
 	p1[0] = pt.x;
@@ -1150,7 +1150,7 @@ void ControlCallback (float dx, float dy)
 	qprintf ("dragging brush plane");
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	[self	dragFrom:	theEvent 
 			useGrid:	YES
@@ -1186,14 +1186,14 @@ mouseDown
 	NSEventModifierFlags		flags;
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	p1[0] = p2[0] = pt.x;
 	p1[1] = p2[1] = pt.y;
 	p1[2] = xy_viewnormal[2] * -4096;
 	p2[2] = xy_viewnormal[2] * 4096;
 
-	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
+	flags = theEvent.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 	
 //
 // shift click to select / deselect a brush from the world
@@ -1201,7 +1201,7 @@ mouseDown
 	if (flags == NSShiftKeyMask)
 	{		
 		[map_i selectRay: p1 : p2 : YES];
-		return self;
+		return;
 	}
 	
 //
@@ -1210,7 +1210,7 @@ mouseDown
 	if (flags == (NSShiftKeyMask|NSCommandKeyMask) )
 	{
 		[map_i entityConnect: p1 : p2];
-		return self;
+		return;
 	}
 	
 //
@@ -1219,7 +1219,7 @@ mouseDown
 	if ( flags == 0 )
 	{
 	// if double click, position Z checker
-		if (theEvent->data.mouse.click > 1)
+		if (theEvent->_data.mouse.click > 1)
 		{
 			qprintf ("positioned Z checker");
 			[zview_i setPoint: &pt];
@@ -1230,19 +1230,19 @@ mouseDown
 		
 	// check eye
 		if ( [cameraview_i XYmouseDown: &pt flags: theEvent->flags] )
-			return self;		// camera move
+			return;		// camera move
 			
 	// check z post
 		if ( [zview_i XYmouseDown: &pt] )
-			return self;		// z view move
+			return;		// z view move
 
 	// check clippers
 		if ( [clipper_i XYDrag: &pt] )
-			return self;
+			return;
 
 	// check single plane dragging
 		if ( [self planeDragFrom: theEvent] )
-			return self;
+			return;
 
 	// check selection
 		ent = [map_i grabRay: p1 : p2];
@@ -1252,10 +1252,11 @@ mouseDown
 		if ([map_i numSelected])
 		{
 			qprintf ("missed");
-			return self;
+			return;
 		}
 		
-		return [self newBrushDragFrom: theEvent];
+		[self newBrushDragFrom: theEvent];
+		return;
 	}
 	
 //
