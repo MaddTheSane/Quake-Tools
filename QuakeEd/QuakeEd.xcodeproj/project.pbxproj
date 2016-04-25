@@ -117,8 +117,8 @@
 		5531415E1B98E61F00390795 /* Things.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Things.h; sourceTree = "<group>"; };
 		5531415F1B98E61F00390795 /* Things.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Things.m; sourceTree = "<group>"; };
 		553141601B98E61F00390795 /* triggers.qc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = triggers.qc; sourceTree = "<group>"; };
-		553141611B98E61F00390795 /* UserPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPath.h; sourceTree = "<group>"; };
-		553141621B98E61F00390795 /* UserPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPath.m; sourceTree = "<group>"; };
+		553141611B98E61F00390795 /* UserPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPath.h; sourceTree = "<group>"; usesTabs = 0; };
+		553141621B98E61F00390795 /* UserPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPath.m; sourceTree = "<group>"; usesTabs = 0; };
 		553141631B98E61F00390795 /* XYView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYView.h; sourceTree = "<group>"; };
 		553141641B98E61F00390795 /* XYView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYView.m; sourceTree = "<group>"; };
 		553141651B98E61F00390795 /* ZScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZScrollView.h; sourceTree = "<group>"; };

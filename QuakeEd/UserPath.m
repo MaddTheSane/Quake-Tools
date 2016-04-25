@@ -19,7 +19,7 @@ NSZone *userPathZone()
 /* Creates a unique zone for use by all user paths */
 {
     if (!upZone) {
-	upZone = NSCreateZone(vm_page_size, vm_page_size, 1);
+		upZone = NSCreateZone(vm_page_size, vm_page_size, 1);
     }
     
     return upZone;
@@ -28,26 +28,19 @@ NSZone *userPathZone()
 UserPath *newUserPath()
 /* Creates a new User Path in the zone returned by userPathZone */
 {
-    UserPath    *up;
-
-    up = (UserPath *)NSZoneMalloc(userPathZone(), sizeof(UserPath));
-    up->max = 8192;	// JDC
-    up->points = (float *)NSZoneMalloc(userPathZone(),
-    				       sizeof(float) * up->max);
-    up->ops = (char *)NSZoneMalloc(userPathZone(),
-    				   (2 + (up->max / 2)) * sizeof(char));
-    up->ping = NO;
-    
+    UserPath    *up = malloc(sizeof(UserPath));
+	up->bPath = [[NSBezierPath alloc] init];
+    up->opForUserPath = dps_send;
+	
     return up;
 }
 
 void freeUserPath(UserPath *up)
 /* Frees User Path and its associated buffers */
 {
-    free(up->points);
-    free(up->ops);
-    free(up);
-    
+	[up->bPath release];
+	free(up);
+	
     return;
 }
 
@@ -60,12 +53,6 @@ void growUserPath(UserPath *up)
 {
  /* double the size of the internal buffers */
 printf ("growUserPath\n");
-    up->max *= 2;
-    up->points = (float *)NXZoneRealloc(userPathZone(), up->points,
-					sizeof(float) * up->max);
-    up->ops = (char *)NXZoneRealloc(userPathZone(), up->ops,
-    				    (2 + (up->max / 2)) * sizeof(char));
-
     return;
 }
 
@@ -77,20 +64,10 @@ void beginUserPath(UserPath *up, BOOL cache)
  * the path and add the dps_setbbox operator.
  */
 {
-    up->numberOfPoints = up->numberOfOps = 0;
-    up->cp.x = up->cp.y = 0;
-    up->bbox[0] = up->bbox[1] = 1.0e6;
-    up->bbox[2] = up->bbox[3] = -1.0e6;
-    if (cache) {
-	//up->ops[up->numberOfOps++] = dps_ucache;
-    }
-    //up->ops[up->numberOfOps++] = dps_setbbox;
-    up->opForUserPath = 0;
-    
-    return;
+    up->opForUserPath = dps_send;
 }
 
-void endUserPath(UserPath *up, int op)
+void endUserPath(UserPath *up, DPSUserPathAction op)
 /*
  * Call this to stop filling the path. Note this does not send the userpath to
  * the server -- use sendUserPath. The op argument should be one of the
@@ -101,6 +78,7 @@ void endUserPath(UserPath *up, int op)
  */
 {
     up->opForUserPath = op;
+    [up->bPath closePath];
     
     return;
 }
@@ -115,7 +93,7 @@ void UPdebug(UserPath *up, BOOL shouldPing)
  * ping is NO. 
  */
 {
-    up->ping = shouldPing;
+    //up->ping = shouldPing;
     
     return;
 }
@@ -132,28 +110,26 @@ int sendUserPath(UserPath *up)
  * server.
  */
 {
-    NXHandler           exception;
-
-    exception.code = 0;
-    if (up->opForUserPath != 0) {
-      NX_DURING
-	DPSDoUserPath(up->points, up->numberOfPoints, dps_float, up->ops,
-		      up->numberOfOps, up->bbox, up->opForUserPath);
-	if (up->ping) {
-	    NXPing();
-	}
-	
-      NX_HANDLER
-	exception = NXLocalHandler;
-      NX_ENDHANDLER
-	if (exception.code) {
-	    NXReportError(&exception);
-	    if (exception.code == dps_err_ps) {
-		return -1;
-	    }
-	} else {
-	    return 0;
-	}
+    switch(up->opForUserPath) {
+        case dps_ufill:
+            [up->bPath fill];
+            break;
+            
+        case dps_ustroke:
+            [up->bPath stroke];
+            break;
+            
+        case dps_ueofill:
+            [up->bPath stroke];
+            break;
+            
+        case dps_send:
+            return -2;
+            break;
+            
+        default:
+            return -1;
+            break;
     }
     
     return -1;
@@ -163,46 +139,13 @@ int sendUserPath(UserPath *up)
 void UPmoveto(UserPath *up, float x, float y)
 /* adds <x y moveto> to user path and updates bounding box */
 {
-    up->ops[up->numberOfOps++] = dps_moveto;
-    up->points[up->numberOfPoints++] = x;
-    up->points[up->numberOfPoints++] = y;
- 
-    if (x < up->bbox[0]) {
-	up->bbox[0] = x;
-    }
-    if (y < up->bbox[1]) {
-	up->bbox[1] = y;
-    }
-    if (x > up->bbox[2]) {
-	up->bbox[2] = x;
-    }
-    if (y > up->bbox[3]) {
-	up->bbox[3] = y;
-    }
-   
-    return;
+    [up->bPath moveToPoint:NSMakePoint(x, y)];
 }
 
 
 void UPlineto(UserPath *up, float x, float y)
 /* adds <x y lineto> to user path and updates bounding box */
 {
-    up->ops[up->numberOfOps++] = dps_lineto;
-    up->points[up->numberOfPoints++] = x;
-    up->points[up->numberOfPoints++] = y;
- 
-    if (x < up->bbox[0]) {
-	up->bbox[0] = x;
-    }
-    if (y < up->bbox[1]) {
-	up->bbox[1] = y;
-    }
-    if (x > up->bbox[2]) {
-	up->bbox[2] = x;
-    }
-    if (y > up->bbox[3]) {
-	up->bbox[3] = y;
-    }
-    return;
+    [up->bPath lineToPoint:NSMakePoint(x, y)];
 }
 

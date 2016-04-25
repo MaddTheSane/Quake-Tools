@@ -34,26 +34,38 @@
 #import <AppKit/AppKit.h>
 //#import <dpsclient/dpsclient.h>
 
+typedef NS_ENUM(int, DPSUserPathAction) {
+    dps_uappend = 176,
+    dps_ufill = 179,
+    dps_ueofill = 178,
+    dps_ustroke = 183,
+    dps_ustrokepath = 364,
+    dps_inufill = 93,
+    dps_inueofill = 92,
+    dps_inustroke = 312,
+    dps_infill = 90,
+    dps_ineofill = 89,
+    dps_instroke = 311,
+    dps_def = 51,
+    dps_put = 120,
+    dps_send = 113	/* This is really the null operator */
+};
+
 typedef struct _UP {
-    float          *points;
-    int             numberOfPoints;
-    char           *ops;
-    NSPoint         cp;
-    int             numberOfOps;
-    int             max;
-    float           bbox[4];
-    int             opForUserPath;
-    BOOL            ping;
+    NSBezierPath *bPath;
+    DPSUserPathAction opForUserPath;
 } UserPath;
 
 /* UserPath functions */
 NSZone *userPathZone();
+///Creates a new User Path
 UserPath *newUserPath();
+///Frees User Path and its associated buffers
 void freeUserPath(UserPath *up);
 void debugUserPath(UserPath *up, BOOL shouldPing);
 void growUserPath(UserPath *up);
 void beginUserPath(UserPath *up, BOOL cache);
-void endUserPath(UserPath *up, int op);
+void endUserPath(UserPath *up, DPSUserPathAction op);
 int sendUserPath(UserPath *up);
 void UPmoveto(UserPath *up, float x, float y);
 void UPrmoveto(UserPath *up, float x, float y);
