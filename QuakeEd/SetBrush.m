@@ -499,7 +499,7 @@ can be removed.
 initOwner:::
 ===========
 */
-- (instancetype)initWithOwner: own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex
+- (instancetype)initWithOwner: own mins:(vec3_t)mins maxs:(vec3_t)maxs texture:(texturedef_t *)tex
 {
 	if (self = [super init]) {
 
@@ -511,7 +511,7 @@ initOwner:::
 	return self;
 }
 
-- (void)setMins:(float *)mins maxs:(float *)maxs
+- (void)setMins:(vec3_t)mins maxs:(vec3_t)maxs
 {
 	int		i, j;
 	vec3_t	pts[4][2];
@@ -878,7 +878,7 @@ clipRay
 	int		i, j;
 	face_t	*f;
 	float	d1, d2, m;
-	float	*start;
+	vec3_t	start;
 	
 	start = p1;
 

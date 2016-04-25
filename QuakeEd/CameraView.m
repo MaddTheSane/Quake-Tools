@@ -157,11 +157,11 @@ TRANSFORMATION METHODS
 	matrix[1][2] = sin(xa+M_PI/2);
 
 // vright
-	CrossProduct (matrix[2], matrix[1], matrix[0]);
+	matrix[0] = CrossProduct (matrix[2], matrix[1]);
 }
 
 
-- inverseTransform: (vec_t *)invec to:(vec_t *)outvec
+- inverseTransform: (vec3_t)invec to:(vec3_t)outvec
 {
 	vec3_t		inverse[3];
 	vec3_t		temp;

@@ -67,7 +67,7 @@ Clipper *clipper_i;
 	VectorSubtract (pos[2], pos[0], v1);
 	VectorSubtract (pos[1], pos[0], v2);
 	
-	CrossProduct (v1, v2, norm);
+	norm = CrossProduct (v1, v2);
 	VectorNormalize (norm);
 	
 	if ( !norm[0] && !norm[1] && !norm[2] )

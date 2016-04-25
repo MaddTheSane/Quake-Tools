@@ -8,22 +8,15 @@ vec3_t vec3_origin = {0,0,0};
 
 double VectorLength(vec3_t v)
 {
-	int		i;
-	double	length;
-	
-	length = 0;
-	for (i=0 ; i< 3 ; i++)
-		length += v[i]*v[i];
-	length = sqrt (length);		// FIXME
-
-	return length;
+	return vector_length(v);
 }
 
-void VectorMA (vec3_t va, double scale, vec3_t vb, vec3_t vc)
+vec3_t VectorMA (vec3_t va, double scale, vec3_t vb, vec3_t vc)
 {
 	vc[0] = va[0] + scale*vb[0];
 	vc[1] = va[1] + scale*vb[1];
 	vc[2] = va[2] + scale*vb[2];
+	return vc;
 }
 
 bool VectorCompare (vec3_t v1, vec3_t v2)
@@ -47,7 +40,7 @@ void CrossProduct (vec3_t v1, vec3_t v2, vec3_t cross)
 
 vec_t _DotProduct (vec3_t v1, vec3_t v2)
 {
-	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+	return vector_dot(v1, v2);
 }
 
 void _VectorSubtract (vec3_t va, vec3_t vb, vec3_t out)

@@ -115,12 +115,12 @@ char	*debugname;
 	return name;
 }
 
-- (float *)mins
+- (vec3_t)mins
 {
 	return mins;
 }
 
-- (float *)maxs
+- (vec3_t)maxs
 {
 	return maxs;
 }

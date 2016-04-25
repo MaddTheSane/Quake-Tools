@@ -9,7 +9,8 @@ vec3_t bad_maxs = {8, 8, 8};
 - (void)createFixedBrush: (vec3_t)org
 {
 	vec3_t	emins, emaxs;
-	float	*v, *v2, *color;
+	vec3_t v, v2;
+	float	*color;
 	id		new;
 	texturedef_t	td;
 	
@@ -29,8 +30,8 @@ vec3_t bad_maxs = {8, 8, 8};
 	memset(&td,0,sizeof(td));
 	strcpy (td.texture,"entity");
 
-	VectorAdd (org, v, emins);
-	VectorAdd (org, v2, emaxs);
+	emins = org + v;
+	emaxs = org + v2;
 	new = [[SetBrush alloc] initWithOwner: self mins:emins maxs:emaxs
 		texture: &td];
 	[new setEntityColor: color];
@@ -396,7 +397,7 @@ int	nument;
 	id		new;
 	char	value[80];
 	vec3_t	mins, maxs, org;
-	float	*v;
+	vec3_t	v;
 	BOOL	temporg;
 	char	oldang[80];
 	

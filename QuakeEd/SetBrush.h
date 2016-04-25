@@ -61,9 +61,9 @@ winding_t *NewWinding (int points);
 	face_t		faces[MAX_FACES];
 }
 
-- (instancetype)initWithOwner:(id) own mins:(float *)mins maxs:(float *)maxs texture:(texturedef_t *)tex;
+- (instancetype)initWithOwner:(id) own mins:(vec3_t)mins maxs:(vec3_t)maxs texture:(texturedef_t *)tex;
 - (instancetype)initFromTokens: own;
-- (void)setMins:(float *)mins maxs:(float *)maxs;
+- (void)setMins:(vec3_t)mins maxs:(vec3_t)maxs;
 
 @property (assign) id parent;
 
