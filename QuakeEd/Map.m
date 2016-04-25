@@ -961,7 +961,7 @@ UI operations
 	mins[2] = -2048;
 	maxs[2] = 2048;
 	
-	b = [[SetBrush alloc] initOwner: [map_i objectAt:0] mins: mins maxs: maxs texture: &td];
+	b = [[SetBrush alloc] initWithOwner: [map_i objectAt:0] mins: mins maxs: maxs texture: &td];
 	[[map_i objectAt: 0] addObject: b];
 	[b setSelected: YES];
 	[quakeed_i updateAll];
@@ -987,7 +987,7 @@ UI operations
 	mins[2] = 0;
 	maxs[2] = 16;
 	
-	b = [[SetBrush alloc] initOwner: [map_i objectAt:0] mins: mins maxs: maxs texture: &td];
+	b = [[SetBrush alloc] initWithOwner: [map_i objectAt:0] mins: mins maxs: maxs texture: &td];
 	[[map_i objectAt: 0] addObject: b];
 	[b setSelected: YES];
 	[quakeed_i updateAll];

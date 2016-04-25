@@ -1152,8 +1152,6 @@ XYDrawSelf
 			}
 		}
 	}
-	
-	return self;
 }
 
 /*
@@ -1161,7 +1159,7 @@ XYDrawSelf
 ZDrawSelf
 ===========
 */
-- ZDrawSelf
+- (void)ZDrawSelf
 {
 	int			i;
 	vec3_t		p1, p2;
@@ -1223,8 +1221,6 @@ ZDrawSelf
 	
 	PSsetrgbcolor (0,0,0);
 	PSstroke ();
-			
-	return self;
 }
 
 /*
@@ -1232,14 +1228,14 @@ ZDrawSelf
 CameraDrawSelf
 ===========
 */
-- CameraDrawSelf
+- (void)CameraDrawSelf
 {
 	int		i, j;
 	winding_t	*w;
 	id		worldent, currentent;
 	
 	if ([self fakeBrush: @selector(CameraDrawSelf)])
-		return self;
+		return;
 	
 	worldent = [map_i objectAt: 0];
 	currentent = [map_i currentEntity];
@@ -1262,7 +1258,6 @@ CameraDrawSelf
 		for (j=0 ; j<w->numpoints ; j++)
 			CameraLineto (w->points[j]);
 	}
-	return self;
 }
 
 
@@ -1271,17 +1266,15 @@ CameraDrawSelf
 XYRenderSelf
 ===========
 */
-- XYRenderSelf
+- (void)XYRenderSelf
 {
 	int		i;
 	
 	if ([self fakeBrush: @selector(XYRenderSelf)])
-		return self;
+		return;
 	
 	for (i=0 ; i<numfaces ; i++)
 		REN_DrawXYFace (&faces[i]);
-		
-	return self;
 }
 
 /*
@@ -1289,7 +1282,7 @@ XYRenderSelf
 CameraRenderSelf
 ===========
 */
-- CameraRenderSelf
+- (void)CameraRenderSelf
 {
 	int		i;
 	BOOL	olddraw;
@@ -1297,7 +1290,7 @@ CameraRenderSelf
 	pixel32_t	p;
 
 	if ([self fakeBrush: @selector(CameraRenderSelf)])
-		return self;
+		return;
 // hack to draw entity boxes as single flat color
 	if ( ![parent modifiable] )
 	{
@@ -1321,8 +1314,6 @@ CameraRenderSelf
 		for (i=0 ; i<numfaces ; i++)
 			REN_DrawCameraFace (&faces[i]);
 	}
-			
-	return self;
 }
 
 /*

@@ -78,9 +78,9 @@ void qprintf (const char *fmt, ...);		// prints text to cmd_out_i
 - (IBAction)save:(id) sender;
 - (IBAction)saveAs:(id) sender;
 
-- doOpen: (char *)fname;
+- (void)doOpen: (const char *)fname;
 
-- saveBSP:(char *)cmdline dialog:(BOOL)wt;
+- (void)saveBSP:(const char *)cmdline dialog:(BOOL)wt;
 
 - (IBAction)BSP_Full: sender;
 - (IBAction)BSP_FastVis: sender;

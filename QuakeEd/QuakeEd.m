@@ -1,5 +1,6 @@
 
 #import "qedefs.h"
+#include <Carbon/Carbon.h>
 
 id	quakeed_i;
 id	entclasses_i;
@@ -694,7 +695,7 @@ doOpen:
 Called by open or the project panel
 ==============
 */
-- doOpen: (char *)fname;
+- (void)doOpen: (const char *)fname;
 {	
 	strcpy (filename, fname);
 	
@@ -705,8 +706,6 @@ Called by open or the project panel
 	[self updateAll];
 
 	qprintf ("%s loaded\n", fname);
-	
-	return self;
 }
 
 
@@ -717,18 +716,17 @@ open
 */
 - (IBAction)open: sender;
 {
-	id			openpanel;
-	static char	*suffixlist[] = {"map", 0};
+	NSOpenPanel	*openpanel;
 
 	openpanel = [NSOpenPanel openPanel];
+	NSString *mapDir = @([project_i getMapDirectory]);
+	openpanel.directoryURL = [NSURL fileURLWithPath:mapDir];
+	openpanel.allowedFileTypes = @[@"map"];
 
-	if ( [openpanel 
-			runModalForDirectory: [project_i getMapDirectory] 
-			file: ""
-			types: suffixlist] != NX_OKTAG)
+	if ( [openpanel runModal] != NSFileHandlingPanelOKButton)
 		return;
 
-	[self doOpen: (char *)[openpanel filename]];
+	[self doOpen: [[openpanel filename] fileSystemRepresentation]];
 }
 
 
@@ -770,11 +768,13 @@ saveAs
 	
 	panel_i = [NSSavePanel savePanel];
 	ExtractFileBase (filename, dir);
-	[panel_i setRequiredFileType: @"map"];
-	if ( [panel_i runModalForDirectory:[project_i getMapDirectory] file: dir] != NX_OKTAG)
+	panel_i.allowedFileTypes = @[@"map"];
+	NSString *mapDir = @([project_i getMapDirectory]);
+	panel_i.directoryURL = [NSURL fileURLWithPath:mapDir];
+	if ( [panel_i runModal] != NSFileHandlingPanelOKButton)
 		return;
 	
-	strcpy (filename, [panel_i filename]);
+	strcpy (filename, [[panel_i filename] fileSystemRepresentation]);
 	
 	[self setTitleAsFilename:filename];
 	
@@ -823,53 +823,53 @@ keyDown
 #define	KEY_UPARROW			0xad
 #define	KEY_DOWNARROW		0xaf
 
-- keyDown:(NSEvent *)theEvent
+- (void)keyDown:(NSEvent *)theEvent
 {
     int		ch;
 	
 // function keys
 	switch (theEvent.keyCode)
 	{
-	case 60:	// F2
+	case kVK_F2:	// F2
 		[cameraview_i setDrawMode: dr_wire];
 		qprintf ("wire draw mode");
-		return self;
-	case 61:	// F3
+		return;
+	case kVK_F3:	// F3
 		[cameraview_i setDrawMode: dr_flat];
 		qprintf ("flat draw mode");
-		return self;
-	case 62:	// F4
+		return;
+	case kVK_F4:	// F4
 		[cameraview_i setDrawMode: dr_texture];
 		qprintf ("texture draw mode");
-		return self;
+		return;
 
-	case 63:	// F5
+	case kVK_F5:	// F5
 		[xyview_i setDrawMode: dr_wire];
 		qprintf ("wire draw mode");
-		return self;
-	case 64:	// F6
+		return;
+	case kVK_F6:	// F6
 		qprintf ("texture draw mode");
-		return self;
+		return;
 		
-	case 66:	// F8
+	case kVK_F8:	// F8
 		[cameraview_i homeView: self];
-		return self;
+		return;
 		
-	case 88:	// F12
+	case kVK_F12:	// F12
 		[map_i subtractSelection: self];
-		return self;
+		return;
 
-	case 106:	// page up
+	case kVK_PageUp:	// page up
 		[cameraview_i upFloor: self];
-		return self;
+		return;
 		
-	case 107:	// page down
+	case kVK_PageDown:	// page down
 		[cameraview_i downFloor: self];
-		return self;
+		return;
 		
-	case 109:	// end
+	case kVK_End:	// end
 		[self deselect: self];
-		return self;
+		return;
 	}
 
 // portable things
@@ -893,7 +893,7 @@ keyDown
 	case 27:	// escape
 		autodirty = dirty = YES;
 		[self deselect: self];
-		return self;
+		return;
 		
 	case 127:	// delete
 		autodirty = dirty = YES;
@@ -965,8 +965,6 @@ keyDown
 		NopSound ();
 		break;
 	}
-
-    return self;
 }
 
 

@@ -121,7 +121,7 @@ initFrame:
 setOrigin:scale:
 ===================
 */
-- setOrigin: (NSPoint *)pt scale: (float)sc
+- (void)setOrigin: (NSPoint)pt scale: (float)sc
 {
 	NSRect		sframe;
 	NSRect		newbounds;
@@ -132,7 +132,7 @@ setOrigin:scale:
 	scale = sc;
 	
 	sframe = newbounds = [[self superview] frame];
-	newbounds.origin = *pt;
+	newbounds.origin = pt;
 	newbounds.size.width /= scale; 
 	newbounds.size.height /= scale; 
 	
@@ -159,12 +159,10 @@ setOrigin:scale:
 	[[self superview] setDrawSize
 		: sframe.size.width/scale 
 		: sframe.size.height/scale];
-	[[self superview] setDrawOrigin: pt->x : pt->y];
+	[[self superview] setDrawOrigin: pt.x : pt.y];
 
 	[quakeed_i reenableDisplay];
 	[scrollview_i display];
-	
-	return self;
 }
 
 - centerOn: (vec3_t)org
@@ -283,7 +281,7 @@ Called when the scaler popup on the window is used
 zoomIn
 ==============
 */
-- zoomIn: (NSPoint *)constant
+- (void)zoomIn: (NSPoint *)constant
 {
 	id			itemlist;
 	NSInteger	selected, numrows, numcollumns;
@@ -299,7 +297,7 @@ zoomIn
 	
 	selected = [itemlist selectedRow] + 1;
 	if (selected >= numrows)
-		return NULL;
+		return;
 		
 	[itemlist selectCellAtRow:selected column:0];
 	[scalebutton_i setTitle: [[itemlist selectedCell] title]];
@@ -966,7 +964,7 @@ void DirectionCallback (float dx, float dy)
 	qprintf ("changing camera direction");
 
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	direction[0] = pt.x;
 	direction[1] = pt.y;
@@ -1021,7 +1019,7 @@ void NewCallback (float dx, float dy)
 	qprintf ("sizing new brush");
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	neworg[0] = [self snapToGrid: pt.x];
 	neworg[1] = [self snapToGrid: pt.y];
@@ -1049,7 +1047,6 @@ void NewCallback (float dx, float dy)
 	
 	[quakeed_i updateCamera];
 	qprintf ("");
-	return self;
 	
 }
 
@@ -1219,17 +1216,17 @@ mouseDown
 	if ( flags == 0 )
 	{
 	// if double click, position Z checker
-		if (theEvent->_data.mouse.click > 1)
+		if (theEvent.buttonNumber > 1)
 		{
 			qprintf ("positioned Z checker");
 			[zview_i setPoint: &pt];
 			[quakeed_i newinstance];
 			[quakeed_i updateZ];
-			return self;
+			return;
 		}
 		
 	// check eye
-		if ( [cameraview_i XYmouseDown: &pt flags: theEvent->flags] )
+		if ( [cameraview_i XYmouseDown: &pt flags: theEvent.modifierFlags] )
 			return;		// camera move
 			
 	// check z post
@@ -1237,7 +1234,7 @@ mouseDown
 			return;		// z view move
 
 	// check clippers
-		if ( [clipper_i XYDrag: &pt] )
+		if ( [clipper_i XYDrag: pt] )
 			return;
 
 	// check single plane dragging
@@ -1246,8 +1243,10 @@ mouseDown
 
 	// check selection
 		ent = [map_i grabRay: p1 : p2];
-		if (ent)
-			return [self selectionDragFrom: theEvent];
+		if (ent) {
+			[self selectionDragFrom: theEvent];
+			return;
+		}
 		
 		if ([map_i numSelected])
 		{
@@ -1264,12 +1263,12 @@ mouseDown
 //
 	if (flags == NSControlKeyMask)
 	{
-		[cameraview_i setXYOrigin: &pt];
+		[cameraview_i setXYOrigin: pt];
 		[quakeed_i newinstance];
 		[cameraview_i display];
-		[cameraview_i XYmouseDown: &pt flags: theEvent->flags];
+		[cameraview_i XYmouseDown: &pt flags: theEvent.modifierFlags];
 		qprintf ("");
-		return self;
+		return;
 	}
 		
 //
@@ -1279,14 +1278,14 @@ mouseDown
 	{
 // check single plane dragging
 [self shearDragFrom: theEvent];
-return self;
+return;
 
 		qprintf ("moving Z checker");
 		[zview_i setXYOrigin: &pt];
 		[quakeed_i updateAll];
 		[zview_i XYmouseDown: &pt];
 		qprintf ("");
-		return self;
+		return;
 	}
 
 //
@@ -1298,11 +1297,11 @@ return self;
 		{
 			qprintf ("No texture setting except in texture mode!\n");
 			NopSound ();
-			return self;
+			return;
 		}
 		[map_i setTextureRay: p1 : p2 : YES];
 		[quakeed_i updateAll];
-		return self;
+		return;
 	}
 		
 //
@@ -1314,16 +1313,15 @@ return self;
 		{
 			qprintf ("No texture setting except in texture mode!\n");
 			NopSound ();
-			return self;
+			return;
 		}
 		[map_i setTextureRay: p1 : p2 : NO];
 		[quakeed_i updateAll];
-		return self;
+		return;
 	}
 		
 	qprintf ("bad flags for click");
 	NopSound ();
-	return self;
 }
 
 /*
@@ -1337,9 +1335,9 @@ rightMouseDown
 	NSEventModifierFlags	flags;
 		
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
-	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
+	flags = theEvent.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 	if (flags == NSCommandKeyMask)
 	{

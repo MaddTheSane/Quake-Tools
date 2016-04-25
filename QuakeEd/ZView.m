@@ -1,7 +1,7 @@
 
 #import "qedefs.h"
 
-id zview_i;
+ZView *zview_i;
 
 ZScrollView *zscrollview_i;
 NSMenu *zscalemenu_i;
@@ -291,7 +291,7 @@ Rect is in global world (unscaled) coordinates
 ============
 */
 
-- (void)drawGrid: (const NSRect *)rect
+- (void)drawGrid: (NSRect)rect
 {
 	int		y, stopy;
 	CGFloat	top,bottom;
@@ -311,8 +311,8 @@ Rect is in global world (unscaled) coordinates
 	left = self.bounds.origin.x;
 	right = 24;
 	
-	bottom = rect->origin.y-1;
-	top = rect->origin.y+rect->size.height+2;
+	bottom = rect.origin.y-1;
+	top = rect.origin.y+rect.size.height+2;
 
 //
 // grid
@@ -528,20 +528,20 @@ static	NSPoint		oldreletive;
 	gridsize = [xyview_i gridsize];
 	
 	startpt = startevent.locationInWindow;
-	[self convertPoint:&startpt  fromView:NULL];
+	startpt = [self convertPoint:startpt  fromView:NULL];
 	
 	oldreletive.x = oldreletive.y = 0;
 	
 	while (1)
 	{
-		event = [NSApp getNextEvent: 
+		event = [NSApp nextEventMatchingMask:
 			NSLeftMouseUpMask | NSLeftMouseDraggedMask
 			| NSRightMouseUpMask | NSRightMouseDraggedMask];
 		if (event.type == NSLeftMouseUp || event.type == NSRightMouseUp)
 			break;
 			
 		newpt = event.locationInWindow;
-		[self convertPoint:&newpt  fromView:NULL];
+		newpt = [self convertPoint:newpt  fromView:NULL];
 
 		reletive.y = newpt.y - startpt.y;
 		
@@ -595,15 +595,15 @@ void ZScrollCallback (float dy)
 	NSPoint		neworg;
 	float		scale;
 	
-	[ [zview_i superview] getBounds: &basebounds];
-	[zview_i convertRectFromSuperview: &basebounds];
+	basebounds = [ [zview_i superview] bounds];
+	[zview_i convertRectFromSuperview: basebounds];
 
 	neworg.y = basebounds.origin.y - dy;
 	
 	scale = [zview_i currentScale];
 	
 	oldreletive.y -= dy;
-	[zview_i setOrigin: &neworg scale: scale];
+	[zview_i setOrigin: neworg scale: scale];
 }
 
 - scrollDragFrom: (NSEvent*)theEvent	
@@ -638,7 +638,7 @@ void ZControlCallback (float dy)
 		return NO;
 
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	dragpoint[0] = origin[0];
 	dragpoint[1] = origin[1];
@@ -651,7 +651,7 @@ void ZControlCallback (float dy)
 	qprintf ("dragging brush plane");
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	[self	dragFrom:	theEvent 
 			useGrid:	YES
@@ -672,20 +672,20 @@ void ZControlCallback (float dy)
 mouseDown
 ===================
 */
-- mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
 	NSPoint	pt;
-	int		flags;
+	NSEventModifierFlags		flags;
 	vec3_t	p1;
 	
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
 	p1[0] = origin[0];
 	p1[1] = origin[1];
 	p1[2] = pt.y;
 	
-	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
+	flags = theEvent.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 //
 // shift click to select / deselect a brush from the world
@@ -693,7 +693,7 @@ mouseDown
 	if (flags == NSShiftKeyMask)
 	{		
 		[map_i selectRay: p1 : p1 : NO];
-		return self;
+		return;
 	}
 		
 //
@@ -702,7 +702,7 @@ mouseDown
 	if (flags == NSAlternateKeyMask)
 	{
 		[map_i setTextureRay: p1 : p1 : YES];
-		return self;
+		return;
 	}
 
 //
@@ -712,8 +712,8 @@ mouseDown
 	{
 		[cameraview_i setZOrigin: pt.y];
 		[quakeed_i updateAll];
-		[cameraview_i ZmouseDown: &pt flags:theEvent->flags];
-		return self;
+		[cameraview_i ZmouseDown: &pt flags:theEvent.modifierFlags];
+		return;
 	}
 
 //
@@ -722,25 +722,24 @@ mouseDown
 	if ( flags == 0 )
 	{
 // check eye
-		if ( [cameraview_i ZmouseDown: &pt flags:theEvent->flags] )
-			return self;
+		if ( [cameraview_i ZmouseDown: &pt flags:theEvent.modifierFlags] )
+			return;
 			
 		if ([map_i numSelected])
 		{
 			if ( pt.x > 0)
 			{
 				if ([self planeDragFrom: theEvent])
-					return self;
+					return;
 			}
 			[self selectionDragFrom: theEvent];
-			return self;
+			return;
 		}
 
 	}
 		
 	qprintf ("bad flags for click");
 	NopSound ();
-	return self;
 }
 
 /*
@@ -754,9 +753,9 @@ rightMouseDown
 	int		flags;
 		
 	pt= theEvent.locationInWindow;
-	[self convertPoint:&pt  fromView:NULL];
+	pt = [self convertPoint:pt  fromView:NULL];
 
-	flags = theEvent->flags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
+	flags = theEvent.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
 	
 //
@@ -827,7 +826,7 @@ drawentry:
 		[self display];
 		NXPing ();
 				
-		event = [NSApp getNextEvent: 
+		event = [NSApp nextEventMatchingMask: 
 			NSLeftMouseUpMask | NSLeftMouseDraggedMask];		
 	}
 
