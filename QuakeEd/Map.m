@@ -28,15 +28,16 @@ FILE METHODS
 - saveSelected
 {
 	NSInteger	i, c;
-	id			o, w;
+	List		*w;
+	id			o;
 	
 	[oldselection empty];
-	w = [self objectAtIndex: 0];
+	w = [self objectAt: 0];
 	c = [w count];
 	sb_newowner = oldselection;
 	for (i=0 ; i<c ; i++)
 	{
-		o = [w objectAtIndex: 0];
+		o = [w objectAt: 0];
 		if ([o selected])
 			[o moveToEntity];
 		else
@@ -49,8 +50,9 @@ FILE METHODS
 	c = [self count];
 	for (i=0 ; i<c ; i++)
 	{
-		o = [self objectAtIndex: 0];
+		o = [self objectAt: 0];
 		[self removeObjectAt: 0];
+		[o freeObjects];
 		[o release];
 	}
 
@@ -63,12 +65,12 @@ FILE METHODS
 	id			n, w;
 	
 	c = [oldselection count];
-	w = [self objectAtIndex: 0];	// world object
+	w = [self objectAt: 0];	// world object
 
 	sb_newowner = w;
 	for (i=0 ; i<c ; i++)
 	{
-		n = [oldselection objectAtIndex:i];
+		n = [oldselection objectAt:i];
 		[n moveToEntity];
 		i--;
 		c--;
@@ -145,7 +147,7 @@ FILE METHODS
 	
 	if (o == currentEntity)
 	{	// select the world
-		[self setCurrentEntity: [self objectAtIndex: 0]];
+		[self setCurrentEntity: [self objectAt: 0]];
 	}
 
 	return o;
@@ -174,18 +176,21 @@ FILE METHODS
 	num = 0;
 	c = [currentEntity count];
 	for (i=0 ; i<c ; i++)
-		if ( [[currentEntity objectAtIndex: i] selected] )
+		if ( [[currentEntity objectAt: i] selected] )
 			num++;
 	return num;
 }
 
 - (SetBrush*)selectedBrush
 {
-	for (SetBrush *aBrush in currentEntity) {
-		if ([aBrush selected]) {
-			return aBrush;
-		}
-	}
+	int		i, c;
+	int		num;
+	
+	num = 0;
+	c = [currentEntity count];
+	for (i=0 ; i<c ; i++)
+		if ( [[currentEntity objectAt: i] selected] )
+			return [currentEntity objectAt: i];
 	return nil;
 }
 
@@ -221,7 +226,7 @@ readMapFile
 
 	free (dat);
 
-	[self setCurrentEntity: [self objectAtIndex: 0]];
+	[self setCurrentEntity: [self objectAt: 0]];
 
 	[self addSelected];
 		
@@ -242,7 +247,7 @@ readMapFile
 	c = [self count];
 	for (i=1 ; i<c ; i++)
 	{
-		ent = [self objectAtIndex: i];
+		ent = [self objectAt: i];
 		cl = [ent valueForQKey: "classname"];
 		if (cl && !strcasecmp (cl,"info_player_start"))
 		{
@@ -273,7 +278,7 @@ writeMapFile
 		Error ("couldn't write %s", fname);
 	
 	for (i=0 ; i<numElements ; i++)
-		[[self objectAtIndex: i] writeToFILE: f region: reg];
+		[[self objectAt: i] writeToFILE: f region: reg];
 			
 	fclose (f);
 }
@@ -293,7 +298,7 @@ DRAWING
 	count = [self count];
 
 	for (i=0 ; i<count ; i++)
-		[[self objectAtIndex: i] ZDrawSelf];
+		[[self objectAt: i] ZDrawSelf];
 }
 
 - (void)RenderSelf: (void (*) (face_t *))callback
@@ -302,7 +307,7 @@ DRAWING
 	
 	count = [self count];
 	for (i=0 ; i<count ; i++)
-		[[self objectAtIndex: i] RenderSelf: callback];
+		[[self objectAt: i] RenderSelf: callback];
 }
 
 
@@ -317,7 +322,7 @@ A command-shift-click on an entity while an entity is selected will
 make a target connection from the original entity.
 ===================
 */
-- entityConnect: (vec3_t)p1 : (vec3_t)p2
+- (void)entityConnect: (vec3_t)p1 : (vec3_t)p2
 {
 	id	oldent, ent;
 	
@@ -325,7 +330,7 @@ make a target connection from the original entity.
 	if (oldent == [self objectAt: 0])
 	{
 		qprintf ("Must have a non-world entity selected to connect");
-		return self;
+		return;
 	}
 
 	[self selectRay: p1 : p2 : YES];
@@ -333,19 +338,19 @@ make a target connection from the original entity.
 	if (ent == oldent)
 	{
 		qprintf ("Must click on a different entity to connect");
-		return self;
+		return;
 	}
 	
 	if (ent == [self objectAt: 0])
 	{
 		qprintf ("Must click on a non-world entity to connect");
-		return self;
+		return;
 	}
 	
 	[oldent setKey:"target" toValue: [ent targetname]];
 	[quakeed_i updateAll];
 
-	return self;
+	return;
 }
 
 

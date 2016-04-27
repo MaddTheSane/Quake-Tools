@@ -12,9 +12,9 @@
 #import <objc/List.h>
 #else
 #define List QEList
-#endif
 #define maxElements [self count]
 #define numElements [self count]
+#endif
 
 #define QLLIST_DEPRECATED(msg) __OSX_AVAILABLE_BUT_DEPRECATED_MSG(__MAC_10_0, __MAC_10_0, __IPHONE_NA, __IPHONE_NA, msg)
 
@@ -32,10 +32,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)objectAtIndex:(NSInteger)index;
 - (nullable id)removeObject:(id)obj;
 
-- (id)insertObject:(id)obj at:(int)idx DEPRECATED_ATTRIBUTE;
+- (void)insertObject:(id)obj at:(int)idx QLLIST_DEPRECATED("Use -insertObject:atIndex: instead");
 - (void)insertObject:(id)obj atIndex:(NSInteger)idx;
 
-- (id)empty QLLIST_DEPRECATED("Use -removeAllObjects instead");
+- (void)empty QLLIST_DEPRECATED("Use -removeAllObjects instead");
 - (void)removeAllObjects;
 
 @property (readonly) NSInteger count;

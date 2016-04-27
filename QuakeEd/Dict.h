@@ -7,31 +7,40 @@ typedef struct
 	char	*value;
 } dict_t;
 
-@interface Dict:NSObject //Storage (?)
+@interface Dict: NSObject <NSCopying> //Storage (?)
 {
+	NSMutableDictionary<NSString*,NSString*> *intDict;
 }
 
 - (instancetype)initFromFile:(FILE *)fp;
 
-- (id) parseMultipleFrom:(char *)value;
-- (int) getValueUnits:(char *)key;
-- delString:(char *)string fromValue:(char *)key;
-- addString:(char *)string toValue:(char *)key;
-- (char *)convertListToString:(id)list;
-- (char *)getStringFor:(char *)name;
-- removeKeyword:(char *)key;
-- (unsigned int)getValueFor:(char *)name;
-- changeStringFor:(char *)key to:(char *)value;
-- (dict_t *) findKeyword:(char *)key;
+- (NSArray<NSString*>*) parseMultipleFrom:(NSString *)value;
+- (int) getValueUnits:(NSString *)key;
+- (BOOL)delString:(NSString *)string fromValue:(NSString *)key;
+- (BOOL)addString:(NSString *)string toValue:(NSString *)key;
+- (NSString *)convertListToString:(id)list DEPRECATED_ATTRIBUTE;
++ (NSString*)convertArrayToString:(NSArray<NSString*>*)list;
+- (NSString *)getStringFor:(NSString *)name;
+- (void)removeKeyword:(NSString *)key;
+- (unsigned int)getValueFor:(NSString *)name;
+- (void)changeStringFor:(NSString *)key to:(NSString *)value;
+- (dict_t *) findKeyword:(NSString *)key UNAVAILABLE_ATTRIBUTE;
+- (BOOL)containsObjectForKey:(NSString*)key;
 
-- writeBlockTo:(FILE *)fp;
-- writeFile:(char *)path;
+- (void)writeBlockTo:(FILE *)fp;
+- (BOOL)writeFile:(NSString *)path;
 
 // INTERNAL
 - (instancetype)init;
-- (id) parseBraceBlock:(FILE *)fp;
-- setupMultiple:(char *)value;
-- (char *)getNextParameter;
+- (BOOL) parseBraceBlock:(FILE *)fp;
+- (void)setupMultiple:(NSString *)value;
+- (NSString *)getNextParameter;
+
+- (NSDictionary*)toNSDictionary;
+
+//From the old Storage class?
+@property (readonly) NSInteger count;
+- (void)addElement:(dict_t*)elem;
 
 @end
 

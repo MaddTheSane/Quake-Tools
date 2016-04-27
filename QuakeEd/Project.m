@@ -62,48 +62,48 @@ id	project_i;
 	}
 	#endif
 		
-	if ((s = [projectInfo getStringFor:BSPFULLVIS]))
+	if ((s = [projectInfo getStringFor:@BSPFULLVIS]))
 	{
-		strcpy(string_fullvis,s);
+		strcpy(string_fullvis,s.UTF8String);
 		changeString('@','\"',string_fullvis);
 	}
 		
-	if ((s = [projectInfo getStringFor:BSPFASTVIS]))
+	if ((s = [projectInfo getStringFor:@BSPFASTVIS]))
 	{
-		strcpy(string_fastvis,s);
+		strcpy(string_fastvis,s.UTF8String);
 		changeString('@','\"',string_fastvis);
 	}
 		
-	if ((s = [projectInfo getStringFor:BSPNOVIS]))
+	if ((s = [projectInfo getStringFor:@BSPNOVIS]))
 	{
-		strcpy(string_novis,s);
+		strcpy(string_novis,s.UTF8String);
 		changeString('@','\"',string_novis);
 	}
 		
-	if ((s = [projectInfo getStringFor:BSPRELIGHT]))
+	if ((s = [projectInfo getStringFor:@BSPRELIGHT]))
 	{
-		strcpy(string_relight,s);
+		strcpy(string_relight,s.UTF8String);
 		changeString('@','\"',string_relight);
 	}
 		
-	if ((s = [projectInfo getStringFor:BSPLEAKTEST]))
+	if ((s = [projectInfo getStringFor:@BSPLEAKTEST]))
 	{
-		strcpy(string_leaktest,s);
+		strcpy(string_leaktest,s.UTF8String);
 		changeString('@','\"',string_leaktest);
 	}
 
-	if ((s = [projectInfo getStringFor:BSPENTITIES]))
+	if ((s = [projectInfo getStringFor:@BSPENTITIES]))
 	{
-		strcpy(string_entities,s);
+		strcpy(string_entities,s.UTF8String);
 		changeString('@','\"', string_entities);
 	}
 
 	// Build list of wads	
-	wadList = [projectInfo parseMultipleFrom:WADSKEY];
+	wadList = [projectInfo parseMultipleFrom:@WADSKEY];
 
 	//	Build list of maps & descriptions
-	mapList = [projectInfo parseMultipleFrom:MAPNAMESKEY];
-	descList = [projectInfo parseMultipleFrom:DESCKEY];
+	mapList = [projectInfo parseMultipleFrom:@MAPNAMESKEY];
+	descList = [projectInfo parseMultipleFrom:@DESCKEY];
 	[self changeChar:'_' to:' ' in:descList];
 	
 	[self initProjSettings];
@@ -140,8 +140,7 @@ id	project_i;
 
 - (IBAction)clearBspOutput:sender
 {
-	[BSPoutput_i	selectAll:self];
-	[BSPoutput_i	replaceSel:"\0"];
+	[BSPoutput_i setString:@""];
 }
 
 - (void)print
@@ -156,9 +155,9 @@ id	project_i;
 	if (projectInfo == NULL)
 		return;
 	[self initVars];
-	[mapbrowse_i reuseColumns:YES];
+	[mapbrowse_i setReusesColumns:YES];
 	[mapbrowse_i loadColumnZero];
-	[pis_wads_i reuseColumns:YES];
+	[pis_wads_i setReusesColumns:YES];
 	[pis_wads_i loadColumnZero];
 
 	[things_i		initEntities];
@@ -241,7 +240,7 @@ id	project_i;
 }
 
 
-- setTextureWad: (char *)wf
+- (void)setTextureWad: (char *)wf
 {
 	NSInteger	i, c;
 	char	*name;
@@ -266,14 +265,12 @@ id	project_i;
 //	[inspcontrol_i changeInspectorTo:i_textures];
 
 	[quakeed_i updateAll];
-
-	return self;
 }
 
 //
 //	Clicked on a wad name
 //
-- clickedOnWad:sender
+- (IBAction)clickedOnWad:sender
 {
 	NSMatrix	*matrix;
 	NSInteger	row;
@@ -284,8 +281,6 @@ id	project_i;
 
 	name = (char *)[wadList elementAt:row];
 	[self setTextureWad: name];
-	
-	return self;
 }
 
 
@@ -330,7 +325,9 @@ id	project_i;
 	stat(path,&s);
 	lastModified = s.st_mtime;
 
-	projectInfo = [[QDict dictionaryFromFile:fp] retain];
+	Dict *aDict = [[Dict alloc] initFromFile:fp];
+	projectInfo = [[aDict toNSDictionary] mutableCopy];
+	[aDict release];
 	fclose(fp);
 	
 	return YES;

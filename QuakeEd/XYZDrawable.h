@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol XYZDrawable <NSObject>
+@protocol XYZDrawable /*<NSObject>*/
 - (void)XYDrawSelf;
 - (void)ZDrawSelf;
 

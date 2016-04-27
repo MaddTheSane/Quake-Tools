@@ -162,9 +162,9 @@ insertEC:
 	name = [ec classname];
 	for (i=0 ; i<numElements ; i++)
 	{
-		if (strcasecmp (name, [[self objectAtIndex: i] classname]) < 0)
+		if (strcasecmp (name, [[self objectAt: i] classname]) < 0)
 		{
-			[self insertObject: ec atIndex:i];
+			[self insertObject: ec at:i];
 			return;
 		}
 	}
@@ -213,7 +213,7 @@ scanDirectory
 	int		count, i;
 	struct direct **namelist, *ent;
 	
-	[self removeAllObjects];
+	[self empty];
 	
      count = scandir(source_path, &namelist, NULL, NULL);
 	
@@ -253,7 +253,7 @@ id	entity_classes_i;
 	
 	for (i=0 ; i<numElements ; i++)
 	{
-		o = [self objectAtIndex: i];
+		o = [self objectAt: i];
 		if (!strcmp (name,[o classname]) )
 			return o;
 	}

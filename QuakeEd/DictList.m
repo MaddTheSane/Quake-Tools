@@ -8,11 +8,11 @@
 //
 - initListFromFile:(FILE *)fp
 {
-	id	d;
+	Dict	*d;
 	
 	self = [super init];
 	do {
-		d = [(Dict *)[Dict alloc] initFromFile:fp];
+		d = [[Dict alloc] initFromFile:fp];
 		if (d != NULL)
 			[self addObject:d];
 		[d release];
@@ -24,13 +24,13 @@
 //
 //	Write out list file
 //
-- (void)writeListFile:(char *)filename
+- (void)writeListFile:(NSString *)filename
 {
 	FILE	*fp;
 	int		i;
 	Dict	*obj;
 	
-	fp = fopen(filename,"w+t");
+	fp = fopen(filename.fileSystemRepresentation, "w+t");
 	if (fp == NULL)
 		return;
 		
@@ -38,7 +38,7 @@
 
 	for (i = 0;i < maxElements;i++)
 	{
-		obj = [self objectAtIndex:i];
+		obj = [self objectAt:i];
 		[obj writeBlockTo:fp];
 	}
 	fclose(fp);
@@ -47,18 +47,17 @@
 //
 //	Find the keyword in all the Dict objects
 //
-- (id) findDictKeyword:(char *)key
+- (id) findDictKeyword:(NSString *)key
 {
 	int		i;
-	dict_t	*d;
-	id		dict;
+	Dict	*dict;
 
 	for (i = 0;i < maxElements;i++)
 	{
 		dict = [self objectAt:i];
-		d = [(Dict *)dict findKeyword:key];
-		if (d != NULL)
+		if ([dict containsObjectForKey:key]) {
 			return dict;
+		}
 	}
 	return NULL;
 }

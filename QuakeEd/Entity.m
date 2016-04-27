@@ -308,7 +308,7 @@ int	nument;
 	NSInteger	i, c;
 	float	*color;
 	
-	[self init];
+	self = [self init];
 
 	if (!GetToken (true))
 	{

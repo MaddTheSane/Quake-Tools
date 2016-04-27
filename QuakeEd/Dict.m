@@ -3,25 +3,36 @@
 
 @implementation Dict
 
+- (NSInteger)count
+{
+	return intDict.count;
+}
+
 - init
 {
-	[super	initCount:0
-		elementSize:sizeof(dict_t)
-		description:NULL];
+	if (self = [super init]) {
+		intDict = [[NSMutableDictionary alloc] init];
+	}
 	return self;	
 }
 
-- print
+- (NSDictionary*)toNSDictionary
 {
-	int	i;
-	dict_t	*d;
+	return [NSDictionary dictionaryWithDictionary:intDict];
+}
+
+-(void)dealloc
+{
+	[intDict release];
 	
-	for (i=0 ; i<numElements ; i++)
-	{
-		d = [self elementAt: i];
-		printf ("%s : %s\n",d->key, d->value);
+	[super dealloc];
+}
+
+- (void)print
+{
+	for (NSString *key in intDict) {
+		printf("%s : %s\n", key.UTF8String, intDict[key].UTF8String);
 	}
-	return self;
 }
 
 /*
@@ -33,31 +44,24 @@ JDC
 */
 - copyWithZone:(NSZone *)zone
 {
-	id	new;
-	int	i;
-	dict_t	*d;
-	char	*old;
+	Dict *new;
 	
-	new = [super copyWithZone: zone];
-	for (i=0 ; i<numElements ; i++)
-	{
-		d = [self elementAt: i];
-		old = d->key;
-		d->key = malloc(strlen(old)+1);	
-		strcpy (d->key, old);
-		
-		old = d->value;
-		d->value = malloc(strlen(old)+1);	
-		strcpy (d->value, old);
-	}
+	new = [[Dict alloc] init];
+	[new->intDict release];
+	new->intDict = [intDict mutableCopy];
 	
 	return new;
 }
 
 - initFromFile:(FILE *)fp
 {
-	[self init];
-	return [self parseBraceBlock:fp];
+	if (self = [self init]) {
+		if (![self parseBraceBlock:fp]) {
+			[self release];
+			return nil;
+		}
+	};
+	return self;
 }
 
 //===============================================
@@ -69,46 +73,37 @@ JDC
 //
 //	Write a { } block out to a FILE*
 //
-- writeBlockTo:(FILE *)fp
+- (void)writeBlockTo:(FILE *)fp
 {
-	int		max;
-	int		i;
-	dict_t	*d;
-	
 	fprintf(fp,"{\n");
-	max = [super count];
-	for (i = 0;i < max;i++)
-	{
-		d = [super elementAt:i];
-		fprintf(fp,"\t{\"%s\"\t\"%s\"}\n",d->key,d->value);
+	for (NSString *key in intDict) {
+		fprintf(fp,"\t{\"%s\"\t\"%s\"}\n",key.UTF8String,intDict[key].UTF8String);
 	}
 	fprintf(fp,"}\n");
-	
-	return self;
 }
 
 //
 //	Write a single { } block out
 //
-- writeFile:(char *)path
+- (BOOL)writeFile:(NSString *)path
 {
 	FILE	*fp;
 	
-	fp = fopen(path,"w+t");
+	fp = fopen(path.fileSystemRepresentation,"w+t");
 	if (fp != NULL)
 	{
-		printf("Writing dictionary file %s.\n",path);
-		fprintf(fp,"// QE_Project file %s\n",path);
+		printf("Writing dictionary file %s.\n",path.UTF8String);
+		fprintf(fp,"// QE_Project file %s\n",path.UTF8String);
 		[self writeBlockTo:fp];
 		fclose(fp);
 	}
 	else
 	{
-		printf("Error writing %s!\n",path);
-		return NULL;
+		printf("Error writing %s!\n",path.UTF8String);
+		return NO;
 	}
 
-	return self;
+	return YES;
 }
 
 //===============================================
@@ -121,96 +116,80 @@ JDC
 //	Find a keyword in storage
 //	Returns * to dict_t, otherwise NULL
 //
-- (dict_t *) findKeyword:(char *)key
-{	
+- (dict_t *) findKeyword:(NSString *)key
+{
+#if 0
 	int		max;
 	int		i;
 	dict_t	*d;
 	
-	max = [super count];
+	max = [self count];
 	for (i = 0;i < max;i++)
 	{
-		d = [super elementAt:i];
+		d = [self elementAt:i];
 		if (!strcmp(d->key,key))
 			return d;
 	}
 	
 	return NULL;
+#else
+	return NULL;
+#endif
 }
 
 //
 //	Change a keyword's string
 //
-- changeStringFor:(char *)key to:(char *)value
+- (void)changeStringFor:(NSString *)key to:(NSString *)value
 {
-	dict_t	*d;
-	dict_t	newd;
-	
-	d = [self findKeyword:key];
-	if (d != NULL)
-	{
-		free(d->value);
-		d->value = malloc(strlen(value)+1);
-		strcpy(d->value,value);
-	}
-	else
-	{
-		newd.key = malloc(strlen(key)+1);
-		strcpy(newd.key,key);
-		newd.value = malloc(strlen(value)+1);
-		strcpy(newd.value,value);
-		[self addElement:&newd];
-	}
-	return self;
+	[intDict setValue:value forKey:key];
+}
+
+- (BOOL)containsObjectForKey:(NSString*)key
+{
+	return [intDict objectForKey:key] != nil;
 }
 
 //
 //	Search for keyword, return the string *
 //
-- (char *)getStringFor:(char *)name
+- (NSString *)getStringFor:(NSString *)name
 {
-	dict_t	*d;
-	
-	d = [self findKeyword:name];
-	if (d != NULL)
-		return d->value;
-	
-	return "";
+	return [intDict objectForKey:name] ?: @"";
 }
 
 //
 //	Search for keyword, return the value
 //
-- (unsigned int)getValueFor:(char *)name
+- (unsigned int)getValueFor:(NSString *)name
 {
-	dict_t	*d;
-	
-	d = [self findKeyword:name];
-	if (d != NULL)
-		return atol(d->value);
-	
-	return 0;
+	NSString *n = [self getStringFor:name];
+	return n.intValue;
 }
 
 //
 //	Return # of units in keyword's value
 //
-- (int) getValueUnits:(char *)key
+- (int) getValueUnits:(NSString *)key
 {
 	id		temp;
 	int		count;
 	
 	temp = [self parseMultipleFrom:key];
 	count = [temp count];
-	[temp free];
 	
 	return count;
+}
+
++ (NSString*)convertArrayToString:(NSArray<NSString*>*)list
+{
+	return [list componentsJoinedByString:@"\t"];
 }
 
 //
 //	Convert List to string
 //
-- (char *)convertListToString:(id)list
+- (NSString *)convertListToString:(id)list
 {
 	int		i;
 	int		max;
@@ -229,75 +208,52 @@ JDC
 	newstr = malloc(strlen(tempstr)+1);
 	strcpy(newstr,tempstr);
 	
-	return newstr;
+	return @(newstr);
 }
 
 //
 // JDC: I wrote this to simplify removing vectors
 //
-- removeKeyword:(char *)key
+- (void)removeKeyword:(NSString *)key
 {
-	dict_t	*d;
-
-	d = [self findKeyword:key];
-	if (d == NULL)
-		return self;
-	[self removeElementAt:d - (dict_t*)dataPtr];
-	return self;
+	[intDict removeObjectForKey:key];
 }
 
 //
 //	Delete string from keyword's value
 //
-- delString:(char *)string fromValue:(char *)key
+- (BOOL)delString:(NSString *)string fromValue:(NSString *)key
 {
-	id		temp;
-	int		count;
-	int		i;
-	char	*s;
-	dict_t	*d;
-	
-	d = [self findKeyword:key];
-	if (d == NULL)
-		return NULL;
-	temp = [self parseMultipleFrom:key];
-	count = [temp count];
-	for (i = 0;i < count;i++)
-	{
-		s = [temp elementAt:i];
-		if (!strcmp(s,string))
-		{
-			[temp removeElementAt:i];
-			free(d->value);
-			d->value = [self convertListToString:temp];
-			[temp free];
-			
-			break;
-		}
+	NSString *hi = [intDict objectForKey:key];
+	if (!hi) {
+		return NO;
 	}
-	return self;
+	NSMutableArray *arr = [[hi componentsSeparatedByString:@"\t"] mutableCopy];
+	[arr removeObject:string];
+	
+	[intDict setObject:[arr componentsJoinedByString:@"\t"] forKey:key];
+	[arr release];
+	
+	return YES;
 }
 
 //
 //	Add string to keyword's value
 //
-- addString:(char *)string toValue:(char *)key
+- (BOOL)addString:(NSString *)string toValue:(NSString *)key
 {
-	char	*newstr;
-	char	spacing[] = "\t";
-	dict_t	*d;
+	NSString *const spacing = @"\t";
+	NSMutableString *hi = [[intDict objectForKey:key] mutableCopy];
+	if (!hi) {
+		return NO;
+	}
 	
-	d = [self findKeyword:key];
-	if (d == NULL)
-		return NULL;
-	newstr = malloc(strlen(string) + strlen(d->value) + strlen(spacing) + 1);
-	strcpy(newstr,d->value);
-	strcat(newstr,spacing);
-	strcat(newstr,string);
-	free(d->value);
-	d->value = newstr;
+	[hi appendString:spacing];
+	[hi appendString:string];
+	[intDict setObject:[NSString stringWithString:hi] forKey:key];
+	[hi release];
 	
-	return self;
+	return YES;
 }
 
 //===============================================
@@ -305,16 +261,15 @@ JDC
 //	Use these for multiple parameters in a keyword value
 //
 //===============================================
-char	*searchStr;
+const char	*searchStr;
 char	item[4096];
 
-- setupMultiple:(char *)value
+- (void)setupMultiple:(NSString *)value
 {
-	searchStr = value;
-	return self;
+	searchStr = value.UTF8String;
 }
 
-- (char *)getNextParameter
+- (NSString *)getNextParameter
 {
 	char	*s;
 	
@@ -329,37 +284,33 @@ char	item[4096];
 		*s = 0;
 		searchStr = FindNonwhitespcInBuffer(s+1);
 	}
-	return item;
+	return @(item);
 }
 
 //
 //	Parses a keyvalue string & returns a Storage full of those items
 //
-- (id) parseMultipleFrom:(char *)key
+- (id) parseMultipleFrom:(NSString *)key
 {
 	#define	ITEMSIZE	128
-	id		stuff;
-	char	string[ITEMSIZE];
-	char	*s;
+	NSMutableArray	*stuff;
+	NSString	*string;
+	NSString	*s;
 	
 	s = [self getStringFor:key];
 	if (s == NULL)
 		return NULL;
 		
-	stuff = [[Storage alloc]
-			initCount:0
-			elementSize:ITEMSIZE
-			description:NULL];
+	stuff = [[NSMutableArray alloc] init];
 			
 	[self setupMultiple:s];
 	while((s = [self getNextParameter]))
 	{
-		bzero(string,ITEMSIZE);
-		strcpy(string,s);
-		[stuff addElement:string];
+		string = s;
+		[stuff addObject:string];
 	}
 	
-	return stuff;
+	return [stuff autorelease];
 }
 
 //===============================================
@@ -371,7 +322,7 @@ char	item[4096];
 //
 //	parse all keyword/value pairs within { } 's
 //
-- (id) parseBraceBlock:(FILE *)fp
+- (BOOL) parseBraceBlock:(FILE *)fp
 {
 	int		c;
 	dict_t	pair;
@@ -379,13 +330,13 @@ char	item[4096];
 	
 	c = FindBrace(fp);
 	if (c == -1) {
-		return NULL;
+		return NO;
 	}
 	
 	while((c = FindBrace(fp)) != '}')
 	{
 		if (c == -1)
-			return NULL;
+			return NO;
 //		c = FindNonwhitespc(fp);
 //		if (c == -1)
 //			return NULL;
@@ -394,7 +345,7 @@ char	item[4096];
 // JDC: fixed to allow quoted keys
 		c = FindNonwhitespc(fp);
 		if (c == -1) {
-			return NULL;
+			return NO;
 		}
 		c = fgetc(fp);
 		if ( c == '\"') {
@@ -412,11 +363,17 @@ char	item[4096];
 		pair.value = malloc(strlen(string)+1);
 		strcpy(pair.value,string);
 		
-		[super addElement:&pair];
+		[self addElement:&pair];
 		c = FindBrace(fp);
 	}
 	
-	return self;
+	return YES;
+}
+
+- (void)addElement:(dict_t*)elem
+{
+	[intDict setObject:@(elem->value) forKey:@(elem->key)];
+	free(elem->key); free(elem->value);
 }
 
 @end
