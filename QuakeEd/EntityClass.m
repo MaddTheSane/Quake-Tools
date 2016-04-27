@@ -105,10 +105,7 @@ char	*debugname;
 	return self;
 }
 
-- (esize_t)esize
-{
-	return esize;
-}
+@synthesize esize;
 
 - (char *)classname
 {

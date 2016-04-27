@@ -18,13 +18,15 @@ typedef enum {esize_model, esize_fixed} esize_t;
 }
 
 - (id)initFromText: (char *)text;
-- (char *)classname;
+- (char *)classname NS_RETURNS_INNER_POINTER;
 @property (readonly) esize_t esize;
-- (float *)mins;		// only for esize_fixed
-- (float *)maxs;		// only for esize_fixed
-- (float *)drawColor;
-- (char *)comments;
-- (char *)flagName: (unsigned)flagnum;
+/// only for esize_fixed
+- (float *)mins NS_RETURNS_INNER_POINTER;
+/// only for esize_fixed
+- (float *)maxs NS_RETURNS_INNER_POINTER;
+- (float *)drawColor NS_RETURNS_INNER_POINTER;
+- (char *)comments NS_RETURNS_INNER_POINTER;
+- (char *)flagName: (unsigned)flagnum NS_RETURNS_INNER_POINTER;
 
 @end
 
