@@ -1,4 +1,5 @@
 #import "qedefs.h"
+#include "oldPSFuncs.h"
 
 id cameraview_i;
 
@@ -514,6 +515,7 @@ ZDrawSelf
 */
 - (void)ZDrawSelf
 {
+	
 	PSsetrgbcolor (0,0,1.0);
 	PSsetlinewidth (0.15);
 	

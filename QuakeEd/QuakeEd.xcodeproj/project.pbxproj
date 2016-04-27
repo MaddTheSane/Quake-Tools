@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5509C3A71B9E35780002FFC0 /* QDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5509C3A61B9E35780002FFC0 /* QDict.swift */; };
 		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; };
 		5531411E1B98E5C400390795 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5531411D1B98E5C400390795 /* Info.plist */; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; };
@@ -129,6 +128,7 @@
 		553141991B9909D800390795 /* UpArrow.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = UpArrow.tiff; sourceTree = "<group>"; };
 		5531419B1B99100500390795 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
 		5531419C1B99100500390795 /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
+		555070A71CD1305E007D6E08 /* oldPSFuncs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = oldPSFuncs.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +179,7 @@
 		5531411F1B98E5E800390795 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				555070A71CD1305E007D6E08 /* oldPSFuncs.h */,
 				553141201B98E61F00390795 /* Brush.h */,
 				553141211B98E61F00390795 /* CameraView.h */,
 				553141221B98E61F00390795 /* CameraView.m */,
@@ -375,7 +376,6 @@
 				553141931B98E61F00390795 /* ZView.m in Sources */,
 				5531417E1B98E61F00390795 /* mathlib.c in Sources */,
 				553141911B98E61F00390795 /* XYView.m in Sources */,
-				5509C3A71B9E35780002FFC0 /* QDict.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,8 +462,10 @@
 		5531411B1B98E46B00390795 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREFIX_HEADER = oldPSFuncs.h;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.id.quake.QuakeEd;
@@ -476,8 +478,10 @@
 		5531411C1B98E46B00390795 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREFIX_HEADER = oldPSFuncs.h;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.id.quake.QuakeEd;

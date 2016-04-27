@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
 - (void)setDrawMode: (drawmode_t)mode;
 
 - (void)newSuperBounds;
-- (void)newRealBounds: (NSRect *)nb;
+- (void)newRealBounds: (NSRect)nb;
 
 - (void)addToScrollRange: (float)x :(float)y;
 - (void)setOrigin: (NSPoint *)pt scale: (float)sc;

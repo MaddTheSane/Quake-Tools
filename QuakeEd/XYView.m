@@ -192,13 +192,11 @@ newSuperBounds
 When superview is resized
 ==================
 */
-- newSuperBounds
+- (void)newSuperBounds
 {
 	NSRect	r = [self superview].bounds;
 	
-	[self newRealBounds: &r];
-	
-	return self;
+	[self newRealBounds: r];
 }
 
 /*
@@ -210,7 +208,7 @@ Should only change the scroll bars, not cause any redraws.
 If realbounds has shrunk, nothing will change.
 ===================
 */
-- newRealBounds: (NSRect)nb
+- (void)newRealBounds: (NSRect)nb
 {
 	NSRect		sbounds;
 	
@@ -238,8 +236,6 @@ If realbounds has shrunk, nothing will change.
 	
 	[[scrollview_i horizontalScroller] display];
 	[[scrollview_i verticalScroller] display];
-	
-	return self;
 }
 
 

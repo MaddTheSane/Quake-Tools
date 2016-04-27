@@ -5,7 +5,7 @@
 //======================================
 
 #import "qedefs.h"
-#import "QuakeEd-Swift.h"
+//#import "QuakeEd-Swift.h"
 
 id	project_i;
 

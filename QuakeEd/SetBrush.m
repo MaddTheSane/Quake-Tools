@@ -1168,7 +1168,7 @@ ZDrawSelf
 	qtexture_t	*q;
 	
 	if ([self fakeBrush: @selector(ZDrawSelf)])
-		return self;
+		return;
 
 	[zview_i addToHeightRange: bmins[2]];
 	[zview_i addToHeightRange: bmaxs[2]];
@@ -1188,7 +1188,7 @@ ZDrawSelf
 	
 	for (i=0 ; i<2 ; i++)
 		if (bmins[i] >= p1[i] || bmaxs[i] <= p1[i])
-			return self;
+			return;
 	
 	p1[2] = 4096;
 	p2[0] = p1[0];
@@ -1198,7 +1198,7 @@ ZDrawSelf
 	[self clipRay: p1 : p2 : frontpoint: &frontface : backpoint : &backface];
 
 	if (frontface == -1 || backface == -1)
-		return self;
+		return;
 		
 	q = TEX_ForName (faces[frontface].texture.texture);
 	

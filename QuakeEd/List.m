@@ -8,7 +8,7 @@
 
 #import "List.h"
 
-@implementation List
+@implementation QEList
 
 - (instancetype)init
 {
@@ -23,7 +23,7 @@
 	[internalList addObject:obj];
 }
 
-- (id)objectAt:(int)index
+- (id)objectAt:(unsigned int)index
 {
 	return [self objectAtIndex:index];
 }

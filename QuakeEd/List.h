@@ -8,36 +8,42 @@
 
 #import <Foundation/Foundation.h>
 
+#if !__OBJC2__
+#import <objc/List.h>
+#else
+#define List QEList
+#endif
 #define maxElements [self count]
 #define numElements [self count]
+
+#define QLLIST_DEPRECATED(msg) __OSX_AVAILABLE_BUT_DEPRECATED_MSG(__MAC_10_0, __MAC_10_0, __IPHONE_NA, __IPHONE_NA, msg)
 
 NS_ASSUME_NONNULL_BEGIN
 
 ///Simple wrapper emulating the NeXTStep `List` class.
-@interface List : NSObject <NSFastEnumeration> {
+@interface QEList : NSObject <NSFastEnumeration> {
 	NSMutableArray *internalList;
 }
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 - (void)addObject:(id)obj;
-- (id)objectAt:(int)index DEPRECATED_ATTRIBUTE;
+- (id)objectAt:(unsigned int)index QLLIST_DEPRECATED("Use -objectAtIndex: instead");
 - (id)objectAtIndex:(NSInteger)index;
 - (nullable id)removeObject:(id)obj;
 
-- (void)insertObject:(id)obj at:(int)idx DEPRECATED_ATTRIBUTE;
+- (id)insertObject:(id)obj at:(int)idx DEPRECATED_ATTRIBUTE;
 - (void)insertObject:(id)obj atIndex:(NSInteger)idx;
 
-- (void)empty DEPRECATED_ATTRIBUTE;
+- (id)empty QLLIST_DEPRECATED("Use -removeAllObjects instead");
 - (void)removeAllObjects;
 
 @property (readonly) NSInteger count;
 
-- (void)removeObjectAt:(int)idx DEPRECATED_ATTRIBUTE;
+- (void)removeObjectAt:(int)idx QLLIST_DEPRECATED("Use removeObjectAtIndex: instead");
 - (void)removeObjectAtIndex:(NSInteger)idx;
 
 - (NSEnumerator*)objectEnumerator;
 
 @end
-
 NS_ASSUME_NONNULL_END
