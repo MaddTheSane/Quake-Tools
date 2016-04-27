@@ -22,7 +22,16 @@ void linecolor (float r, float g, float b);
 void XYmoveto (vec3_t pt);
 void XYlineto (vec3_t pt);
 
-typedef NS_ENUM(NSInteger, drawmode_t) {dr_wire, dr_flat, dr_texture};
+typedef NS_ENUM(NSInteger, XYDrawMode) {
+	XYDrawModeWire,
+	XYDrawModeFlat,
+	XYDrawModeTexture,
+	dr_wire = XYDrawModeWire,
+	dr_flat = XYDrawModeFlat,
+	dr_texture = XYDrawModeTexture,
+};
+
+typedef XYDrawMode drawmode_t;
 
 
 @interface XYView :  NSView <NSDraggingSource>

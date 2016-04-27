@@ -43,14 +43,3 @@ typedef struct
 - (void)addElement:(dict_t*)elem;
 
 @end
-
-int	GetNextChar(FILE *fp);
-void CopyUntilWhitespc(FILE *fp,char *buffer);
-void CopyUntilQuote(FILE *fp,char *buffer);
-int FindBrace(FILE *fp);
-int FindQuote(FILE *fp);
-int FindWhitespc(FILE *fp);
-int FindNonwhitespc(FILE *fp);
-
-char *FindWhitespcInBuffer(char *buffer);
-char *FindNonwhitespcInBuffer(char *buffer);

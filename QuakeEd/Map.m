@@ -898,7 +898,7 @@ UI operations
 		return;
 	}
 	
-	sb_newowner = [[Entity alloc] initClass: [things_i spawnName]];
+	sb_newowner = [[Entity alloc] initWithClass: [things_i spawnName]];
 
 	if ( [sb_newowner modifiable] )
 		[self makeSelectedPerform: @selector(moveToEntity)];

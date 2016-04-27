@@ -1,6 +1,18 @@
 
 #import "qedefs.h"
 
+static int	GetNextChar(FILE *fp);
+static void CopyUntilWhitespc(FILE *fp,char *buffer);
+static void CopyUntilQuote(FILE *fp,char *buffer);
+static int FindBrace(FILE *fp);
+static int FindQuote(FILE *fp);
+static int FindWhitespc(FILE *fp);
+static int FindNonwhitespc(FILE *fp);
+
+static char *FindWhitespcInBuffer(char *buffer);
+static char *FindNonwhitespcInBuffer(char *buffer);
+
+
 @implementation Dict
 
 - (NSInteger)count
@@ -261,12 +273,13 @@ JDC
 //	Use these for multiple parameters in a keyword value
 //
 //===============================================
-const char	*searchStr;
+char	*searchStr;
 char	item[4096];
 
 - (void)setupMultiple:(NSString *)value
 {
-	searchStr = value.UTF8String;
+	strcpy(item, value.UTF8String);
+	searchStr = item;
 }
 
 - (NSString *)getNextParameter

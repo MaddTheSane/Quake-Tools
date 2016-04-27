@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; };
-		5531411E1B98E5C400390795 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5531411D1B98E5C400390795 /* Info.plist */; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; };
 		5531416A1B98E61F00390795 /* Clipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141241B98E61F00390795 /* Clipper.m */; };
 		5531416B1B98E61F00390795 /* cmdlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 553141251B98E61F00390795 /* cmdlib.c */; };
@@ -325,7 +324,6 @@
 			files = (
 				553141871B98E61F00390795 /* readme.txt in Resources */,
 				5531418A1B98E61F00390795 /* short.tiff in Resources */,
-				5531411E1B98E5C400390795 /* Info.plist in Resources */,
 				5531418F1B98E61F00390795 /* triggers.qc in Resources */,
 				553141731B98E61F00390795 /* i_90d.tiff in Resources */,
 				553141981B9909C600390795 /* DownArrow.tiff in Resources */,

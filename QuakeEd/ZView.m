@@ -802,13 +802,13 @@ modalMoveLoop
 //
 	goto drawentry;
 
-	while (event->type != NSLeftMouseUp)
+	while (event.type != NSLeftMouseUp)
 	{
 		//
 		// calculate new point
 		//
-		newpt = event.locationInView;
-		[converter convertPoint:&newpt  fromView:NULL];
+		newpt = event.locationInWindow;
+		newpt = [converter convertPoint:newpt  fromView:NULL];
 				
 		delta[0] = newpt.x-basept->x;
 		delta[1] = newpt.y-basept->y;
@@ -824,7 +824,7 @@ drawentry:
 		//
 		[quakeed_i newinstance];
 		[self display];
-		NXPing ();
+		//NXPing ();
 				
 		event = [NSApp nextEventMatchingMask: 
 			NSLeftMouseUpMask | NSLeftMouseDraggedMask];		

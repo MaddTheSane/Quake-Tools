@@ -325,9 +325,7 @@ id	project_i;
 	stat(path,&s);
 	lastModified = s.st_mtime;
 
-	Dict *aDict = [[Dict alloc] initFromFile:fp];
-	projectInfo = [[aDict toNSDictionary] mutableCopy];
-	[aDict release];
+	projectInfo = [[Dict alloc] initFromFile:fp];
 	fclose(fp);
 	
 	return YES;
