@@ -46,9 +46,9 @@ extern InspectorControl *inspcontrol_i;
 	IBOutlet NSWindow	*win_textures_i;	// textures
 	IBOutlet NSWindow	*win_things_i;		// things
 	IBOutlet NSWindow	*win_prefs_i;		// preferences
-	IBOutlet NSWindow	*win_settings_i;		// project settings
+	IBOutlet NSWindow	*win_settings_i;	// project settings
 	IBOutlet NSWindow	*win_output_i;		// bsp output
-	IBOutlet NSWindow	*win_help_i;			// documentation
+	IBOutlet NSWindow	*win_help_i;		// documentation
 	
 	// PopUpList objs
 	IBOutlet NSPopUpButton *itemProject_i;		// project

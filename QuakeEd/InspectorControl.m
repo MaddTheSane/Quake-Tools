@@ -119,7 +119,7 @@ InspectorControl *inspcontrol_i;
 	r = inspectorView_i.frame;
 	inspectorSubview_i = newView;
 	[inspectorSubview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-	[inspectorSubview_i sizeTo:r.size.width - 4 :r.size.height - 4];
+	[inspectorSubview_i setFrameSize:NSMakeSize(r.size.width - 4, r.size.height - 4)];
 	
 	[inspectorSubview_i lockFocus];
 	
@@ -128,7 +128,6 @@ InspectorControl *inspcontrol_i;
 	NSRectFill(f);
 	[inspectorSubview_i unlockFocus];
 	[inspectorView_i display];
-	
 }
 
 

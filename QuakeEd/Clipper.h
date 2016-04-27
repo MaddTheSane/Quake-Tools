@@ -3,7 +3,7 @@
 #import "XYZDrawable.h"
 
 @class Clipper;
-extern	Clipper	*clipper_i;
+extern Clipper *clipper_i;
 
 @interface Clipper : NSObject <XYZDrawable>
 {

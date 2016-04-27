@@ -2,7 +2,7 @@
 #import <AppKit/AppKit.h>
 
 @class Things;
-extern	Things *things_i;
+extern Things *things_i;
 
 #define	ENTITYNAMEKEY	"spawn"
 

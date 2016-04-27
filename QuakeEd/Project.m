@@ -260,7 +260,7 @@ id	project_i;
 	}
 
 // update the texture inspector
-	[texturepalette_i initPaletteFromWadfile:wf ];
+	[texturepalette_i setUpPaletteFromWadfile:wf ];
 	[[map_i objectAt: 0] setKey:"wad" toValue: wf];
 //	[inspcontrol_i changeInspectorTo:i_textures];
 

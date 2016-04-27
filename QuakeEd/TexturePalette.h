@@ -3,8 +3,8 @@
 
 typedef union
 {
-	byte		chan[4];
-	unsigned	p;
+	byte			chan[4];
+	unsigned int	p;
 } pixel32_t;
 
 
@@ -49,21 +49,22 @@ typedef struct
 #define	TEX_INDENT	10
 #define	TEX_SPACING	16
 
-extern	id texturepalette_i;
+@class TexturePalette;
+extern TexturePalette *texturepalette_i;
 
 @interface TexturePalette: NSObject
 {
 	char	currentwad[1024];
 	id	textureList_i;
 	IBOutlet id	textureView_i;
-	IBOutlet id	searchField_i;
-	IBOutlet id	sizeField_i;
+	IBOutlet NSTextField *searchField_i;
+	IBOutlet NSTextField *sizeField_i;
 	
-	IBOutlet id	field_Xshift_i;
-	IBOutlet id	field_Yshift_i;
-	IBOutlet id	field_Xscale_i;
-	IBOutlet id	field_Yscale_i;
-	IBOutlet id	field_Rotate_i;
+	IBOutlet NSTextField *field_Xshift_i;
+	IBOutlet NSTextField *field_Yshift_i;
+	IBOutlet NSTextField *field_Xscale_i;
+	IBOutlet NSTextField *field_Yscale_i;
+	IBOutlet NSTextField *field_Rotate_i;
 	
 	int	viewWidth;
 	int	viewHeight;
@@ -71,7 +72,7 @@ extern	id texturepalette_i;
 }
 
 - (char*)currentWad;
-- (id)initPaletteFromWadfile:(char *)wf;
+- (void)setUpPaletteFromWadfile:(char *)wf;
 - (void)computeTextureViewSize;
 - (void)alphabetize;
 - (id)getList;

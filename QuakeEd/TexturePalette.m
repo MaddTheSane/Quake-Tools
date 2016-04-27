@@ -1,7 +1,7 @@
 
 #import "qedefs.h"
 
-id	texturepalette_i;
+TexturePalette *texturepalette_i;
 
 
 #define	TYP_MIPTEX	67
@@ -276,7 +276,7 @@ qtexture_t *TEX_ForName (char *name)
 	return currentwad;
 }
 
-- initPaletteFromWadfile:(char *)wf
+- (void)setUpPaletteFromWadfile:(char *)wf
 {
 	int			i;
 	texpal_t	t;
@@ -318,8 +318,6 @@ qtexture_t *TEX_ForName (char *name)
 	[self computeTextureViewSize];
 	[textureView_i setParent:self];
 	[self setSelectedTexture:0];
-
-	return self;
 }
 
 
