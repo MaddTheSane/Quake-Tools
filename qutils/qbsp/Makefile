@@ -82,8 +82,6 @@ soundpvs$(EXT) : ../vis/soundpvs.c
 	$(CC) $(CFLAGS) -c -o soundpvs$(EXT) ../vis/soundpvs.c
 bspinfo$(EXT) : ../bspinfo/bspinfo.c
 	$(CC) $(CFLAGS) -c -o bspinfo$(EXT) ../bspinfo/bspinfo.c
-bspinfo$(EXT) : ../bspinfo/bspinfo.c
-	$(CC) $(CFLAGS) -c -o bspinfo$(EXT) ../bspinfo/bspinfo.c
 cmdlib$(EXT) : ../common/cmdlib.c
 	$(CC) $(CFLAGS) -c -o cmdlib$(EXT) ../common/cmdlib.c
 mathlib$(EXT) : ../common/mathlib.c
