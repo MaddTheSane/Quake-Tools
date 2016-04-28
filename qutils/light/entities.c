@@ -127,8 +127,7 @@ void LoadEntities (void)
 			if (c == '}')
 				Error ("LoadEntities: closing brace without data");
 			
-			epair = malloc (sizeof(epair_t));
-			memset (epair, 0, sizeof(epair));
+			epair = calloc (sizeof(epair_t), 1);
 			strcpy (epair->key, key);
 			strcpy (epair->value, com_token);
 			epair->next = entity->epairs;
@@ -229,7 +228,7 @@ void 	GetVectorForKey (entity_t *ent, char *key, vec3_t vec)
 	char	*k;
 	
 	k = ValueForKey (ent, key);
-	sscanf (k, "%lf %lf %lf", &vec[0], &vec[1], &vec[2]);
+	sscanf (k, "%f %f %f", &vec[0], &vec[1], &vec[2]);
 }
 
 

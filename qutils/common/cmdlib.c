@@ -8,8 +8,9 @@
 #include <direct.h>
 #endif
 
-#ifdef NeXT
+#ifdef __APPLE__
 #include <libc.h>
+#include <unistd.h>
 #endif
 
 #define PATHSEPERATOR   '/'
