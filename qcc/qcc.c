@@ -18,6 +18,7 @@
 */
 
 #include "qcc.h"
+#include <unistd.h>
 
 
 char		destfile[1024];
@@ -1043,7 +1044,7 @@ void CopyFiles (void)
 main
 ============
 */
-void main (int argc, char **argv)
+int main (int argc, char **argv)
 {
 	char	*src;
 	char	*src2;
@@ -1061,7 +1062,7 @@ void main (int argc, char **argv)
 		printf ("to build a clean data tree: qcc -copy <srcdir> <destdir>\n");
 		printf ("to build a clean pak file: qcc -pak <srcdir> <packfile>\n");
 		printf ("to bsp all bmodels: qcc -bspmodels <gamedir>\n");
-		return;
+		return 0;
 	}
 	
 	p = CheckParm ("-src");
@@ -1130,4 +1131,5 @@ void main (int argc, char **argv)
 
 // report / copy the data files
 	CopyFiles ();
+	return 0;
 }

@@ -20,6 +20,7 @@
 
 #include "cmdlib.h"
 #include <sys/time.h>
+#include <unistd.h>
 
 #define PATHSEPERATOR   '/'
 
