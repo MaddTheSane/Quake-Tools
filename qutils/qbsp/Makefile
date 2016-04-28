@@ -5,6 +5,11 @@ NTEXES = qbsp.exe light.exe vis.exe bspinfo.exe entmap.exe visx.exe
 #==============================================================================
 
 EXT=	.o
+CFLAGS = -I../common
+
+.c.o:
+	$(CC) $(CFLAGS) $< -c -o $@
+
 
 all: $(EXES)
 
@@ -57,9 +62,29 @@ entmap : entmap$(EXT) cmdlib$(EXT)
 	$(CC) $(CFLAGS) -o entmap entmap$(EXT) cmdlib$(EXT)
 
 
-cmdlib$(EXT) : ../cmdlib.c
-	$(CC) $(CFLAGS) -c -o cmdlib$(EXT) ../cmdlib.c
-mathlib$(EXT) : ../mathlib.c
-	$(CC) $(CFLAGS) -c -o mathlib$(EXT) ../mathlib.c
+bspfile$(EXT) : ../common/bspfile.c
+	$(CC) $(CFLAGS) -c -o bspfile$(EXT) ../common/bspfile.c
+threads$(EXT) : ../light/threads.c
+	$(CC) $(CFLAGS) -c -o threads$(EXT) ../light/threads.c
+light$(EXT) : ../light/light.c
+	$(CC) $(CFLAGS) -c -o light$(EXT) ../light/light.c
+ltface$(EXT) : ../light/ltface.c
+	$(CC) $(CFLAGS) -c -o ltface$(EXT) ../light/ltface.c
+trace$(EXT) : ../light/trace.c
+	$(CC) $(CFLAGS) -c -o trace$(EXT) ../light/trace.c
+entities$(EXT) : ../light/entities.c
+	$(CC) $(CFLAGS) -c -o entities$(EXT) ../light/entities.c
+vis$(EXT) : ../vis/vis.c
+	$(CC) $(CFLAGS) -c -o vis$(EXT) ../vis/vis.c
+flow$(EXT) : ../vis/flow.c
+	$(CC) $(CFLAGS) -c -o flow$(EXT) ../vis/flow.c
+soundpvs$(EXT) : ../vis/soundpvs.c
+	$(CC) $(CFLAGS) -c -o soundpvs$(EXT) ../vis/soundpvs.c
+bspinfo$(EXT) : ../bspinfo/bspinfo.c
+	$(CC) $(CFLAGS) -c -o bspinfo$(EXT) ../bspinfo/bspinfo.c
+cmdlib$(EXT) : ../common/cmdlib.c
+	$(CC) $(CFLAGS) -c -o cmdlib$(EXT) ../common/cmdlib.c
+mathlib$(EXT) : ../common/mathlib.c
+	$(CC) $(CFLAGS) -c -o mathlib$(EXT) ../common/mathlib.c
 
 
