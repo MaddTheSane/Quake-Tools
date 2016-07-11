@@ -30,7 +30,7 @@ initFrame:
 	ent = [map_i currentEntity];
 	count = [ent numPairs];
 
-	[[self superview] setFlipped: YES];
+	//[[self superview] setFlipped: YES];
 	
 	b = [[self superview] bounds];
 	w = b.size.width;

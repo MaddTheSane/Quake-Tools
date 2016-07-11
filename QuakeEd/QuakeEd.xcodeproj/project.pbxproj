@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; };
+		552C9F091D3441E30096E99C /* QDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5509C3A61B9E35780002FFC0 /* QDict.swift */; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; };
 		5531416A1B98E61F00390795 /* Clipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141241B98E61F00390795 /* Clipper.m */; };
 		5531416B1B98E61F00390795 /* cmdlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 553141251B98E61F00390795 /* cmdlib.c */; };
@@ -40,7 +41,6 @@
 		553141911B98E61F00390795 /* XYView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141641B98E61F00390795 /* XYView.m */; };
 		553141921B98E61F00390795 /* ZScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141661B98E61F00390795 /* ZScrollView.m */; };
 		553141931B98E61F00390795 /* ZView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141681B98E61F00390795 /* ZView.m */; };
-		5531419D1B99100500390795 /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531419C1B99100500390795 /* List.m */; };
 		555070A91CD1573A007D6E08 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 555070A81CD1573A007D6E08 /* Icons.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -110,8 +110,6 @@
 		553141661B98E61F00390795 /* ZScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZScrollView.m; sourceTree = "<group>"; };
 		553141671B98E61F00390795 /* ZView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZView.h; sourceTree = "<group>"; };
 		553141681B98E61F00390795 /* ZView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZView.m; sourceTree = "<group>"; };
-		5531419B1B99100500390795 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
-		5531419C1B99100500390795 /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
 		555070A71CD1305E007D6E08 /* oldPSFuncs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = oldPSFuncs.h; sourceTree = "<group>"; };
 		555070A81CD1573A007D6E08 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -219,8 +217,6 @@
 				553141671B98E61F00390795 /* ZView.h */,
 				553141681B98E61F00390795 /* ZView.m */,
 				5509C3A41B9E2B980002FFC0 /* XYZDrawable.h */,
-				5531419B1B99100500390795 /* List.h */,
-				5531419C1B99100500390795 /* List.m */,
 				5509C3A51B9E35770002FFC0 /* QuakeEd-Bridging-Header.h */,
 			);
 			name = Classes;
@@ -269,7 +265,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "C.W. Betts";
 				TargetAttributes = {
 					553141081B98E46B00390795 = {
@@ -340,12 +336,12 @@
 				553141841B98E61F00390795 /* QuakeEd_main.m in Sources */,
 				553141891B98E61F00390795 /* SetBrush.m in Sources */,
 				5531416A1B98E61F00390795 /* Clipper.m in Sources */,
-				5531419D1B99100500390795 /* List.m in Sources */,
 				553141901B98E61F00390795 /* UserPath.m in Sources */,
 				553141921B98E61F00390795 /* ZScrollView.m in Sources */,
 				553141931B98E61F00390795 /* ZView.m in Sources */,
 				5531417E1B98E61F00390795 /* mathlib.c in Sources */,
 				553141911B98E61F00390795 /* XYView.m in Sources */,
+				552C9F091D3441E30096E99C /* QDict.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,7 +428,6 @@
 		5531411B1B98E46B00390795 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -449,7 +444,6 @@
 		5531411C1B98E46B00390795 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;

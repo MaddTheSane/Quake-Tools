@@ -1,7 +1,7 @@
 
 // Map is a list of Entity objects
 
-#import "List.h"
+//#import "List.h"
 #import "XYZDrawable.h"
 
 @class SetBrush;
@@ -9,10 +9,11 @@
 @class Entity;
 extern Map *map_i;
 
-@interface Map : List <XYZDrawable>
+@interface Map : NSObject <XYZDrawable>
 {
 	Entity	*currentEntity;
-	List	*oldselection;	// temp when loading a new map
+	NSArray	*oldselection;	// temp when loading a new map
+	NSArray *mapData;
 	float	minz, maxz;
 }
 
@@ -30,7 +31,7 @@ extern Map *map_i;
 - (void)setTextureRay: (vec3_t)p1 : (vec3_t)p2 : (BOOL)allsides;
 - (SetBrush*)getTextureRay: (vec3_t)p1 : (vec3_t)p2;
 
-@property (assign, nonatomic) id currentEntity;
+@property (assign, nonatomic) Entity *currentEntity;
 
 @property (nonatomic) float currentMinZ;
 @property (nonatomic) float currentMaxZ;

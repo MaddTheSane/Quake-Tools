@@ -1,7 +1,5 @@
 #import <AppKit/AppKit.h>
-#import <objc/List.h>
 #import "mathlib.h"
-#import "List.h"
 
 typedef enum {esize_model, esize_fixed} esize_t;
 
@@ -9,7 +7,7 @@ typedef enum {esize_model, esize_fixed} esize_t;
 
 @interface EntityClass : NSObject
 {
-	char	*name;
+	NSString*name;
 	esize_t	esize;
 	vec3_t	mins, maxs;
 	vec3_t	color;
@@ -18,29 +16,34 @@ typedef enum {esize_model, esize_fixed} esize_t;
 }
 
 - (id)initFromText: (char *)text;
-- (char *)classname NS_RETURNS_INNER_POINTER;
+@property (readonly, copy) NSString *classname;
 @property (readonly) esize_t esize;
 /// only for esize_fixed
 - (float *)mins NS_RETURNS_INNER_POINTER;
 /// only for esize_fixed
 - (float *)maxs NS_RETURNS_INNER_POINTER;
 - (float *)drawColor NS_RETURNS_INNER_POINTER;
-- (char *)comments NS_RETURNS_INNER_POINTER;
-- (char *)flagName: (unsigned)flagnum NS_RETURNS_INNER_POINTER;
+- (const char *)comments NS_RETURNS_INNER_POINTER;
+- (const char *)flagName: (unsigned)flagnum NS_RETURNS_INNER_POINTER;
 
 @end
 
 @class EntityClassList;
 extern EntityClassList *entity_classes_i;
 
-@interface EntityClassList : List
+
+@interface EntityClassList : NSObject
 {
-	id		nullclass;
-	char	*source_path;
+	id								nullclass;
+	NSString						*source_path;
+	NSMutableArray<EntityClass*>	*classList;
 }
 
-- (instancetype)initForSourceDirectory: (char *)path;
-- (id)classForName: (char *)name;
+- (EntityClass*)objectAtIndex:(NSInteger)idx;
+- (NSUInteger)indexOfObject:(EntityClass*)anObject;
+
+- (instancetype)initForSourceDirectory: (NSString *)path;
+- (id)classForName: (NSString *)name;
 - (void)scanDirectory;
 
 @end

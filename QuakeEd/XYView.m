@@ -430,11 +430,9 @@ addToScrollRange::
 superviewChanged
 ===================
 */
-- superviewChanged
+- (void)superviewChanged
 {	
 	[self newRealBounds: &realbounds];
-	
-	return self;
 }
 
 

@@ -28,10 +28,10 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 {
 	int		i;
 	int		max;
-	List	*list_i;
+	NSArray	*list_i;
 	texpal_t *t;
-	int		x;
-	int		y;
+	CGFloat	x;
+	CGFloat	y;
 	NSPoint	p;
 	NSRect	r;
 	int		selected;
@@ -50,7 +50,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 
 	if (deselectIndex != -1)
 	{
-		t = [list_i elementAt:deselectIndex];
+		t = [list_i objectAtIndex:deselectIndex];
 		r = t->r;
 		r.origin.x -= TEX_INDENT;
 		r.origin.y -= TEX_INDENT;
@@ -98,7 +98,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 			
 			p = t->r.origin;
 			p.y += TEX_SPACING;
-			[t->image drawAt:&p];
+			[t->image drawAtPoint:p fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
 			x = t->r.origin.x;
 			y = t->r.origin.y + 7;
 			PSmoveto(x,y);
@@ -120,7 +120,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	NSInteger	max;
 	int			oldwindowmask;
 	texpal_t	*t;
-	List		*list;
+	NSArray		*list;
 	NSRect		r;
 
 	//oldwindowmask = [window addToEventMask:NSLeftMouseDraggedMask];
@@ -131,7 +131,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	max = [list count];
 	for (i = 0;i < max; i++)
 	{
-		t = [list elementAt:i];
+		t = [list objectAtIndex:i];
 		r = t->r;
 		if (NSPointInRect(loc, r) == YES)
 		{
@@ -141,7 +141,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		}
 	}
 	
-	[[self window] setEventMask:oldwindowmask];
+	//[[self window] setEventMask:oldwindowmask];
 }
 
 @end

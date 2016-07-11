@@ -184,13 +184,13 @@ JDC
 //
 - (int) getValueUnits:(NSString *)key
 {
-	id		temp;
-	int		count;
+	id			temp;
+	NSInteger	count;
 	
 	temp = [self parseMultipleFrom:key];
 	count = [temp count];
 	
-	return count;
+	return (int)count;
 }
 
 + (NSString*)convertArrayToString:(NSArray<NSString*>*)list
@@ -201,19 +201,15 @@ JDC
 //
 //	Convert List to string
 //
-- (NSString *)convertListToString:(id)list
+- (NSString *)convertListToString:(NSArray<NSString*>*)list
 {
-	int		i;
-	int		max;
-	char	tempstr[4096];
-	char	*s;
+	char	tempstr[4096] = {0};
+	const char	*s;
 	char	*newstr;
 	
-	max = [list count];
-	tempstr[0] = 0;
-	for (i = 0;i < max;i++)
+	for (NSString *ss in list)
 	{
-		s = [list elementAt:i];
+		s = ss.UTF8String;
 		strcat(tempstr,s);
 		strcat(tempstr,"  ");
 	}

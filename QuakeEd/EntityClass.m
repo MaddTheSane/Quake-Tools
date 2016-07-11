@@ -16,7 +16,7 @@ Flag names can follow the size description:
 /*QUAKED func_door (0 .5 .8) ? START_OPEN STONE_SOUND DOOR_DONT_LINK GOLD_KEY SILVER_KEY
 
 */
-char	*debugname;
+NSString	*debugname;
 - initFromText: (char *)text
 {
 	char		*t;
@@ -30,8 +30,7 @@ char	*debugname;
 	
 // grab the name
 	text = COM_Parse (text);
-	name = malloc (strlen(com_token)+1);
-	strcpy (name, com_token);
+	name = [@(com_token) retain];
 	debugname = name;
 	
 // grab the color
@@ -106,11 +105,7 @@ char	*debugname;
 }
 
 @synthesize esize;
-
-- (char *)classname
-{
-	return name;
-}
+@synthesize classname = name;
 
 - (float *)mins
 {
@@ -127,17 +122,24 @@ char	*debugname;
 	return color;
 }
 
-- (char *)comments
+- (const char *)comments
 {
 	return comments;
 }
 
 
-- (char *)flagName: (unsigned)flagnum
+- (const char *)flagName: (unsigned)flagnum
 {
 	if (flagnum >= MAX_FLAGS)
 		Error ("EntityClass flagName: bad number");
 	return flagnames[flagnum];
+}
+
+- (void)dealloc
+{
+	[name release];
+	
+	[super dealloc];
 }
 
 @end
@@ -153,19 +155,17 @@ insertEC:
 */
 - (void)insertEC: ec
 {
-	char	*name;
-	int		i;
-	
-	name = [ec classname];
-	for (i=0 ; i<numElements ; i++)
+	NSString *name = [ec classname];
+	for (NSInteger i=0 ; i<classList.count ; i++)
 	{
-		if (strcasecmp (name, [[self objectAt: i] classname]) < 0)
+		if ([name compare:[[classList objectAtIndex:i] classname]] == NSOrderedDescending)
 		{
-			[self insertObject: ec at:i];
+			
+			[classList insertObject: ec atIndex:i];
 			return;
 		}
 	}
-	[self addObject: ec];
+	[classList addObject: ec];
 }
 
 
@@ -174,17 +174,15 @@ insertEC:
 scanFile
 =================
 */
-- (void)scanFile: (char *)filename
+- (void)scanFile: (NSString *)filename
 {
 	ssize_t	size;
 	char	*data;
 	id		cl;
 	int		i;
-	char	path[1024];
+	NSString *fullPath = [source_path stringByAppendingPathComponent:filename];
 	
-	sprintf (path,"%s/%s", source_path, filename);
-	
-	size = LoadFile (path, (void *)&data);
+	size = LoadFile (fullPath.fileSystemRepresentation, (void *)&data);
 	
 	for (i=0 ; i<size ; i++)
 		if (!strncmp(data+i, "/*QUAKED",8))
@@ -193,7 +191,7 @@ scanFile
 			if (cl)
 				[self insertEC: cl];
 			else
-				printf ("Error parsing: %s in %s\n",debugname, filename);
+				printf ("Error parsing: %s in %s\n",debugname.fileSystemRepresentation, filename.UTF8String);
 		}
 		
 	free (data);
@@ -209,10 +207,11 @@ scanDirectory
 {
 	int		count, i;
 	struct direct **namelist, *ent;
+	NSFileManager *fm = [NSFileManager defaultManager];
 	
-	[self empty];
+	[classList removeAllObjects];
 	
-     count = scandir(source_path, &namelist, NULL, NULL);
+     count = scandir(source_path.fileSystemRepresentation, &namelist, NULL, NULL);
 	
 	for (i=0 ; i<count ; i++)
 	{
@@ -220,44 +219,53 @@ scanDirectory
 		if (ent->d_namlen <= 3)
 			continue;
 		if (!strcmp (ent->d_name+ent->d_namlen-3,".qc"))
-			[self scanFile: ent->d_name];
+			[self scanFile: [fm stringWithFileSystemRepresentation:ent->d_name length:ent->d_namlen]];
 	}
 }
 
+EntityClassList *entity_classes_i;
 
-id	entity_classes_i;
-
-
-- initForSourceDirectory: (char *)path
+- (EntityClass*)objectAtIndex:(NSInteger)idx
 {
-	self = [super init];
-	
-	source_path = path;	
-	[self scanDirectory];
-	
-	entity_classes_i = self;
-	
-	nullclass = [[EntityClass alloc] initFromText:
-"/*QUAKED UNKNOWN_CLASS (0 0.5 0) ?"];
+	return [classList objectAtIndex:idx];
+}
 
+- (NSUInteger)indexOfObject:(EntityClass*)anObject;
+{
+	return [classList indexOfObject:anObject];
+}
+
+- initForSourceDirectory: (NSString *)path
+{
+	if (self = [super init]) {
+		classList = [[NSMutableArray alloc] init];
+		source_path = [path copy];
+		[self scanDirectory];
+		
+		entity_classes_i = self;
+		
+		nullclass = [[EntityClass alloc] initFromText:
+					 "/*QUAKED UNKNOWN_CLASS (0 0.5 0) ?"];
+	}
 	return self;
 }
 
-- (id)classForName: (char *)name
+- (id)classForName: (NSString *)name
 {
-	int		i;
-	id		o;
-	
-	for (i=0 ; i<numElements ; i++)
-	{
-		o = [self objectAt: i];
-		if (!strcmp (name,[o classname]) )
+	for (EntityClass *o in classList) {
+		if ([name isEqualToString:o.classname])
 			return o;
 	}
 	
 	return nullclass;
 }
 
+- (void)dealloc
+{
+	[classList release];
+	[source_path release];
+	
+	[super dealloc];
+}
 
 @end
-

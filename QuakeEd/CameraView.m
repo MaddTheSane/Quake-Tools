@@ -398,7 +398,7 @@ drawSolid
 		r_width*4,
 		NO,
 		NO,
-		NSRGBColorSpace,
+		NSDeviceRGBColorSpace,
 		planes
 	);
 

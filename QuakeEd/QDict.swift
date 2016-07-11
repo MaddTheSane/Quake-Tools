@@ -8,6 +8,115 @@
 
 import Foundation
 
+private func FindBrace(fp: UnsafeMutablePointer<FILE>) -> Int32 {
+	let count = 800;
+	var c: Int32 = 0
+	
+	for _ in 0 ..< count {
+		c = GetNextChar(fp);
+		if c == EOF {
+			return -1;
+		}
+		if c == 123 || c == 125 {
+			return c;
+		}
+	}
+	return -1;
+}
+
+private func FindNonwhitespc(fp: UnsafeMutablePointer<FILE>) -> Int32 {
+	let count = 800;
+	var c: Int32 = 0
+	
+	for _ in 0 ..< count {
+		c = GetNextChar(fp);
+		if c == EOF {
+			return -1;
+		}
+		if c > 20 {
+			ungetc(c,fp);
+			return c;
+		}
+	}
+	return -1;
+}
+
+private func FindQuote(fp: UnsafeMutablePointer<FILE>) -> Int32 {
+	let count = 800;
+	var c: Int32 = 0
+	
+	for _ in 0 ..< count {
+		c = GetNextChar(fp);
+		if c == EOF {
+			return -1;
+		}
+		if c == 34 {
+			return c;
+		}
+	}
+	return -1;
+}
+
+private func GetNextChar(fp: UnsafeMutablePointer<FILE>) -> Int32 {
+	var c = getc(fp);
+	if (c == EOF) {
+		return -1;
+	}
+	if c == 0x2F {		// parse comments
+		var c2 = getc(fp);
+		if c2 == 0x2F {
+			
+			while(c2 != 10) {
+				c2 = getc(fp)
+			}
+			c = getc(fp);
+		} else {
+			ungetc(c2,fp);
+		}
+	}
+	return c;
+}
+
+
+private func CopyUntilQuote(fp: UnsafeMutablePointer<FILE>, _ buffer1: UnsafeMutablePointer<Int8>) {
+	let count = 800;
+	var buffer = buffer1
+	var c: Int32 = 0
+	
+	for _ in 0 ..< count {
+		c = GetNextChar(fp);
+		if c == EOF {
+			return;
+		}
+		if c == 34 {
+			buffer.memory = 0;
+			return;
+		}
+		buffer = buffer.advancedBy(1)
+		buffer.memory = Int8(c)
+	}
+}
+
+private func CopyUntilWhitespc(fp: UnsafeMutablePointer<FILE>, _ buffer1: UnsafeMutablePointer<Int8>) {
+	let	count = 800;
+	var buffer = buffer1
+	var	c: Int32 = 0
+	
+	for _ in 0 ..< count {
+		c = GetNextChar(fp);
+		if c == EOF {
+			return;
+		}
+		if c <= 20 {
+			buffer.memory = 0;
+			return;
+		}
+		buffer = buffer.advancedBy(1)
+		buffer.memory = Int8(c)
+	}
+}
+
+
 /// Helper class that converts dicts read in from a file to NSDictionaries
 class QDict: NSObject /*, NSCopying, NSCoding*/ {
 	var dictionary = [String: String]()
@@ -67,12 +176,12 @@ class QDict: NSObject /*, NSCopying, NSCoding*/ {
 		return true
 	}
 	
-	class func dictionaryFromFile(fp: UnsafeMutablePointer<FILE>) -> NSMutableDictionary? {
+	class func dictionaryFromFile(fp: UnsafeMutablePointer<FILE>) -> [String: String]? {
 		let aParse = QDict()
 		if !aParse.parseBraceBlock(fp) {
 			return nil
 		}
-		let toRet = NSMutableDictionary(dictionary: aParse.dictionary)
+		let toRet = aParse.dictionary
 		
 		return toRet
 	}

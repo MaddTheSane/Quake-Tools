@@ -210,7 +210,7 @@ int CheckParm (char *check)
 
 
 
-int SafeOpenWrite (char *filename)
+int SafeOpenWrite (const char *filename)
 {
 	int     handle;
 
@@ -225,7 +225,7 @@ int SafeOpenWrite (char *filename)
 	return handle;
 }
 
-int SafeOpenRead (char *filename)
+int SafeOpenRead (const char *filename)
 {
 	int     handle;
 
@@ -280,7 +280,7 @@ void *SafeMalloc (long size)
 ==============
 */
 
-long    LoadFile (char *filename, void **bufferptr)
+long    LoadFile (const char *filename, void **bufferptr)
 {
 	int             handle;
 	long    length;
@@ -306,7 +306,7 @@ long    LoadFile (char *filename, void **bufferptr)
 ==============
 */
 
-void    SaveFile (char *filename, void *buffer, long count)
+void    SaveFile (const char *filename, void *buffer, long count)
 {
 	int             handle;
 

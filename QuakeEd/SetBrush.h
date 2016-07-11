@@ -54,7 +54,7 @@ winding_t *NewWinding (int points);
 
 	BOOL		invalid;		// not a proper polyhedron
 
-	List		*parent;			// the entity this brush is in
+	NSArray		*parent;			// the entity this brush is in
 	vec3_t		bmins, bmaxs;
 	vec3_t		entitycolor;
 	int			numfaces;

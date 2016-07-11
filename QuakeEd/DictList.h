@@ -1,11 +1,11 @@
 
-#import <AppKit/AppKit.h>
-#import "List.h"
+#import <Foundation/Foundation.h>
 
 @class Dict;
 
-@interface DictList: List
+@interface DictList: NSObject
 {
+	NSMutableArray<Dict*> *intList;
 }
 
 - (instancetype)initListFromFile:(FILE *)fp;

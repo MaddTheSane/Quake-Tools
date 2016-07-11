@@ -1,6 +1,6 @@
 
 
-#import "List.h"
+#import <Foundation/Foundation.h>
 
 #define	MAX_KEY		64
 #define	MAX_VALUE	128
@@ -13,9 +13,9 @@ typedef struct epair_s
 
 // an Entity is a list of brush objects, with additional key / value info
 
-@interface Entity : List <NSCopying>
+@interface Entity : NSObject <NSCopying>
 {
-	epair_t	*epairs;
+	NSDictionary<NSString*,NSString*>	*epairs;
 	BOOL	modifiable;
 }
 

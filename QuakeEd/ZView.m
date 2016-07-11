@@ -40,24 +40,22 @@ initFrame:
 	[zscalebutton_i setTarget: self];
 	[zscalebutton_i setAction: @selector(scaleMenuTarget:)];
 
-	[zscalemenu_i addItem: "12.5%"];
-	[zscalemenu_i addItem: "25%"];
-	[zscalemenu_i addItem: "50%"];
-	[zscalemenu_i addItem: "75%"];
-	[zscalemenu_i addItem: "100%"];
-	[zscalemenu_i addItem: "200%"];
-	[zscalemenu_i addItem: "300%"];
-	[zscalemenu_i selectCellAt: 4 : 0];
-	
-	//[zscalebutton_i setMenu:zscalemenu_i];
-
+	[zscalemenu_i addItemWithTitle:@"12.5%" action:nil keyEquivalent:@""];
+	[zscalemenu_i addItemWithTitle:@"25%" action:nil keyEquivalent:@""];
+	[zscalemenu_i addItemWithTitle:@"50%" action:nil keyEquivalent:@"" ];
+	[zscalemenu_i addItemWithTitle:@"75%" action:nil keyEquivalent:@""];
+	[zscalemenu_i addItemWithTitle:@"100%" action:nil keyEquivalent:@""];
+	[zscalemenu_i addItemWithTitle:@"200%" action:nil keyEquivalent:@""];
+	[zscalemenu_i addItemWithTitle:@"300%" action:nil keyEquivalent:@""];
+	[zscalebutton_i setMenu:zscalemenu_i];
+	[zscalebutton_i selectItemAtIndex:4];
 
 // initialize the scroll view
 	zscrollview_i = [[ZScrollView alloc] 
 		initWithFrame: 		frameRect
 		button1: 		zscalebutton_i
 	];
-	[zscrollview_i setAutosizing: NX_WIDTHSIZABLE | NX_HEIGHTSIZABLE];
+	zscrollview_i.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
 	[zscrollview_i setDocumentView: self];
 
@@ -125,7 +123,7 @@ setOrigin:scale:
 //
 // redisplay everything
 //
-	[quakeed_i disableDisplay];
+	[quakeed_i disableFlushWindow];
 
 //
 // size this view
@@ -142,8 +140,8 @@ setOrigin:scale:
 		: sframe.size.height/scale];
 	[[self superview] setDrawOrigin: pt.x : pt.y];
 
-	[quakeed_i reenableDisplay];
-	[zscrollview_i display];
+	[quakeed_i enableFlushWindow];
+	[zscrollview_i setNeedsDisplay:YES];
 }
 
 
@@ -264,18 +262,18 @@ If realbounds has shrunk, nothing will change.
 //
 // size this view
 //
-	[quakeed_i disableDisplay];
+	[quakeed_i disableFlushWindow];
 
 	[self suspendNotifyAncestorWhenFrameChanged:YES];
 	[self sizeTo: sbounds.size.width : sbounds.size.height];
 	[self setDrawOrigin: -sbounds.size.width/2 : sbounds.origin.y];
 	[self moveTo: -sbounds.size.width/2 : sbounds.origin.y];
 	[self suspendNotifyAncestorWhenFrameChanged:NO];
-	[[[self superview] superview] reflectScroll: [self superview]];
+	[[[self superview] superview] reflectScrolledClipView: (NSClipView*)[self superview]];
 
-	[quakeed_i reenableDisplay];
+	[quakeed_i enableFlushWindow];
 	
-	[[[[self superview] superview] verticalScroller] display];
+	[[(NSScrollView*)[[self superview] superview] verticalScroller] display];
 }
 
 
@@ -304,7 +302,7 @@ Rect is in global world (unscaled) coordinates
 	
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	path.lineWidth = 0;
-	PSsetlinewidth (0);
+	//PSsetlinewidth (0);
 
 	gridsize = [xyview_i gridsize];
 	
@@ -486,18 +484,18 @@ XYDrawSelf
 getPoint: (NSPoint *)pt
 ==============
 */
-- getPoint: (NSPoint *)pt
+- (NSPoint)point
 {
-	pt->x = origin[0] + 0.333;	// offset a bit to avoid edge cases
-	pt->y = origin[1] + 0.333;
-	return self;
+	NSPoint pt;
+	pt.x = origin[0] + 0.333;	// offset a bit to avoid edge cases
+	pt.y = origin[1] + 0.333;
+	return pt;
 }
 
-- setPoint: (NSPoint *)pt
+- (void)setPoint: (NSPoint *)pt
 {
 	origin[0] = pt->x;
 	origin[1] = pt->y;
-	return self;
 }
 
 

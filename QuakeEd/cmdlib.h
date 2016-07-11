@@ -29,14 +29,14 @@ void	Error (const char *error, ...);
 void	ErrorV (const char* error, va_list list);
 int		CheckParm (char *check);
 
-int 	SafeOpenWrite (char *filename);
-int 	SafeOpenRead (char *filename);
+int 	SafeOpenWrite (const char *filename);
+int 	SafeOpenRead (const char *filename);
 void 	SafeRead (int handle, void *buffer, long count);
 void 	SafeWrite (int handle, void *buffer, long count);
 void 	*SafeMalloc (long size);
 
-long	LoadFile (char *filename, void **bufferptr);
-void	SaveFile (char *filename, void *buffer, long count);
+long	LoadFile (const char *filename, void **bufferptr);
+void	SaveFile (const char *filename, void *buffer, long count);
 
 void 	DefaultExtension (char *path, char *extension);
 void 	DefaultPath (char *path, char *basepath);

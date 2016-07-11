@@ -18,12 +18,9 @@ id	things_i;
 //
 //	Load the TEXT object with the entity comment
 //
-- loadEntityComment:(id)obj
+- (void)loadEntityComment:(id)obj
 {
-	[entity_comment_i selectAll:self];
-	[entity_comment_i replaceSel:[obj comments]];
-
-	return self;
+	[entity_comment_i replaceCharactersInRange:NSMakeRange(0, entity_comment_i.string.length) withString:@([obj comments])];
 }
 
 
@@ -35,7 +32,7 @@ id	things_i;
 
 	[prog_path_i setStringValue: path];
 	
-	[[EntityClassList alloc] initForSourceDirectory: path.fileSystemRepresentation];
+	[[EntityClassList alloc] initForSourceDirectory: path];
 
 	[self loadEntityComment:[entity_classes_i objectAtIndex:lastSelected]];
 	[entity_browser_i loadColumnZero];
@@ -50,7 +47,7 @@ id	things_i;
 	
 	matr = [sender matrixInColumn: 0];
 	lastSelected = [matr selectedRow];
-	[self loadEntityComment:[entity_classes_i objectAt:lastSelected]];
+	[self loadEntityComment:[entity_classes_i objectAtIndex:lastSelected]];
 	[quakeed_i makeFirstResponder: quakeed_i];
 }
 
@@ -60,9 +57,9 @@ id	things_i;
 	[quakeed_i makeFirstResponder: quakeed_i];
 }
 
-- (char *)spawnName
+- (NSString *)spawnName
 {
-	return [[entity_classes_i objectAt:lastSelected] classname];
+	return [[entity_classes_i objectAtIndex:lastSelected] classname];
 }
 
 
@@ -89,24 +86,24 @@ id	things_i;
 	entity_classes_i = [[EntityClassList alloc] initForSourceDirectory: path];
 
 	lastSelected = 0;
-	ent = [entity_classes_i objectAt:lastSelected];
-	[self loadEntityComment:[entity_classes_i objectAt:lastSelected]];
+	ent = [entity_classes_i objectAtIndex:lastSelected];
+	[self loadEntityComment:[entity_classes_i objectAtIndex:lastSelected]];
 
 	[entity_browser_i loadColumnZero];
-	[[entity_browser_i matrixInColumn:0] selectCellAt:lastSelected :0];
+	[[entity_browser_i matrixInColumn:0] selectCellAtRow:lastSelected column:0];
 
 	[self newCurrentEntity];	// in case flags changed
 }
 
 
-- (IBAction)selectClass: (char *)class
+- (void)selectClass: (NSString *)class
 {
 	id		classent;
 		
 	classent = [entity_classes_i classForName:class];
 	if (!classent)
 		return;
-	lastSelected = [entity_classes_i indexOf: classent];
+	lastSelected = [entity_classes_i indexOfObject: classent];
 	
 	if (lastSelected < 0)
 		lastSelected = 0;

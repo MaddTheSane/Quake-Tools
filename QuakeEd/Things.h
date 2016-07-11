@@ -26,7 +26,7 @@ extern Things *things_i;
 - (void)setSelectedKey:(epair_t *)ep;
 
 - (void)clearInputs;
-- (char *)spawnName;
+- (NSString *)spawnName;
 
 // UI targets
 - (IBAction)reloadEntityClasses: sender;

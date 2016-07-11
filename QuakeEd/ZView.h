@@ -24,8 +24,8 @@ extern	float	zplanedir;
 - (void)clearBounds;
 - (void)getBounds: (float *)top :(float *)bottom;
 
-- getPoint: (NSPoint *)pt;
-- setPoint: (NSPoint *)pt;
+@property NSPoint point;
+- getPoint: (NSPoint *)pt DEPRECATED_ATTRIBUTE;
 
 - (void)addToHeightRange: (float)height;
 

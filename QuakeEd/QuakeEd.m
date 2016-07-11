@@ -2,7 +2,7 @@
 #import "qedefs.h"
 #include <Carbon/Carbon.h>
 
-id	quakeed_i;
+QuakeEd *quakeed_i;
 id	entclasses_i;
 
 id	g_cmd_out_i;

@@ -145,7 +145,7 @@ id	project_i;
 
 - (void)print
 {
-	[BSPoutput_i	printPSCode:self];
+	[BSPoutput_i printPSCode:self];
 }
 
 
@@ -169,7 +169,7 @@ id	project_i;
 - (void)changeChar:(char)f to:(char)t in:(id)obj
 {
 	int	i;
-	int	max;
+	NSInteger max;
 	char	*string;
 
 	max = [obj count];
@@ -226,7 +226,7 @@ id	project_i;
 	
 	matrix = [sender matrixInColumn:0];
 	row = [matrix selectedRow];
-	sprintf(fname,"%s/%s.map",path_mapdirectory,
+	sprintf(fname,"%s/%s.map",path_mapdirectory.fileSystemRepresentation,
 		(char *)[mapList elementAt:row]);
 	
 	panel = NSGetAlertPanel(@"Loading...",
@@ -279,7 +279,7 @@ id	project_i;
 	matrix = [sender matrixInColumn:0];
 	row = [matrix selectedRow];
 
-	name = (char *)[wadList elementAt:row];
+	name = (char *)[wadList objectAtIndex:row];
 	[self setTextureWad: name];
 }
 
@@ -290,7 +290,7 @@ id	project_i;
 - (void)parseProjectFile
 {
 	NSString	*path;
-	int			rtn;
+	NSInteger	rtn;
 	
 	path = [preferences_i getProjectPath];
 	if (!path || access([path fileSystemRepresentation],0))
@@ -304,41 +304,44 @@ id	project_i;
 		return;
 	}
 
-	[self openProjectFile:[path fileSystemRepresentation]];
+	[self openProjectFile:path];
 }
 
 //
 //	Loads and parses a project file
 //
-- (BOOL)openProjectFile:(const char *)path
-{		
+- (BOOL)openProjectFile:(NSString *)path
+{
+	return [self openProjectFileAtURL:[NSURL fileURLWithPath:path] error:NULL];
+}
+
+- (BOOL)openProjectFileAtURL:(NSURL*)aURL error:(NSError**)error
+{
 	FILE	*fp;
 	struct	stat s;
-
-	strcpy(path_projectinfo,path);
-
+	const char *path = aURL.fileSystemRepresentation;
+	
+	
+	[path_projectinfo release];
+	path_projectinfo = [aURL.path retain];
+	
 	projectInfo = NULL;
 	fp = fopen(path,"r+t");
 	if (fp == NULL)
 		return NO;
-
+	
 	stat(path,&s);
 	lastModified = s.st_mtime;
-
+	
 	projectInfo = [[Dict alloc] initFromFile:fp];
 	fclose(fp);
 	
 	return YES;
 }
 
-//- (BOOL)openProjectFileAtURL:(NSURL*)aURL error:(NSError**)error
-//{
-//
-//}
-
 - (const char *)currentProjectFile
 {
-	return path_projectinfo;
+	return path_projectinfo.fileSystemRepresentation;
 }
 
 //
@@ -356,7 +359,8 @@ id	project_i;
 	rtn = [openpanel runModal];
 	if (rtn == NSModalResponseOK) {
 		NSURL *selURL = [openpanel URL];
-		strcpy(path_projectinfo, [selURL fileSystemRepresentation]);
+		[path_projectinfo release];
+		path_projectinfo = [[selURL path] copy];
 		return [self openProjectFile:[selURL fileSystemRepresentation]];
 	}
 	return NO;
@@ -370,33 +374,36 @@ id	project_i;
 {
 	NSInteger	i;
 	NSInteger	max;
-	char	*s;
+	const char	*s;
 
 	max = [obj count];
 	for (i = 0;i < max; i++)
 	{
-		s = (char *)[obj elementAt:i];
+		s = [[obj objectAtIndex:i] UTF8String];
 		if (!strcmp(s,str))
 			return 1;
 	}
 	return 0;
 }
 
-- (char *)getMapDirectory
+- (const char *)getMapDirectory
 {
-	return path_mapdirectory;
+	return path_mapdirectory.fileSystemRepresentation;
 }
 
-- (char *)getFinalMapDirectory
+- (const char *)getFinalMapDirectory
 {
-	return path_finalmapdir;
+	return path_finalmapdir.fileSystemRepresentation;
 }
 
-- (char *)getProgDirectory
+- (const char *)getProgDirectory
 {
-	return path_progdir;
+	return path_progdir.fileSystemRepresentation;
 }
 
+@synthesize mapDirectory = path_mapdirectory;
+@synthesize finalMapDirectory = path_finalmapdir;
+@synthesize progDirectory = path_progdir;
 
 //
 //	Return the WAD name for cmd-8

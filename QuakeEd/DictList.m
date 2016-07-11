@@ -8,17 +8,24 @@
 //
 - initListFromFile:(FILE *)fp
 {
+	if (self = [super init]) {
 	Dict	*d;
-	
-	self = [super init];
 	do {
 		d = [[Dict alloc] initFromFile:fp];
 		if (d != NULL)
-			[self addObject:d];
+			[intList addObject:d];
 		[d release];
 	} while(d != NULL);
-	
+		intList = [[NSMutableArray alloc] init];
+	}
 	return self;
+}
+
+- (void)dealloc
+{
+	[intList release];
+	
+	[super dealloc];
 }
 
 //
@@ -36,9 +43,9 @@
 		
 	fprintf(fp,"// Object List written by QuakeEd\n");
 
-	for (i = 0;i < maxElements;i++)
+	for (i = 0;i < intList.count;i++)
 	{
-		obj = [self objectAt:i];
+		obj = [intList objectAtIndex:i];
 		[obj writeBlockTo:fp];
 	}
 	fclose(fp);
@@ -49,17 +56,12 @@
 //
 - (id) findDictKeyword:(NSString *)key
 {
-	int		i;
-	Dict	*dict;
-
-	for (i = 0;i < maxElements;i++)
-	{
-		dict = [self objectAt:i];
+	for (Dict *dict in intList) {
 		if ([dict containsObjectForKey:key]) {
 			return dict;
 		}
 	}
-	return NULL;
+	return nil;
 }
 
 @end
