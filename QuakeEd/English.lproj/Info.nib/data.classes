@@ -1,1 +1,1 @@
-FirstResponder = {ACTIONS = {}; SUPERCLASS = Object; };
+"FirstResponder" = {ACTIONS = {}; OUTLETS = {}; SUPERCLASS = NSObject; };
