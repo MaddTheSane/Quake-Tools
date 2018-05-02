@@ -1,0 +1,232 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {drawMode = id; homeView = id; }; 
+            CLASS = CameraView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"mode_radio_i" = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = Clipper; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = Entity; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {addPair = id; delPair = id; setAngle = id; setFlags = id; }; 
+            CLASS = EntityPanel; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"flags_i" = id; "keyInput_i" = id; "valueInput_i" = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeInspector = id; }; 
+            CLASS = InspectorControl; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "b_textureField_i" = id; 
+                contentList = id; 
+                "inspectorSubview_i" = id; 
+                "inspectorView_i" = id; 
+                "inspectors_i" = id; 
+                "itemHelp_i" = id; 
+                itemList = id; 
+                "itemOutput_i" = id; 
+                "itemPrefs_i" = id; 
+                "itemProject_i" = id; 
+                "itemSettings_i" = id; 
+                "itemTextures_i" = id; 
+                "itemThings_i" = id; 
+                "obj_genkeypair_i" = id; 
+                "obj_textures_i" = id; 
+                "popUpButton_i" = id; 
+                "popUpMatrix_i" = id; 
+                printList = id; 
+                "win_help_i" = id; 
+                "win_output_i" = id; 
+                "win_prefs_i" = id; 
+                "win_project_i" = id; 
+                "win_settings_i" = id; 
+                "win_textures_i" = id; 
+                "win_things_i" = id; 
+                windowList = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = InspectorView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            ACTIONS = {
+                cloneSelection = id; 
+                "flip_x" = id; 
+                "flip_y" = id; 
+                "flip_z" = id; 
+                makeEntity = id; 
+                "rotate_x" = id; 
+                "rotate_y" = id; 
+                "rotate_z" = id; 
+                selectCompleteEntity = id; 
+                selectCompletelyInside = id; 
+                selectPartiallyInside = id; 
+                shortBrush = id; 
+                subtractSelection = id; 
+                tallBrush = id; 
+            }; 
+            CLASS = Map; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {currentEntity = id; oldselection = id; }; 
+            SUPERCLASS = List; 
+        }, 
+        {CLASS = PopScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {
+            ACTIONS = {UIChanged = id; setBspSound = id; setCurrentProject = id; }; 
+            CLASS = Preferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "brushOffset_i" = id; 
+                "bspSoundField_i" = id; 
+                "bspSound_i" = id; 
+                "showBSP_i" = id; 
+                "startproject_i" = id; 
+                "startwad_i" = id; 
+                "xlight_i" = id; 
+                "ylight_i" = id; 
+                "zlight_i" = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                clearBspOutput = id; 
+                clickedOnMap = id; 
+                clickedOnWad = id; 
+                saveSettings = id; 
+            }; 
+            CLASS = Project; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "BSPoutput_i" = id; 
+                "basepathinfo_i" = id; 
+                "currentmap_i" = id; 
+                descList = id; 
+                mapList = id; 
+                "mapbrowse_i" = id; 
+                "pis_basepath_i" = id; 
+                "pis_fastvis_i" = id; 
+                "pis_fullvis_i" = id; 
+                "pis_leaktest_i" = id; 
+                "pis_novis_i" = id; 
+                "pis_panel_i" = id; 
+                "pis_relight_i" = id; 
+                "pis_wads_i" = id; 
+                projectInfo = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                "BSP_FastVis" = id; 
+                "BSP_Full" = id; 
+                "BSP_NoVis" = id; 
+                "BSP_entities" = id; 
+                "BSP_leaktest" = id; 
+                "BSP_relight" = id; 
+                "BSP_stop" = id; 
+                appDidInit = id; 
+                appWillTerminate = id; 
+                applyRegion = id; 
+                centerCamera = id; 
+                centerZChecker = id; 
+                changeXYLookUp = id; 
+                clear = id; 
+                open = id; 
+                openProject = id; 
+                save = id; 
+                saveAs = id; 
+                setBrushRegion = id; 
+                setXYRegion = id; 
+                textCommand = id; 
+                updateAll = id; 
+            }; 
+            CLASS = QuakeEd; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "brushcount_i" = id; 
+                "cmd_in_i" = id; 
+                "cmd_out_i" = id; 
+                "entitycount_i" = id; 
+                "filter_clip_i" = id; 
+                "filter_entities_i" = id; 
+                "filter_light_i" = id; 
+                "filter_path_i" = id; 
+                "filter_water_i" = id; 
+                "filter_world_i" = id; 
+                "regionbutton_i" = id; 
+                "show_coordinates_i" = id; 
+                "show_names_i" = id; 
+                "xy_drawmode_i" = id; 
+            }; 
+            SUPERCLASS = NSWindow; 
+        }, 
+        {CLASS = SetBrush; LANGUAGE = ObjC; SUPERCLASS = Storage; }, 
+        {
+            ACTIONS = {
+                clearTexinfo = id; 
+                decRotate = id; 
+                decXScale = id; 
+                decXShift = id; 
+                decYScale = id; 
+                decYShift = id; 
+                incRotate = id; 
+                incXScale = id; 
+                incXShift = id; 
+                incYScale = id; 
+                incYShift = id; 
+                onlyShowMapTextures = id; 
+                searchForTexture = id; 
+                texturedefChanged = id; 
+            }; 
+            CLASS = TexturePalette; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "field_Rotate_i" = id; 
+                "field_Xscale_i" = id; 
+                "field_Xshift_i" = id; 
+                "field_Yscale_i" = id; 
+                "field_Yshift_i" = id; 
+                "searchField_i" = id; 
+                "sizeField_i" = id; 
+                "textureList_i" = id; 
+                "textureView_i" = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                addPair = id; 
+                delPair = id; 
+                doubleClickEntity = id; 
+                "newprog_path" = id; 
+                reloadEntityClasses = id; 
+                selectEntity = id; 
+                setAngle = id; 
+                setFlags = id; 
+            }; 
+            CLASS = Things; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "entity_browser_i" = id; 
+                "entity_comment_i" = id; 
+                "flags_i" = id; 
+                "keyInput_i" = id; 
+                "prog_path_i" = id; 
+                "valueInput_i" = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {textureViewDown = id; textureViewUp = id; }; 
+            CLASS = XYView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSView; 
+        }
+    ); 
+    IBVersion = 1; 
+}
