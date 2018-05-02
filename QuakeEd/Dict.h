@@ -1,5 +1,6 @@
 
 #import <AppKit/AppKit.h>
+#import "Storage.h"
 
 typedef struct
 {
@@ -7,7 +8,7 @@ typedef struct
 	char	*value;
 } dict_t;
 
-@interface Dict:Storage
+@interface Dict:CompatibleStorage
 {
 
 }

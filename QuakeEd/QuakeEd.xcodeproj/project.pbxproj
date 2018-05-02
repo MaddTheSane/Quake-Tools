@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5515A312209A159B00E7BB11 /* Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5515A310209A159A00E7BB11 /* Storage.m */; };
 		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; };
 		5531416A1B98E61F00390795 /* Clipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141241B98E61F00390795 /* Clipper.m */; };
@@ -44,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5515A310209A159A00E7BB11 /* Storage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Storage.m; sourceTree = "<group>"; };
+		5515A311209A159A00E7BB11 /* Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Storage.h; sourceTree = "<group>"; };
 		552A27021B9D402E0055D5D9 /* QuakeEd.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuakeEd.xib; sourceTree = "<group>"; };
 		553141091B98E46B00390795 /* QuakeEd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuakeEd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5531411D1B98E5C400390795 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -157,6 +160,8 @@
 		5531411F1B98E5E800390795 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5515A311209A159A00E7BB11 /* Storage.h */,
+				5515A310209A159A00E7BB11 /* Storage.m */,
 				553141201B98E61F00390795 /* Brush.h */,
 				553141211B98E61F00390795 /* CameraView.h */,
 				553141221B98E61F00390795 /* CameraView.m */,
@@ -314,6 +319,7 @@
 				5531417C1B98E61F00390795 /* KeypairView.m in Sources */,
 				5531416C1B98E61F00390795 /* Dict.m in Sources */,
 				5531417F1B98E61F00390795 /* misc.m in Sources */,
+				5515A312209A159B00E7BB11 /* Storage.m in Sources */,
 				5531416D1B98E61F00390795 /* DictList.m in Sources */,
 				553141881B98E61F00390795 /* render.m in Sources */,
 				5531418D1B98E61F00390795 /* TextureView.m in Sources */,
