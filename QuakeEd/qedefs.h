@@ -38,7 +38,8 @@ void Sys_UpdateFile (char *path, char *netpath);
 void CleanupName (char *in, char *out);
 
 extern	BOOL	in_error;
-void Error (char *error, ...);
+void Error (const char *error, ...) __printflike(1, 2);
+void ErrorV (const char* error, va_list list) __printflike(1, 0);
 
 #define	MAXTOKEN	128
 extern	char	token[MAXTOKEN];

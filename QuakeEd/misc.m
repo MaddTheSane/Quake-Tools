@@ -118,27 +118,33 @@ For abnormal program terminations
 =================
 */
 BOOL	in_error;
-void Error (char *error, ...)
+void Error (const char *error, ...)
 {
 	va_list		argptr;
+	
+	va_start (argptr,error);
+	ErrorV(error, argptr);
+	va_end (argptr);
+}
+
+void ErrorV (const char* error, va_list list)
+{
 	static char		string[1024];
 	
 	if (in_error)
 		[NSApp terminate:NULL];
 	in_error = YES;
 	
-	va_start (argptr,error);
-	vsprintf (string,error,argptr);
-	va_end (argptr);
-
+	vsprintf (string,error,list);
+	
 	strcat (string, "\nmap saved to "FN_CRASHSAVE);
-
+	
 	[map_i writeMapFile: FN_CRASHSAVE useRegion: NO];
-	NSRunAlertPanel(@"Error", [NSString stringWithCString:string], @"", nil, nil);
-		
+	NSRunAlertPanel(@"Error", @"%@", nil, nil, nil, @(string));
+	
 	[NSApp terminate:NULL];
-}
 
+}
 
 
 void CleanupName (char *in, char *out)
