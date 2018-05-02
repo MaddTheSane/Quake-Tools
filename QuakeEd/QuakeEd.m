@@ -173,55 +173,48 @@ void postappdefined (void)
 
 
 int	c_updateall;
-- updateAll			// when a model has been changed
+- (void)updateAll			// when a model has been changed
 {
 	updatecamera = updatexy = updatez = YES;
 	c_updateall++;
 	postappdefined ();
-	return self;
 }
 
-- updateAll:sender
+- (IBAction)updateAll:sender
 {
 	[self updateAll];
-	return self;
 }
 
-- updateCamera		// when the camera has moved
+- (void)updateCamera		// when the camera has moved
 {
 	updatecamera = YES;
 	clearinstance = YES;
 	
 	postappdefined ();
-	return self;
 }
 
-- updateXY
+- (void)updateXY
 {
 	updatexy = YES;
 	postappdefined ();
-	return self;
 }
 
-- updateZ
+- (void)updateZ
 {
 	updatez = YES;
 	postappdefined ();
-	return self;
 }
 
 
-- newinstance
+- (void)newinstance
 {
 	clearinstance = YES;
-	return self;
 }
 
-- redrawInstance
+- (void)redrawInstance
 {
 	clearinstance = YES;
 	[self flushWindow];
-	return self;
 }
 
 /*
@@ -685,31 +678,26 @@ saveBSP
 - (IBAction)BSP_Full: sender
 {
 	[self saveBSP:[project_i getFullVisCmd] dialog: NO];
-	return self;
 }
 
 - (IBAction)BSP_FastVis: sender
 {
 	[self saveBSP:[project_i getFastVisCmd] dialog: NO];
-	return self;
 }
 
 - (IBAction)BSP_NoVis: sender
 {
 	[self saveBSP:[project_i getNoVisCmd] dialog: NO];
-	return self;
 }
 
 - (IBAction)BSP_relight: sender
 {
 	[self saveBSP:[project_i getRelightCmd] dialog: NO];
-	return self;
 }
 
 - (IBAction)BSP_entities: sender
 {
 	[self saveBSP:[project_i getEntitiesCmd] dialog: NO];
-	return self;
 }
 
 - (IBAction)BSP_stop: sender
@@ -717,14 +705,12 @@ saveBSP
 	if (!bsppid)
 	{
 		NSBeep();
-		return self;
+		return;
 	}
 	
 	kill (bsppid, 9);
 	CheckCmdDone (cmdte, 0, NULL);
 	[project_i addToOutput: "\n\n========= STOPPED =========\n\n"];
-	
-	return self;
 }
 
 
@@ -743,7 +729,7 @@ Called by open or the project panel
 	[map_i readMapFile:filename];
 	
 	[regionbutton_i setIntValue:0];
-	[self setTitleWithRepresentedFilename:[NSString stringWithCString:fname]];
+	[self setTitleWithRepresentedFilename:@(fname)];
 	[self updateAll];
 
 	qprintf ("%s loaded\n", fname);

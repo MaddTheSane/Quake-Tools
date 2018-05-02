@@ -267,7 +267,7 @@ void CameraMoveto(vec3_t p)
 {
 	campt_t	*pt;
 	
-	if (upath->numberOfPoints > 2048)
+	if (upath.elementCount > 2048)
 		lineflush ();
 		
 	pt = &campts[cam_cur];
@@ -275,16 +275,16 @@ void CameraMoveto(vec3_t p)
 	MakeCampt (p,pt);
 	if (!pt->clipflags)
 	{	// onscreen, so move there immediately
-		UPmoveto (upath, pt->screen[0], pt->screen[1]);
+		[upath moveToPoint:NSMakePoint(pt->screen[0], pt->screen[1])];
 	}
 }
 
 void ClipLine (vec3_t p1, vec3_t p2, int planenum)
 {
-	float	d, d2, frac;
+	CGFloat	d, d2, frac;
 	vec3_t	new;
 	plane_t	*pl;
-	float	scale;
+	CGFloat	scale;
 	
 	if (planenum == 5)
 	{	// draw it!

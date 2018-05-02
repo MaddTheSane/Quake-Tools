@@ -79,9 +79,9 @@ initFrame:
 // link objects together
 	[scrollview_i setDocumentView:self];
 	[scrollview_i release];
+	}
 	
 	return self;
-	}
 }
 
 - (BOOL)acceptsFirstResponder

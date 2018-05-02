@@ -21,38 +21,38 @@ void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 	char	filename[1024];		// full path with .map extension
 
 // UI objects
-	id		brushcount_i;
-	id		entitycount_i;
-	id		regionbutton_i;
+	IBOutlet id		brushcount_i;
+	IBOutlet id		entitycount_i;
+	IBOutlet id		regionbutton_i;
 
-	id		show_coordinates_i;
-	id		show_names_i;
+	IBOutlet id		show_coordinates_i;
+	IBOutlet id		show_names_i;
 
-	id		filter_light_i;
-	id		filter_path_i;
-	id		filter_entities_i;
-	id		filter_clip_i;
-	id		filter_water_i;
-	id		filter_world_i;
+	IBOutlet id		filter_light_i;
+	IBOutlet id		filter_path_i;
+	IBOutlet id		filter_entities_i;
+	IBOutlet id		filter_clip_i;
+	IBOutlet id		filter_water_i;
+	IBOutlet id		filter_world_i;
 	
-	id		cmd_in_i;		// text fields
-	id		cmd_out_i;	
+	IBOutlet NSTextField	*cmd_in_i;		// text fields
+	IBOutlet NSTextField	*cmd_out_i;
 	
-	id		xy_drawmode_i;	// passed over to xyview after init
+	IBOutlet id		xy_drawmode_i;	// passed over to xyview after init
 }
 
 - setDefaultFilename;
 - (char *)currentFilename;
 
-- updateAll;		// when a model has been changed
-- updateCamera;		// when the camera has moved
-- updateXY;
-- updateZ;
+- (void)updateAll;		// when a model has been changed
+- (void)updateCamera;		// when the camera has moved
+- (void)updateXY;
+- (void)updateZ;
 
 - (IBAction)updateAll:sender;
 
-- newinstance;		// force next flushwindow to clear all instance drawing
-- redrawInstance;	// erase and redraw all instance now
+- (void)newinstance;		// force next flushwindow to clear all instance drawing
+- (void)redrawInstance;	// erase and redraw all instance now
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 - (NSApplicationTerminateReply)applicationShouldTerminate:(id)sender;
