@@ -15,22 +15,23 @@ FILE METHODS
 
 - init
 {
-	[super init];
+	if (self = [super init]) {
 	map_i = self;
 	minz = 0;
 	maxz = 80;
-	
-	oldselection = [[List alloc] init];
+		objects = [[NSMutableArray alloc] init];
+	oldselection = [[NSMutableArray alloc] init];
+	}
 	
 	return self;
 }
 
 - saveSelected
 {
-	int		i, c;
+	NSInteger		i, c;
 	id		o, w;
 	
-	[oldselection empty];
+	[oldselection removeAllObjects];
 	w = [self objectAt: 0];
 	c = [w count];
 	sb_newowner = oldselection;
@@ -69,7 +70,7 @@ FILE METHODS
 	sb_newowner = w;
 	for (i=0 ; i<c ; i++)
 	{
-		n = [oldselection objectAt:i];
+		n = [oldselection objectAtIndex:i];
 		[n moveToEntity];
 		i--;
 		c--;

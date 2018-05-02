@@ -1,4 +1,6 @@
 
+#import "QEOldListAPIs.h"
+
 #define	MAX_KEY		64
 #define	MAX_VALUE	128
 typedef struct epair_s
@@ -8,21 +10,19 @@ typedef struct epair_s
 	char	value[MAX_VALUE];
 } epair_t;
 
-// an Entity is a list of brush objects, with additional key / value info
-
-@interface Entity : List
+/// an Entity is a list of brush objects, with additional key / value info
+@interface Entity : NSObject
 {
 	epair_t	*epairs;
 	BOOL	modifiable;
 }
 
-- initClass: (char *)classname;
+- (instancetype)initClass: (char *)classname;
 - initFromTokens;
 
-- (void)dealloc;
-
+@property BOOL modifiable;
 - (BOOL)modifiable;
-- setModifiable: (BOOL)m;
+- (void)setModifiable: (BOOL)m;
 
 - (char *)targetname;
 
@@ -37,4 +37,5 @@ typedef struct epair_s
 
 @end
 
-
+@interface Entity (OldListAPIs) <QEOldListAPIs>
+@end

@@ -3,7 +3,8 @@
 #import "mathlib.h"
 #import "SetBrush.h"
 
-extern	id xyview_i;
+@class XYView;
+extern XYView *xyview_i;
 
 #define	MINSCALE	0.125
 #define	MAXSCALE	2.0
@@ -39,24 +40,22 @@ typedef enum {dr_wire, dr_flat, dr_texture} drawmode_t;
 	drawmode_t	drawmode;
 
 // UI links
-	id			mode_radio_i;	
+	IBOutlet id			mode_radio_i;
 }
 
 - (float)currentScale;
 
-- setModeRadio: m;
+@property (nonatomic, assign) IBOutlet id modeRadio;
 
-- drawMode: sender;
-- setDrawMode: (drawmode_t)mode;
+- (IBAction)drawMode: sender;
+- (void)setDrawMode: (drawmode_t)mode;
 
-- newSuperBounds;
-- newRealBounds: (NSRect *)nb;
+- (void)newSuperBounds;
+- (void)newRealBounds: (NSRect *)nb;
 
-- addToScrollRange: (float)x :(float)y;
-- setOrigin: (NSPoint *)pt scale: (float)sc;
-- centerOn: (vec3_t)org;
-
-- drawMode: sender;
+- (void)addToScrollRange: (float)x :(float)y;
+- (void)setOrigin: (NSPoint)pt scale: (float)sc;
+- (void)centerOn: (vec3_t)org;
 
 - superviewChanged;
 

@@ -1,12 +1,15 @@
 
-// Map is a list of Entity objects
+#include "QEOldListAPIs.h"
 
-extern	id	map_i;
+@class Map;
+extern Map *map_i;
 
-@interface Map : List
+/// Map is a list of Entity objects
+@interface Map : NSObject
 {
+	NSMutableArray *objects;
 	id		currentEntity;
-	id		oldselection;	// temp when loading a new map
+	NSMutableArray	*oldselection;	// temp when loading a new map
 	float	minz, maxz;
 }
 
@@ -14,8 +17,8 @@ extern	id	map_i;
 
 - writeStats;
 
-- readMapFile: (char *)fname;
-- writeMapFile: (char *)fname useRegion: (BOOL)reg;
+- (BOOL)readMapFile: (char *)fname;
+- (BOOL)writeMapFile: (char *)fname useRegion: (BOOL)reg;
 
 - entityConnect: (vec3_t)p1 : (vec3_t)p2;
 
@@ -25,15 +28,15 @@ extern	id	map_i;
 - getTextureRay: (vec3_t)p1 : (vec3_t)p2;
 
 - currentEntity;
-- setCurrentEntity: ent;
+- (void)setCurrentEntity: ent;
 
 - (float)currentMinZ;
-- setCurrentMinZ: (float)m;
+- (void)setCurrentMinZ: (float)m;
 - (float)currentMaxZ;
-- setCurrentMaxZ: (float)m;
+- (void)setCurrentMaxZ: (float)m;
 
 - (int)numSelected;
-- selectedBrush;			// returns the first selected brush
+- (id)selectedBrush;			// returns the first selected brush
 
 //
 // operations on current selection
@@ -43,26 +46,29 @@ extern	id	map_i;
 - makeAllPerform: (SEL)sel;
 - makeGlobalPerform: (SEL)sel;	// in and out of region
 
-- cloneSelection: sender;
+- (IBAction)cloneSelection: sender;
 
-- makeEntity: sender;
+- (IBAction)makeEntity: sender;
 
-- subtractSelection: sender;
+- (IBAction)subtractSelection: sender;
 
-- selectCompletelyInside: sender;
-- selectPartiallyInside: sender;
+- (IBAction)selectCompletelyInside: sender;
+- (IBAction)selectPartiallyInside: sender;
 
-- tallBrush: sender;
-- shortBrush: sender;
+- (IBAction)tallBrush: sender;
+- (IBAction)shortBrush: sender;
 
-- rotate_x: sender;
-- rotate_y: sender;
-- rotate_z: sender;
+- (IBAction)rotate_x: sender;
+- (IBAction)rotate_y: sender;
+- (IBAction)rotate_z: sender;
 
-- flip_x: sender;
-- flip_y: sender;
-- flip_z: sender;
+- (IBAction)flip_x: sender;
+- (IBAction)flip_y: sender;
+- (IBAction)flip_z: sender;
 
-- selectCompleteEntity: sender;
+- (IBAction)selectCompleteEntity: sender;
 
+@end
+
+@interface Map (OldListAPIs) <QEOldListAPIs>
 @end

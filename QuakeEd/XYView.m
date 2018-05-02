@@ -1,6 +1,6 @@
 #import "qedefs.h"
 
-id xyview_i;
+XYView *xyview_i;
 
 NSPopUpButton *scalemenu_i, *gridmenu_i;
 PopScrollView *scrollview_i;
@@ -39,15 +39,13 @@ initFrame:
 	[scalemenu_i setTarget:self];
 	[scalemenu_i setAction:@selector(scaleMenuTarget:)];
 
-	[scalemenu_i addItem:@"12.5%"];
-	[scalemenu_i addItem:@"25%"];
-	[scalemenu_i addItem:@"50%"];
-	[scalemenu_i addItem:@"75%"];
-	[scalemenu_i addItem:@"100%"];
-	[scalemenu_i addItem:@"200%"];
-	[scalemenu_i addItem:@"300%"];
-#warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
-#warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
+	[scalemenu_i addItemWithTitle:@"12.5%"];
+	[scalemenu_i addItemWithTitle:@"25%"];
+	[scalemenu_i addItemWithTitle:@"50%"];
+	[scalemenu_i addItemWithTitle:@"75%"];
+	[scalemenu_i addItemWithTitle:@"100%"];
+	[scalemenu_i addItemWithTitle:@"200%"];
+	[scalemenu_i addItemWithTitle:@"300%"];
 	[scalemenu_i selectItemAtIndex:4];
 	
 	scalebutton_i = NSCreatePopUpListButton(scalemenu_i);
@@ -57,16 +55,14 @@ initFrame:
 	[gridmenu_i setTarget:self];
 	[gridmenu_i setAction:@selector(gridMenuTarget:)];
 
-	[gridmenu_i addItem:@"grid 1"];
-	[gridmenu_i addItem:@"grid 2"];
-	[gridmenu_i addItem:@"grid 4"];
-	[gridmenu_i addItem:@"grid 8"];
-	[gridmenu_i addItem:@"grid 16"];
-	[gridmenu_i addItem:@"grid 32"];
-	[gridmenu_i addItem:@"grid 64"];
+	[gridmenu_i addItemWithTitle:@"grid 1"];
+	[gridmenu_i addItemWithTitle:@"grid 2"];
+	[gridmenu_i addItemWithTitle:@"grid 4"];
+	[gridmenu_i addItemWithTitle:@"grid 8"];
+	[gridmenu_i addItemWithTitle:@"grid 16"];
+	[gridmenu_i addItemWithTitle:@"grid 32"];
+	[gridmenu_i addItemWithTitle:@"grid 64"];
 	
-#warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
-#warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
 		[gridmenu_i selectItemAtIndex:4];
 	
 	gridbutton_i = NSCreatePopUpListButton(gridmenu_i);
@@ -93,28 +89,27 @@ initFrame:
 	return YES;
 }
 
-- setModeRadio: m
+@synthesize modeRadio=mode_radio_i;
+
+- (void)setModeRadio: m
 { // this should be set from IB, but because I toss myself in a popscrollview
 // the connection gets lost
 	mode_radio_i = m;
 	[mode_radio_i setTarget:self];
 	[mode_radio_i setAction:@selector(drawMode:)];
-	return self;
 }
 
-- drawMode: sender
+- (IBAction)drawMode: sender
 {
 	drawmode = [sender selectedColumn];
 	[quakeed_i updateXY];
-	return self;
 }
 
-- setDrawMode: (drawmode_t)mode
+- (void)setDrawMode: (drawmode_t)mode
 {
 	drawmode = mode;
 	[mode_radio_i selectCellAtRow:0 column:mode];
 	[quakeed_i updateXY];
-	return self;
 }
 
 
@@ -128,7 +123,7 @@ initFrame:
 setOrigin:scale:
 ===================
 */
-- setOrigin: (NSPoint *)pt scale: (float)sc
+- (void)setOrigin: (NSPoint)pt scale: (float)sc
 {
 	NSRect		sframe;
 	NSRect		newbounds;
@@ -140,7 +135,7 @@ setOrigin:scale:
 	
 	sframe = [[self superview] frame];
 	newbounds = [[self superview] frame];
-	newbounds.origin = *pt;
+	newbounds.origin = pt;
 	newbounds.size.width /= scale; 
 	newbounds.size.height /= scale; 
 	
@@ -164,14 +159,12 @@ setOrigin:scale:
 // scroll and scale the clip view
 //
 	[[self superview] setBoundsSize:NSMakeSize(sframe.size.width/scale, sframe.size.height/scale)];
-	[[self superview] setBoundsOrigin:NSMakePoint(pt->x, pt->y)];
+	[[self superview] setBoundsOrigin:pt];
 
-	[scrollview_i display];
-	
-	return self;
+	[scrollview_i setNeedsDisplay:YES];
 }
 
-- centerOn: (vec3_t)org
+- (void)centerOn: (vec3_t)org
 {
 	NSRect	sbounds;
 	NSPoint	mid, delta;
@@ -187,8 +180,7 @@ setOrigin:scale:
 	sbounds.origin.x += delta.x;
 	sbounds.origin.y += delta.y;
 	
-	[self setOrigin: &sbounds.origin scale: scale];
-	return self;
+	[self setOrigin: sbounds.origin scale: scale];
 }
 
 /*
@@ -198,14 +190,12 @@ newSuperBounds
 When superview is resized
 ==================
 */
-- newSuperBounds
+- (void)newSuperBounds
 {
 	NSRect	r;
 	
 	r = [[self superview] bounds];
 	[self newRealBounds: &r];
-	
-	return self;
 }
 
 /*
@@ -217,7 +207,7 @@ Should only change the scroll bars, not cause any redraws.
 If realbounds has shrunk, nothing will change.
 ===================
 */
-- newRealBounds: (NSRect *)nb
+- (void)newRealBounds: (NSRect *)nb
 {
 	NSRect		sbounds;
 	
@@ -243,8 +233,6 @@ If realbounds has shrunk, nothing will change.
 	
 	[[scrollview_i horizontalScroller] display];
 	[[scrollview_i verticalScroller] display];
-	
-	return self;
 }
 
 
@@ -278,7 +266,7 @@ Called when the scaler popup on the window is used
 	visrect.origin.x -= sframe.size.width/2/nscale;
 	visrect.origin.y -= sframe.size.height/2/nscale;
 	
-	[self setOrigin: &visrect.origin scale: nscale];
+	[self setOrigin: visrect.origin scale: nscale];
 }
 
 /*
@@ -286,7 +274,7 @@ Called when the scaler popup on the window is used
 zoomIn
 ==============
 */
-- zoomIn: (NSPoint *)constant
+- (void)zoomIn: (NSPoint *)constant
 {
 	id			itemlist;
 	NSInteger	selected, numrows, numcollumns;
@@ -304,7 +292,7 @@ zoomIn
 	
 	selected = [itemlist selectedRow] + 1;
 	if (selected >= numrows)
-		return NULL;
+		return;
 		
 	[itemlist selectCellAtRow:selected column:0];
 	[scalebutton_i setTitle:[[itemlist selectedCell] title]];
@@ -319,9 +307,7 @@ zoomIn
 	new.x = constant->x - ofs.x / 2;
 	new.y = constant->y - ofs.y / 2;
 
-	[self setOrigin: &new scale: scale*2];
-	
-	return self;
+	[self setOrigin: new scale: scale*2];
 }
 
 
@@ -330,7 +316,7 @@ zoomIn
 zoomOut
 ==============
 */
-- zoomOut: (NSPoint *)constant
+- (void)zoomOut: (NSPoint *)constant
 {
 	id			itemlist;
 	NSInteger			selected, numrows, numcollumns;
@@ -348,7 +334,7 @@ zoomOut
 	
 	selected = [itemlist selectedRow] - 1;
 	if (selected < 0)
-		return NULL;
+		return;
 		
 	[itemlist selectCellAtRow:selected column:0];
 	[scalebutton_i setTitle:[[itemlist selectedCell] title]];
@@ -363,9 +349,7 @@ zoomOut
 	new.x = constant->x - ofs.x * 2;
 	new.y = constant->y - ofs.y * 2;
 
-	[self setOrigin: &new scale: scale/2];
-	
-	return self;
+	[self setOrigin: new scale: scale/2];
 }
 
 
@@ -421,7 +405,7 @@ snapToGrid
 addToScrollRange::
 ===================
 */
-- addToScrollRange: (float)x :(float)y;
+- (void)addToScrollRange: (float)x :(float)y;
 {
 	if (x < newrect.origin.x)
 	{
@@ -440,8 +424,6 @@ addToScrollRange::
 		
 	if (y > newrect.origin.y + newrect.size.height)
 		newrect.size.height += y - (newrect.origin.y+newrect.size.height);
-		
-	return self;
 }
 
 /*
@@ -449,7 +431,12 @@ addToScrollRange::
 superviewChanged
 ===================
 */
-- superviewChanged
+- (void)viewDidMoveToSuperview
+{
+	[self superviewChanged];
+}
+
+- (id)superviewChanged
 {	
 	[self newRealBounds: &realbounds];
 	
@@ -561,21 +548,22 @@ Rect is in global world (unscaled) coordinates
 			stopx -= gridsize;
 		if (stopy >= top)
 			stopy -= gridsize;
-			
-		beginUserPath (upath,NO);
+		
+		[upath release];
+		upath = [[NSBezierPath bezierPath] retain];
 		
 		for ( ; y<=stopy ; y+= gridsize)
 			if (y&63)
 			{
-				UPmoveto (upath, left, y);
-				UPlineto (upath, right, y);
+				[upath moveToPoint:NSMakePoint(left, y)];
+				[upath lineToPoint:NSMakePoint(right, y)];
 			}
 	
 		for ( ; x<=stopx ; x+= gridsize)
 			if (x&63)
 			{
-				UPmoveto (upath, x, top);
-				UPlineto (upath, x, bottom);
+				[upath moveToPoint:NSMakePoint(x, top)];
+				[upath lineToPoint:NSMakePoint(x, bottom)];
 			}
 		PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
 		[upath stroke];
@@ -794,7 +782,6 @@ drawSelf
 ===================
 */
 NSRect	xy_draw_rect;
-#warning RectConversion: drawRect:(NSRect)rects (used to be drawSelf:(const NXRect *)rects :(int)rectCount) no longer takes an array of rects
 - (void)drawRect:(NSRect)rects
 {
 	static float	drawtime;	// static to shut up compiler warning
@@ -940,7 +927,7 @@ void ScrollCallback (float dx, float dy)
 	
 	oldreletive.x -= dx;
 	oldreletive.y -= dy;
-	[xyview_i setOrigin: &neworg scale: scale];
+	[xyview_i setOrigin: neworg scale: scale];
 }
 
 - scrollDragFrom:(NSEvent *)theEvent 	
@@ -1001,7 +988,7 @@ void DirectionCallback (float dx, float dy)
 
 //============================================================================
 
-id	newbrush;
+SetBrush	*newbrush;
 vec3_t	neworg, newdrag;
 
 void NewCallback (float dx, float dy)

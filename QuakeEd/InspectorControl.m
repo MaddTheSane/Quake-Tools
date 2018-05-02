@@ -6,7 +6,7 @@
 #import	"TexturePalette.h"
 #import	"Preferences.h"
 
-id		inspcontrol_i;
+InspectorControl *inspcontrol_i;
 
 @implementation InspectorControl
 
@@ -16,9 +16,9 @@ id		inspcontrol_i;
 		
 	currentInspectorType = -1;
 
-	contentList = [[List alloc] init];
-	windowList = [[List alloc] init];
-	itemList = [[List alloc] init];
+	contentList = [[NSMutableArray alloc] init];
+	windowList = [[NSMutableArray alloc] init];
+	itemList = [[NSMutableArray alloc] init];
 
 	// ADD NEW INSPECTORS HERE...
 
@@ -61,7 +61,7 @@ id		inspcontrol_i;
 
 	[inspectorView_i setAutoresizesSubviews:YES];
 
-	inspectorSubview_i = [contentList objectAt:i_project];
+	inspectorSubview_i = [contentList objectAtIndex:i_project];
 	[inspectorView_i addSubview:inspectorSubview_i];
 
 	currentInspectorType = -1;
@@ -73,19 +73,18 @@ id		inspcontrol_i;
 //	Sent by the PopUpList in the Inspector
 //	Each cell in the PopUpList must have the correct tag
 //
-- changeInspector:sender
+- (IBAction)changeInspector:sender
 {
 	id	cell;
 
 	cell = [sender selectedCell];
 	[self changeInspectorTo:[cell tag]];
-	return self;
 }
 
 //
 //	Change to specific Inspector
 //
-- changeInspectorTo:(insp_e)which
+- (void)changeInspectorTo:(insp_e)which
 {
 	id		newView;
 	NSRect	r;
@@ -93,12 +92,12 @@ id		inspcontrol_i;
 	NSRect	f;
 	
 	if (which == currentInspectorType)
-		return self;
+		return;
 	
 	currentInspectorType = which;
-	newView = [contentList objectAt:which];
+	newView = [contentList objectAtIndex:which];
 	
-	cell = [itemList objectAt:which];	// set PopUpButton title
+	cell = [itemList objectAtIndex:which];	// set PopUpButton title
 	[popUpButton_i setTitle:[cell title]];
 	
 	[inspectorView_i replaceSubview:inspectorSubview_i with:newView];
@@ -113,8 +112,6 @@ id		inspcontrol_i;
 	NSRectFill(f);
 	[inspectorSubview_i unlockFocus];
 	[inspectorView_i display];
-	
-	return self;
 }
 
 - (insp_e)getCurrentInspector

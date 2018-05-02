@@ -74,8 +74,8 @@ winding_t *NewWinding (int points);
 
 - (BOOL)selected;
 - (BOOL)regioned;
-- setSelected: (BOOL)s;
-- setRegioned: (BOOL)s;
+- (void)setSelected: (BOOL)s;
+- (void)setRegioned: (BOOL)s;
 
 - getMins: (vec3_t)mins maxs: (vec3_t)maxs;
 

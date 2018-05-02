@@ -38,7 +38,6 @@
 		5531418D1B98E61F00390795 /* TextureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531415D1B98E61F00390795 /* TextureView.m */; };
 		5531418E1B98E61F00390795 /* Things.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531415F1B98E61F00390795 /* Things.m */; };
 		5531418F1B98E61F00390795 /* triggers.qc in Resources */ = {isa = PBXBuildFile; fileRef = 553141601B98E61F00390795 /* triggers.qc */; };
-		553141901B98E61F00390795 /* UserPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141621B98E61F00390795 /* UserPath.m */; };
 		553141911B98E61F00390795 /* XYView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141641B98E61F00390795 /* XYView.m */; };
 		553141921B98E61F00390795 /* ZScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141661B98E61F00390795 /* ZScrollView.m */; };
 		553141931B98E61F00390795 /* ZView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141681B98E61F00390795 /* ZView.m */; };
@@ -112,6 +111,7 @@
 		553141671B98E61F00390795 /* ZView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZView.h; sourceTree = "<group>"; };
 		553141681B98E61F00390795 /* ZView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZView.m; sourceTree = "<group>"; };
 		555070A81CD1573A007D6E08 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		55FEA993209A68E2005E220E /* QEOldListAPIs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QEOldListAPIs.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +217,7 @@
 				553141661B98E61F00390795 /* ZScrollView.m */,
 				553141671B98E61F00390795 /* ZView.h */,
 				553141681B98E61F00390795 /* ZView.m */,
+				55FEA993209A68E2005E220E /* QEOldListAPIs.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -338,7 +339,6 @@
 				553141841B98E61F00390795 /* QuakeEd_main.m in Sources */,
 				553141891B98E61F00390795 /* SetBrush.m in Sources */,
 				5531416A1B98E61F00390795 /* Clipper.m in Sources */,
-				553141901B98E61F00390795 /* UserPath.m in Sources */,
 				553141921B98E61F00390795 /* ZScrollView.m in Sources */,
 				553141931B98E61F00390795 /* ZView.m in Sources */,
 				5531417E1B98E61F00390795 /* mathlib.c in Sources */,

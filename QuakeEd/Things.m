@@ -18,12 +18,10 @@ id	things_i;
 //
 //	Load the TEXT object with the entity comment
 //
-- loadEntityComment:(id)obj
+- (void)loadEntityComment:(id)obj
 {
 	[entity_comment_i selectAll:self];
 	[entity_comment_i replaceSel:[NSString stringWithCString:[obj comments]]];
-
-	return self;
 }
 
 
@@ -145,8 +143,6 @@ id	things_i;
 	else
 		flags = atoi(flagname);
 	
-#error ViewConversion: 'setAutodisplay:' is obsolete
-	[flags_i setAutodisplay:NO];
 	for (r=0 ; r<4 ; r++)
 		for (c=0 ; c<3 ; c++)
 		{
@@ -158,9 +154,7 @@ id	things_i;
 			}
 			[cell setIntValue:(flags & (1<< ((c*4)+r)) ) > 0];
 		}
-#error ViewConversion: 'setAutodisplay:' is obsolete
-	[flags_i setAutodisplay:YES];
-	[flags_i display];
+	[flags_i setNeedsDisplay:YES];
 	
 //	[keyInput_i setStringValue: ""];
 //	[valueInput_i setStringValue: ""];
@@ -183,20 +177,19 @@ id	things_i;
 	return self;
 }
 
-- clearInputs
+- (void)clearInputs
 {
 //	[keyInput_i setStringValue: ""];
 //	[valueInput_i setStringValue: ""];
 	
 	[quakeed_i makeFirstResponder:quakeed_i];
-	return self;
 }
 
 //
 //	Action methods
 //
 
--addPair:sender
+-(IBAction)addPair:sender
 {
 	char	*key, *value;
 	
@@ -210,11 +203,9 @@ id	things_i;
 
 	[self clearInputs];
 	[quakeed_i updateXY];
-	
-	return self;
 }
 
--delPair:sender
+-(IBAction)delPair:sender
 {
 	[quakeed_i makeFirstResponder:quakeed_i];
 
@@ -226,15 +217,13 @@ id	things_i;
 	[self clearInputs];
 
 	[quakeed_i updateXY];
-
-	return self;
 }
 
 
 //
 //	Set the key/value fields to "angle <button value>"
 //
-- setAngle:sender
+- (IBAction)setAngle:sender
 {
 	const char *title;
 	char	value[10];
@@ -254,11 +243,9 @@ id	things_i;
 	[self clearInputs];
 
 	[quakeed_i updateXY];
-	
-	return self;
 }
 
-- setFlags:sender
+- (IBAction)setFlags:sender
 {
 	int		flags;
 	int		r, c, i;
@@ -286,8 +273,6 @@ id	things_i;
 	
 	[keypairview_i calcViewSize];
 	[keypairview_i display];
-
-	return self;
 }
 
 
@@ -295,7 +280,7 @@ id	things_i;
 //	Fill the Entity browser
 //	(Delegate method - delegated in Interface Builder)
 //
-- (void)browser:(NSBrowser *)sender createRowsForColumn:(int)column inMatrix:(NSMatrix *)matrix
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(NSInteger)column inMatrix:(NSMatrix *)matrix
 {
 	id		cell;
 	int		max;
@@ -313,8 +298,11 @@ id	things_i;
 		[cell setLeaf:YES];
 		[cell setLoaded:YES];
 	}
-#error BrowserConversion: Do not return count.  The matrix row count must be correct.
-	return i;
+}
+
+- (NSInteger)browser:(NSBrowser *)sender numberOfRowsInColumn:(NSInteger)column
+{
+	return [entity_classes_i count];
 }
 
 @end

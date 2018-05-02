@@ -20,20 +20,20 @@ extern InspectorControl *inspcontrol_i;
 
 @interface InspectorControl:NSObject
 {
-	id	inspectorView_i;	// inspector view
-	id	inspectorSubview_i;	// inspector view's current subview (gets replaced)
+	IBOutlet NSView	*inspectorView_i;	// inspector view
+	NSView	*inspectorSubview_i;	// inspector view's current subview (gets replaced)
 
-	id	contentList;		// List of contentviews (corresponds to
+	NSMutableArray	*contentList;		// List of contentviews (corresponds to
 							// insp_e enum order)
-	id	windowList;			// List of Windows (corresponds to
+	NSMutableArray	*windowList;			// List of Windows (corresponds to
 							// insp_e enum order)
 
 	id	obj_textures_i;		// TexturePalette object (for delegating)
 	id	obj_genkeypair_i;	// GenKeyPair object
 
-	id	popUpButton_i;		// PopUpList title button
-	id	popUpMatrix_i;		// PopUpList matrix
-	id	itemList;			// List of popUp buttons
+	IBOutlet NSPopUpButton	*popUpButton_i;		// PopUpList title button
+	IBOutlet id	popUpMatrix_i;		// PopUpList matrix
+	NSMutableArray	*itemList;			// List of popUp buttons
 		
 	insp_e	currentInspectorType;	// keep track of current inspector
 	//
@@ -42,27 +42,27 @@ extern InspectorControl *inspcontrol_i;
 	//  corresponds to the enums above!
 	
 	// Windows
-	id	win_project_i;		// project
-	id	win_textures_i;		// textures
-	id	win_things_i;		// things
-	id	win_prefs_i;		// preferences
-	id	win_settings_i;		// project settings
-	id	win_output_i;		// bsp output
-	id	win_help_i;			// documentation
+	IBOutlet NSWindow	*win_project_i;		// project
+	IBOutlet NSWindow	*win_textures_i;		// textures
+	IBOutlet NSWindow	*win_things_i;		// things
+	IBOutlet NSWindow	*win_prefs_i;		// preferences
+	IBOutlet NSWindow	*win_settings_i;		// project settings
+	IBOutlet NSWindow	*win_output_i;		// bsp output
+	IBOutlet NSWindow	*win_help_i;			// documentation
 	
 	// PopUpList objs
-	id	itemProject_i;		// project
-	id	itemTextures_i;		// textures
-	id	itemThings_i;		// things
-	id	itemPrefs_i;		// preferences
-	id	itemSettings_i;		// project settings
-	id	itemOutput_i;		// bsp output
-	id	itemHelp_i;			// docs
+	IBOutlet id	itemProject_i;		// project
+	IBOutlet id	itemTextures_i;		// textures
+	IBOutlet id	itemThings_i;		// things
+	IBOutlet id	itemPrefs_i;		// preferences
+	IBOutlet id	itemSettings_i;		// project settings
+	IBOutlet id	itemOutput_i;		// bsp output
+	IBOutlet id	itemHelp_i;			// docs
 }
 
 - (void)awakeFromNib;
-- changeInspector:sender;
-- changeInspectorTo:(insp_e)which;
+- (IBAction)changeInspector:sender;
+- (void)changeInspectorTo:(insp_e)which;
 - (insp_e)getCurrentInspector;
 
 @end

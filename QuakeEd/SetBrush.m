@@ -787,10 +787,9 @@ INTERACTION
 	return selected;
 }
 
-- setSelected: (BOOL)s
+- (void)setSelected: (BOOL)s
 {
 	selected = s;
-	return self;
 }
 
 - (BOOL)regioned
@@ -798,10 +797,9 @@ INTERACTION
 	return regioned;
 }
 
-- setRegioned: (BOOL)s
+- (void)setRegioned: (BOOL)s
 {
 	regioned = s;
-	return self;
 }
 
 
@@ -1097,7 +1095,7 @@ BOOL	fakebrush;
 	copy = [copy addFace: &face];
 	if (copy)
 	{
-		[copy perform:call];
+		[copy performSelector:call];
 		[copy release];
 	}
 	fakebrush = NO;

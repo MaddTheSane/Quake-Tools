@@ -1,7 +1,8 @@
 
 #import <AppKit/AppKit.h>
+#import "QEOldListAPIs.h"
 
-@interface DictList:List
+@interface DictList:NSObject
 {
 
 }
@@ -10,4 +11,8 @@
 - writeListFile:(char *)filename;
 - (id) findDictKeyword:(char *)key;
 
+@end
+
+
+@interface DictList(OldListAPIs) <QEOldListAPIs>
 @end

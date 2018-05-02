@@ -76,7 +76,7 @@ vec3_t bad_maxs = {8, 8, 8};
 	vec3_t	min, max;
 	float	*v;
 	
-	[super init];
+	if (self = [super init]) {
 	
 	modifiable = YES;
 
@@ -103,7 +103,8 @@ vec3_t bad_maxs = {8, 8, 8};
 	}
 	else
 		modifiable = YES;
-			
+		
+	}
 	return self;
 }
 
@@ -117,19 +118,10 @@ vec3_t bad_maxs = {8, 8, 8};
 		n = e->next;
 		free (e);
 	}
-	{ [super dealloc]; return; };
+	[super dealloc];
 }
 
-- (BOOL)modifiable
-{
-	return modifiable;
-}
-
-- setModifiable: (BOOL)m
-{
-	modifiable = m;
-	return self;
-}
+@synthesize modifiable;
 
 - removeObject: o
 {
@@ -481,5 +473,9 @@ INTERACTION
 
 ==============================================================================
 */
+
+@end
+
+@implementation Entity (OldListAPIs)
 
 @end

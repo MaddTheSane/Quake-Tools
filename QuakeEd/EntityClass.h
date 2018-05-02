@@ -1,5 +1,6 @@
 #import <AppKit/AppKit.h>
 #import "mathlib.h"
+#import "QEOldListAPIs.h"
 
 typedef enum {esize_model, esize_fixed} esize_t;
 
@@ -26,9 +27,10 @@ typedef enum {esize_model, esize_fixed} esize_t;
 
 @end
 
-extern	id	entity_classes_i;
+@class EntityClassList;
+extern EntityClassList *entity_classes_i;
 
-@interface EntityClassList : List
+@interface EntityClassList : NSObject
 {
 	id		nullclass;
 	char	*source_path;
@@ -40,3 +42,6 @@ extern	id	entity_classes_i;
 
 @end
 
+@interface EntityClassList (OldListAPIs) <QEOldListAPIs>
+
+@end
