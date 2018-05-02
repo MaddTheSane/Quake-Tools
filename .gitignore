@@ -1,0 +1,9 @@
+.DS_Store
+project.xcworkspace/
+xcuserdata/
+*.o
+qcc/qcc
+qutils/qbsp/bspinfo
+qutils/qbsp/light
+qutils/qbsp/qbsp
+qutils/qbsp/vis
