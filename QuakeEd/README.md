@@ -1,3 +1,10 @@
+About This Fork
+===
+
+This is my attempt at updating QuakeEd to modern Mac OS X. This currently does not build.
+
+Original Read-me
+===
 
 5/18/96
 
@@ -11,15 +18,15 @@ There are lots of mixed case and >8 character filenames, so I'm using unix gnuta
 
 Because most people won't have access to a NEXTSTEP machine, I took pictures of some of the more important stuff from interface builder:
 
-mainwindow.tiff : a screenshot of the primary window
-inspectors.tiff : a screenshot of the important inspector views
-help.txt        : a dump of the (minimal) help inspector's contents.
+- mainwindow.tiff : a screenshot of the primary window
+- inspectors.tiff : a screenshot of the important inspector views
+- help.txt        : a dump of the (minimal) help inspector's contents.
 
 I included some sample data to help you follow the code:
 
-quake.qpr       : our current project file
-jrbase1.map     : a sample map
-triggers.qc     : a sample qc source file that includes some /*QUAKED comments
+- quake.qpr       : our current project file
+- jrbase1.map     : a sample map
+- triggers.qc     : a sample qc source file that includes some /*QUAKED comments
 
 There will not be any major changes to this code base.  I am eagerly looking forward to writing a brand new editor for windows NT + open GL as soon as Quake ships.
 

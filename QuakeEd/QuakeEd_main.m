@@ -4,12 +4,12 @@
 
 #import <AppKit/AppKit.h>
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
     [NSApplication sharedApplication];
-    if ([NSBundle loadNibNamed:@"QuakeEd.nib" owner:NSApp])
+    if ([NSBundle loadNibNamed:@"QuakeEd" owner:NSApp])
 	    [NSApp run];
 	    
     [NSApp release];
-    exit(0);
+    return EXIT_SUCCESS;
 }
