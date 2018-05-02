@@ -1,7 +1,7 @@
 
 extern	id	clipper_i;
 
-@interface Clipper : Object
+@interface Clipper : NSObject
 {
 	int			num;
 	vec3_t		pos[3];
@@ -9,9 +9,9 @@ extern	id	clipper_i;
 }
 
 - (BOOL)hide;
-- XYClick: (NXPoint)pt;
-- (BOOL)XYDrag: (NXPoint *)pt;
-- ZClick: (NXPoint)pt;
+- XYClick: (NSPoint)pt;
+- (BOOL)XYDrag: (NSPoint *)pt;
+- ZClick: (NSPoint)pt;
 - carve;
 - flipNormal;
 - (BOOL)getFace: (face_t *)pl;

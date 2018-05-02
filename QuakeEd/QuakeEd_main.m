@@ -2,14 +2,14 @@
    NOTE: Do NOT change this file -- Project Builder maintains it.
 */
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
 void main(int argc, char *argv[]) {
 
-    [Application new];
-    if ([NXApp loadNibSection:"QuakeEd.nib" owner:NXApp withNames:NO])
-	    [NXApp run];
+    [NSApplication sharedApplication];
+    if ([NSBundle loadNibNamed:@"QuakeEd.nib" owner:NSApp])
+	    [NSApp run];
 	    
-    [NXApp free];
+    [NSApp release];
     exit(0);
 }

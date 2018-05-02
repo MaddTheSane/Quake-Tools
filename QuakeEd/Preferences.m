@@ -35,11 +35,13 @@ void WriteNumericDefault (char *name, float value)
 	char	str[128];
 	
 	sprintf (str,"%f", value);
-	NXWriteDefault (DEFOWNER, name, str);
+#warning DefaultsConversion: [<NSUserDefaults> setObject:...forKey:...] used to be NXWriteDefault(DEFOWNER, name, str). Defaults will be synchronized within 30 seconds after this change.  For immediate synchronization, call '-synchronize'. Also note that the first argument of NXWriteDefault is now ignored; to write into a domain other than the apps default, see the NSUserDefaults API.
+	[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithCString:str] forKey:[NSString stringWithCString:name]];
 }
 void WriteStringDefault (char *name, char *value)
 {
-	NXWriteDefault (DEFOWNER, name, value);
+#warning DefaultsConversion: [<NSUserDefaults> setObject:...forKey:...] used to be NXWriteDefault(DEFOWNER, name, value). Defaults will be synchronized within 30 seconds after this change.  For immediate synchronization, call '-synchronize'. Also note that the first argument of NXWriteDefault is now ignored; to write into a domain other than the apps default, see the NSUserDefaults API.
+	[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithCString:value] forKey:[NSString stringWithCString:name]];
 }
 
 //
@@ -50,28 +52,36 @@ void WriteStringDefault (char *name, char *value)
 	char *string;
 	float	value;
 	
-	string = (char *)NXGetDefaultValue(DEFOWNER,"ProjectPath");
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	string = (char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"ProjectPath"] cString];
 	[self setProjectPath: string];
 	
-	string = (char *)NXGetDefaultValue(DEFOWNER,"BspSoundPath");
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	string = (char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"BspSoundPath"] cString];
 	[self setBspSoundPath:string];
 
-	value = _atoi((char *)NXGetDefaultValue(DEFOWNER,"ShowBSPOutput"));
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	value = _atoi((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"ShowBSPOutput"] cString]);
 	[self setShowBSP:value];
 
-	value = _atoi((char *)NXGetDefaultValue(DEFOWNER,"OffsetBrushCopy"));
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	value = _atoi((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"OffsetBrushCopy"] cString]);
 	[self setBrushOffset:value];
 
-	value = _atoi((char *)NXGetDefaultValue(DEFOWNER,"StartWad"));
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	value = _atoi((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"StartWad"] cString]);
 	[self setStartWad:value];
 
-	value = _atof((char *)NXGetDefaultValue(DEFOWNER,"Xlight"));
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	value = _atof((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"Xlight"] cString]);
 	[self setXlight:value];
 
-	value = _atof((char *)NXGetDefaultValue(DEFOWNER,"Ylight"));
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	value = _atof((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"Ylight"] cString]);
 	[self setYlight:value];
 
-	value = _atof((char *)NXGetDefaultValue(DEFOWNER,"Zlight"));
+#warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
+	value = _atof((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"Zlight"] cString]);
 	[self setZlight:value];
 
 	return self;
@@ -83,14 +93,14 @@ void WriteStringDefault (char *name, char *value)
 	if (!path)
 		path = "";
 	strcpy (projectpath, path);
-	[startproject_i setStringValue: path];
+	[startproject_i setStringValue:[NSString stringWithCString:path]];
 	WriteStringDefault ("ProjectPath", path);
 	return self;
 }
 
 - setCurrentProject:sender
 {
-	[startproject_i setStringValue: [project_i currentProjectFile]];
+	[startproject_i setStringValue:[NSString stringWithCString:[project_i currentProjectFile]]];
 	[self UIChanged: self];
 	return self;
 }
@@ -116,20 +126,21 @@ void WriteStringDefault (char *name, char *value)
 	char	**filename;
 	char	path[1024], file[64];
 	
-	panel = [OpenPanel new];
+#warning FactoryMethods: [OpenPanel openPanel] used to be [OpenPanel new].  Open panels are no longer shared.  'openPanel' returns a new, autoreleased open panel in the default configuration.  To maintain state, retain and reuse one open panel (or manually re-set the state each time.)
+	panel = [NSOpenPanel openPanel];
 
 	ExtractFilePath (bspSound, path);
 	ExtractFileBase (bspSound, file);
 	
-	rtn = [panel 
-			runModalForDirectory:path 
-			file: file
-			types: types];
+#error StringConversion: Open panel types are now stored in an NSArray of NSStrings (used to use char**).  Change your variable declaration.
+	rtn = [panel runModalForDirectory:[NSString stringWithCString:path] file:[NSString stringWithCString:file] types:types];
 
 	if (rtn)
 	{
+#error StringConversion: filenames now returns an NSArray of NSStrings (used to return a NULL terminated array of char * strings).  Change your variable declaration.
+#warning GeneralNamingConversion: 'filenames' now returns absolute paths
 		filename = (char **)[panel filenames];
-		strcpy(bspSound,[panel directory]);
+		strcpy(bspSound,[[panel directory] cString]);
 		strcat(bspSound,"/");
 		strcat(bspSound,filename[0]);
 		[self setBspSoundPath:bspSound];
@@ -160,7 +171,7 @@ void WriteStringDefault (char *name, char *value)
 	strcpy(bspSound,path);
 
 	if (bspSound_i)
-		[bspSound_i free];
+		[bspSound_i release];
 	bspSound_i = [[Sound alloc] initFromSoundfile:bspSound];
 	if (!bspSound_i)
 	{
@@ -168,7 +179,7 @@ void WriteStringDefault (char *name, char *value)
 		bspSound_i = [[Sound alloc] initFromSoundfile:bspSound];
 	}
 
-	[bspSoundField_i setStringValue:bspSound];
+	[bspSoundField_i setStringValue:[NSString stringWithCString:bspSound]];
 	
 	WriteStringDefault ("BspSoundPath", bspSound);
 	
@@ -233,7 +244,7 @@ void WriteStringDefault (char *name, char *value)
 	if (startwad<0 || startwad>2)
 		startwad = 0;
 	
-	[startwad_i selectCellAt:startwad : 0];
+	[startwad_i selectCellAtRow:startwad column:0];
 
 	WriteNumericDefault ("StartWad", value);
 	return self;
@@ -311,8 +322,8 @@ Grab all the current UI state
 {
 	qprintf ("defaults updated");
 	
-	[self setProjectPath: (char *)[startproject_i stringValue]];
-	[self setBspSoundPath: (char *)[bspSoundField_i stringValue]];
+	[self setProjectPath: (char *)[[startproject_i stringValue] cString]];
+	[self setBspSoundPath: (char *)[[bspSoundField_i stringValue] cString]];
 	[self setShowBSP: [showBSP_i intValue]];
 	[self setBrushOffset: [brushOffset_i intValue]];
 	[self setStartWad: [startwad_i selectedRow]];

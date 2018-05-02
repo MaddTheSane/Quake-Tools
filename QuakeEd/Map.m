@@ -42,7 +42,7 @@ FILE METHODS
 		else
 		{
 			[w removeObjectAt: 0];
-			[o free];
+			[o release];
 		}
 	}
 	
@@ -52,7 +52,7 @@ FILE METHODS
 		o = [self objectAt: 0];
 		[self removeObjectAt: 0];
 		[o freeObjects];
-		[o free];
+		[o release];
 	}
 
 	return self;
@@ -452,7 +452,7 @@ to intervening world brushes
 		qprintf ("deselected entity %i brush %i face %i", [self indexOf:bestent], [bestent indexOf: bestbrush], bestface);
 	}
 
-	[quakeed_i reenableFlushWindow];
+	[quakeed_i enableFlushWindow];
 	[quakeed_i updateAll];
 	
 	return self;
@@ -629,7 +629,7 @@ setTextureRay
 		[bestbrush setTexturedef: &td forFace: bestface];
 		qprintf ("deselected entity %i brush %i face %i", [self indexOf:bestent], [bestent indexOf: bestbrush], bestface);
 	}
-	[quakeed_i reenableFlushWindow];
+	[quakeed_i enableFlushWindow];
 		
 	[quakeed_i updateAll];
 	
@@ -927,14 +927,14 @@ UI operations
 	if (currentEntity != [self objectAt: 0])
 	{
 		qprintf ("ERROR: can't makeEntity inside an entity");
-		NXBeep ();
+		NSBeep ();
 		return self;
 	}
 	
 	if ( [self numSelected] == 0)
 	{
 		qprintf ("ERROR: must have a seed brush to make an entity");
-		NXBeep ();
+		NSBeep ();
 		return self;
 	}
 	
@@ -1089,7 +1089,7 @@ subtractSelection
 			[carve_in freeObjects];
 		}
 
-		[sourcelist free];	// the individual have been moved/freed
+		[sourcelist release];	// the individual have been moved/freed
 		sourcelist = carve_out;
 		carve_out = [[List alloc] init];
 	}
@@ -1099,16 +1099,16 @@ subtractSelection
 	[currentEntity appendList: sourcelist];
 	[currentEntity appendList: sellist];
 
-	[sourcelist free];
-	[sellist free];
-	[carve_in free];
-	[carve_out free];
+	[sourcelist release];
+	[sellist release];
+	[carve_in release];
+	[carve_out release];
 	
 	if (![currentEntity count])
 	{
 		o = currentEntity;
 		[self removeObject: o];
-		[o free];
+		[o release];
 	}
 
 	qprintf ("subtracted selection");

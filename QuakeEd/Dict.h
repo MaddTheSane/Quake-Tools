@@ -1,5 +1,5 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
 typedef struct
 {
@@ -9,9 +9,10 @@ typedef struct
 
 @interface Dict:Storage
 {
+
 }
 
-- initFromFile:(FILE *)fp;
+- initWithContentsOfFile:(NSString *)fp;
 
 - (id) parseMultipleFrom:(char *)value;
 - (int) getValueUnits:(char *)key;

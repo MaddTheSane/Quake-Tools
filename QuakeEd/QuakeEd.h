@@ -14,7 +14,7 @@ void NopSound (void);
 
 void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 
-@interface QuakeEd : Window
+@interface QuakeEd : NSWindow
 {
 	BOOL	dirty;
 	char	filename[1024];		// full path with .map extension
@@ -53,8 +53,9 @@ void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 - newinstance;		// force next flushwindow to clear all instance drawing
 - redrawInstance;	// erase and redraw all instance now
 
-- appDidInit:sender;
-- appWillTerminate:sender;
+#warning NotificationConversion: applicationDidFinishLaunching:(NSNotification *)notification (used to be appDidInit:) is an NSApplication notification method (used to be a delegate method); delegates of NSApplication are automatically set to observe this notification; subclasses of NSApplication do not automatically receive this notification
+- (void)applicationDidFinishLaunching:(NSNotification *)notification;
+- (BOOL)applicationShouldTerminate:(id)sender;
 
 - openProject:sender;
 
@@ -64,7 +65,7 @@ void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 
 - (BOOL)dirty;
 
-- clear: sender;
+- (void)clear:(id)sender;
 - centerCamera: sender;
 - centerZChecker: sender;
 

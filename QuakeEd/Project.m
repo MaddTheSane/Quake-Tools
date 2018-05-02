@@ -40,7 +40,7 @@ id	project_i;
 	strcpy(path_finalmapdir,s);
 	strcat(path_finalmapdir,"/"SUBDIR_MAPS);	// dest dir
 	
-	[basepathinfo_i	setStringValue:s];		// in Project Inspector
+	[basepathinfo_i setStringValue:[NSString stringWithCString:s]];		// in Project Inspector
 	
 	#if 0
 	if ((s = [projectInfo getStringFor:BASEPATHKEY]))
@@ -56,7 +56,7 @@ id	project_i;
 		strcpy(path_finalmapdir,s);
 		strcat(path_finalmapdir,"/"SUBDIR_MAPS);	// dest dir
 		
-		[basepathinfo_i	setStringValue:s];		// in Project Inspector
+		[basepathinfo_i setStringValue:[NSString stringWithCString:s]];		// in Project Inspector
 	}
 	#endif
 		
@@ -114,12 +114,12 @@ id	project_i;
 //
 - initProjSettings
 {
-	[pis_basepath_i	setStringValue:path_basepath];
-	[pis_fullvis_i	setStringValue:string_fullvis];
-	[pis_fastvis_i	setStringValue:string_fastvis];
-	[pis_novis_i	setStringValue:string_novis];
-	[pis_relight_i	setStringValue:string_relight];
-	[pis_leaktest_i	setStringValue:string_leaktest];
+	[pis_basepath_i setStringValue:[NSString stringWithCString:path_basepath]];
+	[pis_fullvis_i setStringValue:[NSString stringWithCString:string_fullvis]];
+	[pis_fastvis_i setStringValue:[NSString stringWithCString:string_fastvis]];
+	[pis_novis_i setStringValue:[NSString stringWithCString:string_novis]];
+	[pis_relight_i setStringValue:[NSString stringWithCString:string_relight]];
+	[pis_leaktest_i setStringValue:[NSString stringWithCString:string_leaktest]];
 	
 	return self;
 }
@@ -131,12 +131,12 @@ id	project_i;
 {
 	int	end;
 	
-	end = [BSPoutput_i textLength];
-	[BSPoutput_i setSel:end :end];
-	[BSPoutput_i replaceSel:string];
+	end = [[BSPoutput_i text] length];
+	[BSPoutput_i setSelectionStart:end end:end];
+	[BSPoutput_i replaceSel:[NSString stringWithCString:string]];
 	
-	end = [BSPoutput_i textLength];
-	[BSPoutput_i setSel:end :end];
+	end = [[BSPoutput_i text] length];
+	[BSPoutput_i setSelectionStart:end end:end];
 	[BSPoutput_i scrollSelToVisible];
 	
 	return self;
@@ -144,15 +144,15 @@ id	project_i;
 
 - clearBspOutput:sender
 {
-	[BSPoutput_i	selectAll:self];
-	[BSPoutput_i	replaceSel:"\0"];
+	[BSPoutput_i selectAll:self];
+	[BSPoutput_i replaceSel:@"\0"];
 	
 	return self;
 }
 
 - print
 {
-	[BSPoutput_i	printPSCode:self];
+	[BSPoutput_i print:self];
 	return self;
 }
 
@@ -163,9 +163,9 @@ id	project_i;
 	if (projectInfo == NULL)
 		return self;
 	[self initVars];
-	[mapbrowse_i reuseColumns:YES];
+	[mapbrowse_i setReusesColumns:YES];
 	[mapbrowse_i loadColumnZero];
-	[pis_wads_i reuseColumns:YES];
+	[pis_wads_i setReusesColumns:YES];
 	[pis_wads_i loadColumnZero];
 
 	[things_i		initEntities];
@@ -195,7 +195,7 @@ id	project_i;
 //	Fill the QuakeEd Maps or wads browser
 //	(Delegate method - delegated in Interface Builder)
 //
-- (int)browser:sender fillMatrix:matrix inColumn:(int)column
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(int)column inMatrix:(NSMatrix *)matrix
 {
 	id		cell, list;
 	int		max;
@@ -217,11 +217,12 @@ id	project_i;
 	{
 		name = [list elementAt:i];
 		[matrix addRow];
-		cell = [matrix cellAt:i :0];
-		[cell setStringValue:name];
+		cell = [matrix cellAtRow:i column:0];
+		[cell setStringValue:[NSString stringWithCString:name]];
 		[cell setLeaf:YES];
 		[cell setLoaded:YES];
 	}
+#error BrowserConversion: Do not return count.  The matrix row count must be correct.
 	return i;
 }
 
@@ -240,14 +241,14 @@ id	project_i;
 	sprintf(fname,"%s/%s.map",path_mapdirectory,
 		(char *)[mapList elementAt:row]);
 	
-	panel = NXGetAlertPanel("Loading...",
+	panel = NSGetAlertPanel("Loading...",
 		"Loading map. Please wait.",NULL,NULL,NULL);
 	[panel orderFront:NULL];
 
 	[quakeed_i doOpen:fname];
 
 	[panel performClose:NULL];
-	NXFreeAlertPanel(panel);
+	NSReleaseAlertPanel(panel);
 	return self;
 }
 
@@ -266,7 +267,7 @@ id	project_i;
 		name = (char *)[wadList elementAt:i];
 		if (!strcmp(name, wf))
 		{
-			[[pis_wads_i matrixInColumn:0] selectCellAt: i : 0];
+			[[pis_wads_i matrixInColumn:0] selectCellAtRow:i column:0];
 			break;
 		}
 	}
@@ -311,12 +312,10 @@ id	project_i;
 	path = [preferences_i getProjectPath];
 	if (!path || !path[0] || access(path,0))
 	{
-		rtn = NXRunAlertPanel("Project Error!",
-			"A default project has not been found.\n"
-			, "Open Project", NULL, NULL);
+		rtn = NSRunAlertPanel(@"Project Error!", @"A default project has not been found.\n", @"Open Project", nil, nil);
 		if ([self openProject] == nil)
 			while (1)		// can't run without a project
-				[NXApp terminate: self];
+				[NSApp terminate:self];
 		return self;	
 	}
 
@@ -342,7 +341,7 @@ id	project_i;
 	stat(path,&s);
 	lastModified = s.st_mtime;
 
-	projectInfo = [(Dict *)[Dict alloc] initFromFile:fp];
+	projectInfo = [(Dict *)[Dict alloc] initWithContentsOfFile:[NSString stringWithCString:fp]];
 	fclose(fp);
 	
 	return self;
@@ -365,14 +364,18 @@ id	project_i;
 	char	**filenames;
 	char	*dir;
 	
-	openpanel = [OpenPanel new];
-	[openpanel allowMultipleFiles:NO];
+#warning FactoryMethods: [OpenPanel openPanel] used to be [OpenPanel new].  Open panels are no longer shared.  'openPanel' returns a new, autoreleased open panel in the default configuration.  To maintain state, retain and reuse one open panel (or manually re-set the state each time.)
+	openpanel = [NSOpenPanel openPanel];
+	[openpanel setAllowsMultipleSelection:NO];
 	[openpanel chooseDirectories:NO];
+#error StringConversion: Open panel types are now stored in an NSArray of NSStrings (used to use char**).  Change your variable declaration.
 	rtn = [openpanel runModalForTypes:projtypes];
-	if (rtn == NX_OKTAG)
+	if (rtn == NSOKButton)
 	{
+#error StringConversion: filenames now returns an NSArray of NSStrings (used to return a NULL terminated array of char * strings).  Change your variable declaration.
+#warning GeneralNamingConversion: 'filenames' now returns absolute paths
 		 (const char *const *)filenames = [openpanel filenames];
-		 dir = (char *)[openpanel directory];
+		 dir = (char *)[[openpanel directory] cString];
 		 sprintf(path,"%s/%s",dir,filenames[0]);
 		 strcpy(path_projectinfo,path);
 		 [self openProjectFile:path];

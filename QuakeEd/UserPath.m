@@ -9,18 +9,18 @@
 
 #import "UserPath.h"
 #import <mach/mach_init.h>
-#import <appkit/graphics.h>
-#import <appkit/errors.h>
+#import <AppKit/NSGraphics.h>
+#import <AppKit/NSErrors.h>
 #import <math.h>
 #import <libc.h>
 
-static NXZone      *upZone = NULL;
+static NSZone      *upZone = NULL;
 
-NXZone *userPathZone()
+NSZone *userPathZone()
 /* Creates a unique zone for use by all user paths */
 {
     if (!upZone) {
-	upZone = NXCreateZone(vm_page_size, vm_page_size, 1);
+	upZone = NSCreateZone(vm_page_size, vm_page_size, 1);
     }
     
     return upZone;
@@ -31,11 +31,11 @@ UserPath *newUserPath()
 {
     UserPath    *up;
 
-    up = (UserPath *)NXZoneMalloc(userPathZone(), sizeof(UserPath));
+    up = (UserPath *)NSZoneMalloc(userPathZone(), sizeof(UserPath));
     up->max = 8192;	// JDC
-    up->points = (float *)NXZoneMalloc(userPathZone(),
+    up->points = (float *)NSZoneMalloc(userPathZone(),
     				       sizeof(float) * up->max);
-    up->ops = (char *)NXZoneMalloc(userPathZone(),
+    up->ops = (char *)NSZoneMalloc(userPathZone(),
     				   (2 + (up->max / 2)) * sizeof(char));
     up->ping = NO;
     
@@ -62,9 +62,9 @@ void growUserPath(UserPath *up)
  /* double the size of the internal buffers */
 printf ("growUserPath\n");
     up->max *= 2;
-    up->points = (float *)NXZoneRealloc(userPathZone(), up->points,
+    up->points = (float *)NSZoneRealloc(userPathZone(), up->points,
 					sizeof(float) * up->max);
-    up->ops = (char *)NXZoneRealloc(userPathZone(), up->ops,
+    up->ops = (char *)NSZoneRealloc(userPathZone(), up->ops,
     				    (2 + (up->max / 2)) * sizeof(char));
 
     return;
@@ -133,20 +133,22 @@ int sendUserPath(UserPath *up)
  * server.
  */
 {
+#error FoundationConversion:  The NXHandler structure has been replaced by NSException objects.
     NXHandler           exception;
 
     exception.code = 0;
     if (up->opForUserPath != 0) {
-      NX_DURING
-	DPSDoUserPath(up->points, up->numberOfPoints, dps_float, up->ops,
+      NS_DURING
+	PSDoUserPath(up->points, up->numberOfPoints, dps_float, up->ops,
 		      up->numberOfOps, up->bbox, up->opForUserPath);
 	if (up->ping) {
-	    NXPing();
+	    PSWait();
 	}
 	
-      NX_HANDLER
+      NS_HANDLER
+#error FoundationConversion:  NXLocalHandler has been replaced by localException, an instance of NSException
 	exception = NXLocalHandler;
-      NX_ENDHANDLER
+      NS_ENDHANDLER
 	if (exception.code) {
 	    NXReportError(&exception);
 	    if (exception.code == dps_err_ps) {

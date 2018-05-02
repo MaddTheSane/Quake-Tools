@@ -13,11 +13,11 @@
 	[super init];
 	do
 	{
-		d = [(Dict *)[Dict alloc] initFromFile:fp];
+		d = [(Dict *)[Dict alloc] initWithContentsOfFile:[NSString stringWithCString:fp]];
 		if (d != NULL)
 			[self addObject:d];
 	} while(d != NULL);
-	[d free];
+	[d release];
 	
 	return self;
 }

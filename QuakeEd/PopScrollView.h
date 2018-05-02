@@ -1,11 +1,11 @@
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
-@interface PopScrollView : ScrollView
+@interface PopScrollView : NSScrollView
 {
 	id	button1, button2;
 }
 
-- initFrame:(const NXRect *)frameRect button1: b1 button2: b2;
-- tile;
+- initFrame:(const NSRect *)frameRect button1: b1 button2: b2;
+- (void)tile;
 
 @end

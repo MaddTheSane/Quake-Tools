@@ -21,7 +21,7 @@ typedef struct
 	
 	int			width;
 	int			height;
-	NXBitmapImageRep	*rep;
+	NSBitmapImageRep	*rep;
 	void		*data;
 	pixel32_t	flatcolor;
 } qtexture_t;
@@ -38,7 +38,7 @@ qtexture_t *TEX_ForName (char *name);
 typedef struct
 {
 	id		image;		// NXImage
-	NXRect	r;
+	NSRect	r;
 	char	*name;
 	int		index;
 	int		display;	// flag (on/off)
@@ -49,7 +49,7 @@ typedef struct
 
 extern	id texturepalette_i;
 
-@interface TexturePalette:Object
+@interface TexturePalette:NSObject
 {
 	char	currentwad[1024];
 	id	textureList_i;

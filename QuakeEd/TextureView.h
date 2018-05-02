@@ -1,6 +1,6 @@
 
 
-@interface TextureView:View
+@interface TextureView:NSView
 {
 	id	parent_i;
 	int	deselectIndex;

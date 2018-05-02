@@ -21,12 +21,14 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	return self;
 }
 
-- (BOOL)acceptsFirstMouse
+#warning ViewConversion: 'acceptsFirstMouse:' (used to be 'acceptsFirstMouse') now takes the event as an arg
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
 	return YES;
 }
 
-- drawSelf:(const NXRect *)rects :(int)rectCount
+#warning RectConversion: drawRect:(NSRect)rects (used to be drawSelf:(const NXRect *)rects :(int)rectCount) no longer takes an array of rects
+- (void)drawRect:(NSRect)rects
 {
 	int		i;
 	int		max;
@@ -34,8 +36,8 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	texpal_t *t;
 	int		x;
 	int		y;
-	NXPoint	p;
-	NXRect	r;
+	NSPoint	p;
+	NSRect	r;
 	int		selected;
 	
 	selected = [parent_i getSelectedTexture];
@@ -43,12 +45,12 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	PSselectfont("Helvetica-Medium",FONTSIZE);
 	PSrotate(0);
 	
-	PSsetgray(NX_LTGRAY);
-	PSrectfill(rects->origin.x, rects->origin.y, 
-		rects->size.width, rects->size.height);
+	PSsetgray(NSLightGray);
+	PSrectfill(rects.origin.x, rects.origin.y, 
+		rects.size.width, rects.size.height);
 
 	if (!list_i)		// WADfile didn't init
-		return self;
+		return;
 
 	if (deselectIndex != -1)
 	{
@@ -59,12 +61,12 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		r.size.width += TEX_INDENT*2;
 		r.size.height += TEX_INDENT*2;
 		
-		PSsetgray(NXGrayComponent(NX_COLORLTGRAY));
+		PSsetgray([[[NSColor lightGrayColor] colorUsingColorSpaceName:NSCalibratedWhiteColorSpace] whiteComponent]);
 		PSrectfill(r.origin.x, r.origin.y,
 			r.size.width, r.size.height);
 		p = t->r.origin;
 		p.y += TEX_SPACING;
-		[t->image drawAt:&p];
+		[t->image drawAtPoint:p];
 		PSsetgray(0);
 		x = t->r.origin.x;
 		y = t->r.origin.y + 7;
@@ -84,7 +86,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		r.origin.x -= TEX_INDENT/2;
 		r.size.width += TEX_INDENT;
 		r.origin.y += 4;
-		if (NXIntersectsRect(&rects[0],&r) == YES &&
+		if (!NSIsEmptyRect(NSIntersectionRect(&rects[0] , r)) == YES &&
 			t->display)
 		{
 			if (selected == i)
@@ -100,7 +102,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 			
 			p = t->r.origin;
 			p.y += TEX_SPACING;
-			[t->image drawAt:&p];
+			[t->image drawAtPoint:p];
 			x = t->r.origin.x;
 			y = t->r.origin.y + 7;
 			PSmoveto(x,y);
@@ -108,7 +110,6 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		}
 	}
 	PSstroke();
-	return self;
 }
 
 - deselect
@@ -117,19 +118,20 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	return self;
 }
 
-- mouseDown:(NXEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent 
 {
-	NXPoint	loc;
+	NSPoint	loc;
 	int		i;
 	int		max;
 	int		oldwindowmask;
 	texpal_t *t;
 	id		list;
-	NXRect	r;
+	NSRect	r;
 
-	oldwindowmask = [window addToEventMask:NX_LMOUSEDRAGGEDMASK];
-	loc = theEvent->location;
-	[self convertPoint:&loc	fromView:NULL];
+#error EventConversion: addToEventMask:NX_LMOUSEDRAGGEDMASK: is obsolete; you no longer need to use the eventMask methods; for mouse moved events, see 'setAcceptsMouseMovedEvents:'
+	oldwindowmask = [[self window] addToEventMask:NSLeftMouseDraggedMask];
+	loc = [theEvent locationInWindow];
+	loc = [self convertPoint:loc fromView:NULL];
 	
 	list = [parent_i getList];
 	max = [list count];
@@ -137,7 +139,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 	{
 		t = [list elementAt:i];
 		r = t->r;
-		if (NXPointInRect(&loc,&r) == YES)
+		if (NSPointInRect(loc , r) == YES)
 		{
 			[self deselect]; 
 			[parent_i	setSelectedTexture:i];
@@ -145,8 +147,8 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		}
 	}
 	
-	[window	setEventMask:oldwindowmask];
-	return self;
+#error EventConversion: setEventMask:oldwindowmask: is obsolete; you no longer need to use the eventMask methods; for mouse moved events, see 'setAcceptsMouseMovedEvents:'
+	[[self window] setEventMask:oldwindowmask];
 }
 
 @end

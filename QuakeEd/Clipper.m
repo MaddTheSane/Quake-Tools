@@ -40,7 +40,7 @@ id	clipper_i;
 	else
 	{
 		qprintf ("no clipplane");
-		NXBeep ();
+		NSBeep ();
 	}
 	
 	return self;
@@ -83,7 +83,7 @@ id	clipper_i;
 XYClick
 ================
 */
-- XYClick: (NXPoint)pt
+- XYClick: (NSPoint)pt
 {
 	int		i;
 	vec3_t	new;
@@ -123,7 +123,7 @@ XYClick
 XYDrag
 ================
 */
-- (BOOL)XYDrag: (NXPoint *)pt
+- (BOOL)XYDrag: (NSPoint *)pt
 {
 	int		i;
 	
@@ -138,7 +138,7 @@ XYDrag
 	return NO;
 }
 
-- ZClick: (NXPoint)pt
+- ZClick: (NSPoint)pt
 {
 	return self;
 }

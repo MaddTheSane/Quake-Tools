@@ -1,11 +1,11 @@
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import "mathlib.h"
 
 typedef enum {esize_model, esize_fixed} esize_t;
 
 #define	MAX_FLAGS	8
 
-@interface EntityClass : Object
+@interface EntityClass : NSObject
 {
 	char	*name;
 	esize_t	esize;

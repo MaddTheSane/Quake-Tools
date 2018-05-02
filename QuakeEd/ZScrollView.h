@@ -1,11 +1,11 @@
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
-@interface ZScrollView : ScrollView
+@interface ZScrollView : NSScrollView
 {
 	id	button1;
 }
 
-- initFrame:(const NXRect *)frameRect button1: b1;
-- tile;
+- initFrame:(const NSRect *)frameRect button1: b1;
+- (void)tile;
 
 @end

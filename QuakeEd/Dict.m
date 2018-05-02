@@ -31,14 +31,14 @@ copyFromZone
 JDC
 ===========
 */
-- copyFromZone:(NXZone *)zone
+- copyWithZone:(NSZone *)zone
 {
 	id	new;
 	int	i;
 	dict_t	*d;
 	char	*old;
 	
-	new = [super copyFromZone: zone];
+	new = [super copyWithZone:zone];
 	for (i=0 ; i<numElements ; i++)
 	{
 		d = [self elementAt: i];
@@ -54,10 +54,10 @@ JDC
 	return new;
 }
 
-- initFromFile:(FILE *)fp
+- initWithContentsOfFile:(NSString *)fp
 {
 	[self init];
-	return [self parseBraceBlock:fp];
+	return [self parseBraceBlock:[fp cString]];
 }
 
 //===============================================
@@ -202,7 +202,7 @@ JDC
 	
 	temp = [self parseMultipleFrom:key];
 	count = [temp count];
-	[temp free];
+	[temp release];
 	
 	return count;
 }
@@ -270,7 +270,7 @@ JDC
 			[temp removeElementAt:i];
 			free(d->value);
 			d->value = [self convertListToString:temp];
-			[temp free];
+			[temp release];
 			
 			break;
 		}

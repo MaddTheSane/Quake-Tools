@@ -1,5 +1,5 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #include <sys/stat.h>
 
 #define BASEPATHKEY		"basepath"
@@ -19,7 +19,7 @@
 
 extern	id project_i;
 
-@interface Project:Object
+@interface Project:NSObject
 {
 	id	projectInfo;		// dictionary storage of project info
 

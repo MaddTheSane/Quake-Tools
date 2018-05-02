@@ -1,5 +1,5 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import <ctype.h>
 #import <sys/types.h>
 #import <sys/dir.h>
@@ -32,7 +32,7 @@
 #import "Clipper.h"
 
 
-void PrintRect (NXRect *r);
+void PrintRect (NSRect *r);
 int	FileTime (char *path);
 void Sys_UpdateFile (char *path, char *netpath);
 void CleanupName (char *in, char *out);

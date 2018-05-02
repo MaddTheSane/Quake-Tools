@@ -1,5 +1,5 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 #import "mathlib.h"
 
 extern	id zview_i;
@@ -8,7 +8,7 @@ extern	id zview_i;
 extern	float	zplane;
 extern	float	zplanedir;
 
-@interface ZView :  View
+@interface ZView :  NSView
 {
 	float		minheight, maxheight;
 	float		oldminheight, oldmaxheight;
@@ -22,8 +22,8 @@ extern	float	zplanedir;
 - clearBounds;
 - getBounds: (float *)top :(float *)bottom;
 
-- getPoint: (NXPoint *)pt;
-- setPoint: (NXPoint *)pt;
+- getPoint: (NSPoint *)pt;
+- setPoint: (NSPoint *)pt;
 
 - addToHeightRange: (float)height;
 
@@ -32,11 +32,11 @@ extern	float	zplanedir;
 
 - XYDrawSelf;
 
-- (BOOL)XYmouseDown: (NXPoint *)pt;
+- (BOOL)XYmouseDown: (NSPoint *)pt;
 
-- setXYOrigin: (NXPoint *)pt;
+- setXYOrigin: (NSPoint *)pt;
 
-- setOrigin: (NXPoint *)pt scale: (float)sc;
+- setOrigin: (NSPoint *)pt scale: (float)sc;
 
 @end
 

@@ -1,8 +1,9 @@
 
 extern	id	keypairview_i;
 
-@interface KeypairView:View
+@interface KeypairView:NSView
 {
+
 }
 
 - calcViewSize;

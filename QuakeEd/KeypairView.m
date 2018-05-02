@@ -10,9 +10,9 @@ id	keypairview_i;
 initFrame:
 ==================
 */
-- initFrame:(const NXRect *)frameRect
+- initWithFrame:(NSRect)frameRect
 {
-	[super initFrame:frameRect];
+	[super initWithFrame:frameRect];
 	keypairview_i = self;
 	return self;
 }
@@ -20,41 +20,43 @@ initFrame:
 
 - calcViewSize
 {
-	NXCoord	w;
-	NXCoord	h;
-	NXRect	b;
-	NXPoint	pt;
+	float	w;
+	float	h;
+	NSRect	b;
+	NSPoint	pt;
 	int		count;
 	id		ent;
 	
 	ent = [map_i currentEntity];
 	count = [ent numPairs];
 
-	[superview setFlipped: YES];
+#error ViewConversion: '[NSView setFlipped:]' is obsolete; you must override 'isFlipped' instead of setting externally. However, [NSImage setFlipped:] is not obsolete. If that is what you are using here, no change is needed.
+	[[self superview] setFlipped:YES];
 	
-	[superview getBounds:&b];
+	b = [[self superview] bounds];
 	w = b.size.width;
 	h = LINEHEIGHT*count + SPACING;
-	[self	sizeTo:w :h];
+	[self setFrameSize:NSMakeSize(w, h)];
 	pt.x = pt.y = 0;
-	[self scrollPoint: &pt];
+	[self scrollPoint:pt];
 	return self;
 }
 
-- drawSelf:(const NXRect *)rects :(int)rectCount
+#warning RectConversion: drawRect:(NSRect)rects (used to be drawSelf:(const NXRect *)rects :(int)rectCount) no longer takes an array of rects
+- (void)drawRect:(NSRect)rects
 {
 	epair_t	*pair;
 	int		y;
 	
-	PSsetgray(NXGrayComponent(NX_COLORLTGRAY));
-	PSrectfill(0,0,bounds.size.width,bounds.size.height);
+	PSsetgray([[[NSColor lightGrayColor] colorUsingColorSpaceName:NSCalibratedWhiteColorSpace] whiteComponent]);
+	PSrectfill(0,0,[self bounds].size.width,[self bounds].size.height);
 		
 	PSselectfont("Helvetica-Bold",FONTSIZE);
 	PSrotate(0);
 	PSsetgray(0);
 	
 	pair = [[map_i currentEntity] epairs];
-	y = bounds.size.height - LINEHEIGHT;
+	y = [self bounds].size.height - LINEHEIGHT;
 	for ( ; pair ; pair=pair->next)
 	{
 		PSmoveto(SPACING, y);
@@ -64,33 +66,29 @@ initFrame:
 		y -= LINEHEIGHT;
 	}
 	PSstroke();
-	
-	return self;
 }
 
-- mouseDown:(NXEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent 
 {
-	NXPoint	loc;
+	NSPoint	loc;
 	int		i;
 	epair_t	*p;
 
-	loc = theEvent->location;
-	[self convertPoint:&loc	fromView:NULL];
+	loc = [theEvent locationInWindow];
+	loc = [self convertPoint:loc fromView:NULL];
 	
-	i = (bounds.size.height - loc.y - 4) / LINEHEIGHT;
+	i = ([self bounds].size.height - loc.y - 4) / LINEHEIGHT;
 
 	p = [[map_i currentEntity] epairs];
 	while (	i )
 	{
 		p=p->next;
 		if (!p)
-			return self;
+			return;
 		i--;
 	}
 	if (p)
 		[things_i setSelectedKey: p];
-	
-	return self;
 }
 
 @end

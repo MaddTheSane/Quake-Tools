@@ -89,7 +89,7 @@ TEX_ImageFromMiptex
 */
 void TEX_ImageFromMiptex (miptex_t *qtex)
 {
-	NXBitmapImageRep	*bm;
+	NSBitmapImageRep	*bm;
 	byte		*source;
 	unsigned	*dest;
 	int			width, height, i, count;
@@ -99,17 +99,11 @@ void TEX_ImageFromMiptex (miptex_t *qtex)
 	width = LittleLong(qtex->width);
 	height = LittleLong(qtex->height);
 
-	bm = [[NXBitmapImageRep alloc]	
-			initData:		NULL 
-			pixelsWide:		width 
-			pixelsHigh:		height 
-			bitsPerSample:	8 
-			samplesPerPixel:3 
-			hasAlpha:		NO
-			isPlanar:		NO 
-			colorSpace:		NX_RGBColorSpace 
-			bytesPerRow:	width*4 
-			bitsPerPixel:	32];
+	{
+	unsigned char *conversion_tmp[5] = {NULL}; 
+	conversion_tmp[0] = NULL; 
+	bm = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:&conversion_tmp[0] pixelsWide:width pixelsHigh:height bitsPerSample:8 samplesPerPixel:3 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:width*4 bitsPerPixel:32];
+	};
 	
 	dest = (unsigned *)[bm data];
 	count = width*height;
@@ -184,7 +178,7 @@ void	TEX_InitFromWad (char *path)
 	
 // free any textures
 	for (i=0 ; i<tex_count ; i++)
-		[qtextures[i].rep free];
+		[qtextures[i].rep release];
 	tex_count = 0;
 
 // try and use the cached wadfile	
@@ -265,10 +259,9 @@ qtexture_t *TEX_ForName (char *name)
 	return self;
 }
 
-- display
+- (void)display
 {
 	[[textureView_i superview] display];
-	return self;
 }
 
 
@@ -372,10 +365,10 @@ qtexture_t *TEX_ForName (char *name)
 	texpal_t *t;
 	int		y;
 	id		view;
-	NXRect	b;
+	NSRect	b;
 	int		maxwidth;
 	int		maxheight;
-	NXPoint	pt;
+	NSPoint	pt;
 	
 	max = [textureList_i count];
 	y = 0;
@@ -383,7 +376,7 @@ qtexture_t *TEX_ForName (char *name)
 	x = TEX_INDENT;
 
 	view = [textureView_i superview];
-	[view getBounds:&b];
+	b = [view bounds];
 	maxwidth = b.size.width;
 
 	for (i = 0;i < max; i++)
@@ -406,9 +399,9 @@ qtexture_t *TEX_ForName (char *name)
 
 	viewWidth = maxwidth;
 	viewHeight = y + TEX_SPACING;
-	[textureView_i sizeTo:viewWidth :viewHeight];
+	[textureView_i setFrameSize:NSMakeSize(viewWidth, viewHeight)];
 	pt.x = pt.y = 0;
-	[textureView_i scrollPoint:&pt];
+	[textureView_i scrollPoint:pt];
 
 	return self;
 }
@@ -431,17 +424,17 @@ qtexture_t *TEX_ForName (char *name)
 		else
 			qprintf ("can't modify spawned entities");
 	}
-	[quakeed_i makeFirstResponder: quakeed_i];
+	[quakeed_i makeFirstResponder:quakeed_i];
 	return self;
 }
 
 - clearTexinfo: sender
 {
-	[field_Xshift_i	setFloatValue:0];
-	[field_Yshift_i	setFloatValue:0];
-	[field_Xscale_i	setFloatValue:1];
-	[field_Yscale_i	setFloatValue:1];
-	[field_Rotate_i	setFloatValue:0];
+	[field_Xshift_i setFloatValue:0];
+	[field_Yshift_i setFloatValue:0];
+	[field_Xscale_i setFloatValue:1];
+	[field_Yscale_i setFloatValue:1];
+	[field_Rotate_i setFloatValue:0];
 	
 	[self texturedefChanged: self];
 
@@ -454,7 +447,7 @@ qtexture_t *TEX_ForName (char *name)
 - setSelectedTexture:(int)which
 {
 	texpal_t *t;
-	NXRect	r;
+	NSRect	r;
 	char	string[16];
 
 // wipe the fields
@@ -470,11 +463,11 @@ qtexture_t *TEX_ForName (char *name)
 		r.size.height += TEX_INDENT*2;
 		r.origin.x -= TEX_INDENT;
 		r.origin.y -= TEX_INDENT;
-		[textureView_i scrollRectToVisible:&r];
+		[textureView_i scrollRectToVisible:r];
 		[textureView_i display];
 		sprintf(string,"%d x %d",(int)t->r.size.width,
 			(int)t->r.size.height - TEX_SPACING);
-		[sizeField_i setStringValue:string];
+		[sizeField_i setStringValue:[NSString stringWithCString:string]];
 	}
 
 	[self texturedefChanged:self];
@@ -562,8 +555,8 @@ qtexture_t *TEX_ForName (char *name)
 		return self;
 
 	max = [textureList_i count];
-	strcpy(name,(const char *)[sender stringValue]);
-	[sender setStringValue:strupr(name)];
+	strcpy(name,(const char *)[[sender stringValue] cString]);
+	[sender setStringValue:[NSString stringWithCString:strupr(name)]];
 	len = strlen(name);
 	
 	for (i = selectedTexture-1;i >= 0; i--)
@@ -601,11 +594,11 @@ qtexture_t *TEX_ForName (char *name)
 {
 	[self setTextureByName:td->texture];
 
-	[field_Xshift_i	setFloatValue:td->shift[0]];
-	[field_Yshift_i	setFloatValue:td->shift[1]];
-	[field_Xscale_i	setFloatValue:td->scale[0]];
-	[field_Yscale_i	setFloatValue:td->scale[1]];
-	[field_Rotate_i	setFloatValue:td->rotate];
+	[field_Xshift_i setFloatValue:td->shift[0]];
+	[field_Yshift_i setFloatValue:td->shift[1]];
+	[field_Xscale_i setFloatValue:td->scale[0]];
+	[field_Yscale_i setFloatValue:td->scale[1]];
+	[field_Rotate_i setFloatValue:td->rotate];
 
 	[self texturedefChanged:self];
 	
@@ -700,13 +693,13 @@ qtexture_t *TEX_ForName (char *name)
 //
 - incXScale:sender
 {
-	[field_Xscale_i setIntValue: 1];
+	[field_Xscale_i setIntValue:1];
 	[self texturedefChanged:self];
 	return self;
 }
 - decXScale:sender
 {
-	[field_Xscale_i setIntValue: -1];
+	[field_Xscale_i setIntValue:-1];
 	[self texturedefChanged:self];
 	return self;
 }
@@ -716,13 +709,13 @@ qtexture_t *TEX_ForName (char *name)
 //
 - incYScale:sender
 {
-	[field_Yscale_i setIntValue: 1];
+	[field_Yscale_i setIntValue:1];
 	[self texturedefChanged:self];
 	return self;
 }
 - decYScale:sender
 {
-	[field_Yscale_i setIntValue: -1];
+	[field_Yscale_i setIntValue:-1];
 	[self texturedefChanged:self];
 	return self;
 }

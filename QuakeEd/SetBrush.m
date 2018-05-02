@@ -621,12 +621,12 @@ initOwner:::
 	return self;
 }
 
-- copyFromZone:(NXZone *)zone
+- copyWithZone:(NSZone *)zone
 {
 	id	new;
 	
 	[self freeWindings];
-	new = [super copyFromZone: zone];
+	new = [super copyWithZone:zone];
 	
 	[self calcWindings];
 	[new calcWindings];
@@ -634,10 +634,10 @@ initOwner:::
 	return new;
 }
 
-- free
+- (void)dealloc
 {
 	[self freeWindings];
-	return [super free];
+	{ [super dealloc]; return; };
 }
 
 /*
@@ -1098,7 +1098,7 @@ BOOL	fakebrush;
 	if (copy)
 	{
 		[copy perform:call];
-		[copy free];
+		[copy release];
 	}
 	fakebrush = NO;
 	return YES;
@@ -1228,7 +1228,7 @@ ZDrawSelf
 		PSstroke ();
 	}
 
-	[zview_i getPoint: (NXPoint *)p1];
+	[zview_i getPoint: (NSPoint *)p1];
 	
 	for (i=0 ; i<2 ; i++)
 		if (bmins[i] >= p1[i] || bmaxs[i] <= p1[i])
@@ -1726,7 +1726,7 @@ id	sb_newowner;
 	parent = sb_newowner;
 	
 // hack to allow them to be copied to another map
-	if ( [parent respondsTo:@selector(valueForQKey:)])
+	if ( [parent respondsToSelector:@selector(valueForQKey:)])
 	{
 		eclass = [entity_classes_i classForName: [parent valueForQKey: "classname"]];
 		c = [eclass drawColor];
@@ -1816,7 +1816,7 @@ vec3_t	sb_mins, sb_maxs;
 	}
 
 	[parent removeObject: self];
-	[self free];
+	[self release];
 
 	return nil;
 }

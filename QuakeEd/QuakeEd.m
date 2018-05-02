@@ -26,7 +26,7 @@ char	*leakcmd = "rsh satan \"/LocalApps/qbsp -mark -notjunc $1 $2\"";
 
 void NopSound (void)
 {
-	NXBeep ();
+	NSBeep ();
 }
 
 UserPath	*upath;
@@ -45,7 +45,7 @@ AutoSave
 Every five minutes, save a modified map
 ===============
 */
-void AutoSave(DPSTimedEntry tag, double now, void *userData)
+void AutoSave(NSTimer *tag, double now, void *userData)
 {
 // automatic backup
 	if (autodirty)
@@ -71,7 +71,7 @@ void DisplayCmdOutput (void)
 
 	[preferences_i playBspSound];		
 	
-	NXPing ();
+	PSWait ();
 }
 
 /*
@@ -81,8 +81,8 @@ CheckCmdDone
 See if the BSP is done
 ===============
 */
-DPSTimedEntry	cmdte;
-void CheckCmdDone(DPSTimedEntry tag, double now, void *userData)
+NSTimer *cmdte;
+void CheckCmdDone(NSTimer *tag, double now, void *userData)
 {
     union wait statusp;
     struct rusage rusage;
@@ -91,7 +91,7 @@ void CheckCmdDone(DPSTimedEntry tag, double now, void *userData)
 		return;
 	DisplayCmdOutput ();
 	bsppid = 0;
-	DPSRemoveTimedEntry( cmdte );	
+	[cmdte invalidate]; [cmdte release];;	
 }
 
 //============================================================================
@@ -103,27 +103,20 @@ void CheckCmdDone(DPSTimedEntry tag, double now, void *userData)
 init
 ===============
 */
-- initContent:(const NXRect *)contentRect
-style:(int)aStyle
-backing:(int)backingType
-buttonMask:(int)mask
-defer:(BOOL)flag
+- initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)backingType defer:(BOOL)flag
 {
-	[super initContent:contentRect
-		style:aStyle
-		backing:backingType
-		buttonMask:mask
-		defer:flag];
+	[super initWithContentRect:contentRect styleMask:aStyle|mask backing:backingType defer:flag];
 
-	[self addToEventMask:
-		NX_RMOUSEDRAGGEDMASK|NX_LMOUSEDRAGGEDMASK];	
+#error EventConversion: addToEventMask:NX_RMOUSEDRAGGEDMASK|NX_LMOUSEDRAGGEDMASK: is obsolete; you no longer need to use the eventMask methods; for mouse moved events, see 'setAcceptsMouseMovedEvents:'
+	[self addToEventMask:NSRightMouseDraggedMask|NSLeftMouseDraggedMask];	
 	
     malloc_error(My_Malloc_Error);
 	
 	quakeed_i = self;
 	dirty = autodirty = NO;
 
-	DPSAddTimedEntry(5*60, AutoSave, self, NX_BASETHRESHOLD);
+#error DPSConversion: 'scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:' used to be DPSAddTimedEntry(5*60, AutoSave, self, NSBaseThreshhold).  AutoSave should be converted to a method with one argument (the timer), and <target> should be converted to the implementor of that method ([aTarget aSelector:timer]).  The argument to userInfo: needs to be converted to an object and can be retrieved with [timer userInfo].
+	[[NSTimer scheduledTimerWithTimeInterval:5*60 target:<target> selector:AutoSave userInfo:self repeats:YES] retain];
 
 	upath = newUserPath ();
 
@@ -133,7 +126,7 @@ defer:(BOOL)flag
 - setDefaultFilename
 {	
 	strcpy (filename, FN_TEMPSAVE);
-	[self setTitleAsFilename:filename];
+	[self setTitleWithRepresentedFilename:[NSString stringWithCString:filename]];
 	
 	return self;
 }
@@ -162,14 +155,15 @@ BOOL	updatecamera;
 
 void postappdefined (void)
 {
-	NXEvent ev;
+	NSEvent *ev;
 
 	if (updateinflight)
 		return;
 			
 // post an event at the end of the que
-	ev.type = NX_APPDEFINED;
-	if (DPSPostEvent(&ev, 0) == -1)
+#error EventConversion: NSEvents are immutable.
+	[ev type] = NSApplicationDefined;
+	if ([window postEvent:ev atStart:0] == -1)
 		printf ("WARNING: DPSPostEvent: full\n");
 //printf ("posted\n");
 	updateinflight = YES;
@@ -235,15 +229,15 @@ flushWindow
 instance draw the brush after each flush
 ===============
 */
--flushWindow
+- (void)flushWindow
 {
 	[super flushWindow];
 	
 	if (!running || in_error)
-		return self;		// don't lock focus before nib is finished loading
+		return;		// don't lock focus before nib is finished loading
 		
 	if (_flushDisabled)
-		return self;
+		return;
 		
 	[cameraview_i lockFocus];	
 	if (clearinstance)
@@ -278,8 +272,6 @@ instance draw the brush after each flush
 	[clipper_i ZDrawSelf];
 	PSsetinstance (0);
 	[zview_i unlockFocus];
-
-	return self;
 }
 
 
@@ -291,16 +283,17 @@ App delegate methods
 ==============================================================================
 */
 
-- applicationDefined:(NXEvent *)theEvent
+#error Application Conversion: 'applicationDefined:' is obsolete. Override sendEvent to catch this event
+- applicationDefined:(NSEvent *)theEvent 
 {
-	NXEvent		ev, *evp;
+	NSEvent *ev, *evp;
 	
 	updateinflight = NO;
 
 //printf ("serviced\n");
 	
 // update screen	
-	evp = [NXApp peekNextEvent:-1 into:&ev];
+	evp = [NSApp peekNextEvent:-1 into:ev];
 	if (evp)
 	{
 		postappdefined();
@@ -311,9 +304,9 @@ App delegate methods
 	[self disableFlushWindow];	
 
 	if ([map_i count] != [entitycount_i intValue])
-		[entitycount_i setIntValue: [map_i count]];
+		[entitycount_i setIntValue:[map_i count]];
 	if ([[map_i currentEntity] count] != [brushcount_i intValue])
-		[brushcount_i setIntValue: [[map_i currentEntity] count]];
+		[brushcount_i setIntValue:[[map_i currentEntity] count]];
 		
 	if (updatecamera)
 		[cameraview_i display];
@@ -324,7 +317,7 @@ App delegate methods
 
 	updatecamera = updatexy = updatez = NO;
 
-	[self reenableFlushWindow];
+	[self enableFlushWindow];
 	[self flushWindow];
 	
 //	NXPing ();
@@ -332,9 +325,11 @@ App delegate methods
 	return self;
 }
 
-- appDidInit:sender
+#warning NotificationConversion: applicationDidFinishLaunching:(NSNotification *)notification (used to be appDidInit:) is an NSApplication notification method (used to be a delegate method); delegates of NSApplication are automatically set to observe this notification; subclasses of NSApplication do not automatically receive this notification
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-	NXScreen	const *screens;
+	NSApplication *theApplication = [notification object];
+    NSScreen *const **screens;
 	int			screencount;
 	
 	running = YES;
@@ -347,31 +342,28 @@ App delegate methods
 											// scrollview and can't be
 											// connected directly in IB
 	
-	[self setFrameAutosaveName:"EditorWinFrame"];
-	[self clear: self];
+	[self setFrameAutosaveName:@"EditorWinFrame"];
+	[self clear:self];
 
 // go to my second monitor
-	[NXApp getScreens:&screens count:&screencount];
+#error ScreenConversion: 'getScreens:count:' has been replaced by NSScreen 'screens' (returning an NSArray instance)
+	[NSApp getScreens:screens count:&screencount];
 	if (screencount == 2)
-		[self moveTopLeftTo:0 : screens[1].screenBounds.size.height
+		[self moveTopLeftTo:0 : [screens[1] frame].size.height
 		screen:screens+1];
 	
-	[self makeKeyAndOrderFront: self];
+	[self makeKeyAndOrderFront:self];
 
 //[self doOpen: "/raid/quake/id1_/maps/amlev1.map"];	// DEBUG
 	[map_i newMap];
 		
 	qprintf ("ready.");
-
-//malloc_debug(-1);		// DEBUG
-	
-	return self;
 }
 
-- appWillTerminate:sender
+- (BOOL)applicationShouldTerminate:(id)sender
 {
 // FIXME: save dialog if dirty
-	return self;
+	return YES;
 }
 
 
@@ -381,7 +373,7 @@ App delegate methods
 {
 	char	const *t;
 	
-	t = [sender stringValue];
+	t = [[sender stringValue] cString];
 	
 	if (!strcmp (t, "texname"))
 	{
@@ -411,23 +403,21 @@ App delegate methods
 }
 
 
-- clear: sender
+- (void)clear:(id)sender
 {	
 	[map_i newMap];
 
 	[self updateAll];
-	[regionbutton_i setIntValue: 0];
+	[regionbutton_i setIntValue:0];
 	[self setDefaultFilename];
-
-	return self;
 }
 
 
 - centerCamera: sender
 {
-	NXRect	sbounds;
+	NSRect	sbounds;
 	
-	[[xyview_i superview] getBounds: &sbounds];
+	sbounds = [[xyview_i superview] bounds];
 	
 	sbounds.origin.x += sbounds.size.width/2;
 	sbounds.origin.y += sbounds.size.height/2;
@@ -440,9 +430,9 @@ App delegate methods
 
 - centerZChecker: sender
 {
-	NXRect	sbounds;
+	NSRect	sbounds;
 	
-	[[xyview_i superview] getBounds: &sbounds];
+	sbounds = [[xyview_i superview] bounds];
 	
 	sbounds.origin.x += sbounds.size.width/2;
 	sbounds.origin.y += sbounds.size.height/2;
@@ -520,7 +510,7 @@ applyRegion:
 	[b remove];
 
 // turn region on
-	[regionbutton_i setIntValue: 1];
+	[regionbutton_i setIntValue:1];
 	[self applyRegion: self];
 	
 	return self;
@@ -528,10 +518,10 @@ applyRegion:
 
 - setXYRegion: sender
 {
-	NXRect	bounds;
+	NSRect	bounds;
 	
 // get xy size
-	[[xyview_i superview] getBounds: &bounds];
+	bounds = [[xyview_i superview] bounds];
 
 	region_min[0] = bounds.origin.x;
 	region_min[1] = bounds.origin.y;
@@ -541,7 +531,7 @@ applyRegion:
 	region_max[2] = 99999;
 	
 // turn region on
-	[regionbutton_i setIntValue: 1];
+	[regionbutton_i setIntValue:1];
 	[self applyRegion: self];
 	
 	return self;
@@ -610,7 +600,7 @@ saveBSP
 	
 	if (bsppid)
 	{
-		NXBeep();
+		NSBeep();
 		return self;
 	}
 
@@ -668,16 +658,18 @@ saveBSP
 	{
 		id		panel;
 		
-		panel = NXGetAlertPanel("BSP In Progress",expandedcmd,NULL,NULL,NULL);
+		panel = NSGetAlertPanel("BSP In Progress",expandedcmd,NULL,NULL,NULL);
 		[panel makeKeyAndOrderFront:NULL];
 		system(expandedcmd);
-		NXFreeAlertPanel(panel);
+		NSReleaseAlertPanel(panel);
 		[self makeKeyAndOrderFront:NULL];
 		DisplayCmdOutput ();
 	}
 	else
 	{
-		cmdte = DPSAddTimedEntry(1, CheckCmdDone, self, NX_BASETHRESHOLD);
+#error DPSConversion: cmdte should be converted from a DPSTimedEntry to an NSTimer object
+#error DPSConversion: 'scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:' used to be DPSAddTimedEntry(1, CheckCmdDone, self, NSBaseThreshhold).  CheckCmdDone should be converted to a method with one argument (the timer), and <target> should be converted to the implementor of that method ([aTarget aSelector:timer]).  The argument to userInfo: needs to be converted to an object and can be retrieved with [timer userInfo].
+		cmdte = [[NSTimer scheduledTimerWithTimeInterval:1 target:<target> selector:CheckCmdDone userInfo:self repeats:YES] retain];
 		if (! (bsppid = fork ()) )
 		{
 			system (expandedcmd);
@@ -723,7 +715,7 @@ saveBSP
 {
 	if (!bsppid)
 	{
-		NXBeep();
+		NSBeep();
 		return self;
 	}
 	
@@ -749,8 +741,8 @@ Called by open or the project panel
 	
 	[map_i readMapFile:filename];
 	
-	[regionbutton_i setIntValue: 0];
-	[self setTitleAsFilename:fname];
+	[regionbutton_i setIntValue:0];
+	[self setTitleWithRepresentedFilename:[NSString stringWithCString:fname]];
 	[self updateAll];
 
 	qprintf ("%s loaded\n", fname);
@@ -769,15 +761,14 @@ open
 	id			openpanel;
 	static char	*suffixlist[] = {"map", 0};
 
-	openpanel = [OpenPanel new];
+#warning FactoryMethods: [OpenPanel openPanel] used to be [OpenPanel new].  Open panels are no longer shared.  'openPanel' returns a new, autoreleased open panel in the default configuration.  To maintain state, retain and reuse one open panel (or manually re-set the state each time.)
+	openpanel = [NSOpenPanel openPanel];
 
-	if ( [openpanel 
-			runModalForDirectory: [project_i getMapDirectory] 
-			file: ""
-			types: suffixlist] != NX_OKTAG)
+#error StringConversion: Open panel types are now stored in an NSArray of NSStrings (used to use char**).  Change your variable declaration.
+	if ( [openpanel runModalForDirectory:[NSString stringWithCString:[project_i getMapDirectory]] file:@"" types:suffixlist] != NSOKButton)
 		return self;
 
-	[self doOpen: (char *)[openpanel filename]];
+	[self doOpen: (char *)[[openpanel filename] cString]];
 	
 	return self;
 }
@@ -819,15 +810,16 @@ saveAs
 	id		panel_i;
 	char	dir[1024];
 	
-	panel_i = [SavePanel new];
+#warning FactoryMethods: [SavePanel savePanel] used to be [SavePanel new].  Save panels are no longer shared.  'savePanel' returns a new, autoreleased save panel in the default configuration.  To maintain state, retain and reuse one save panel (or manually re-set the state each time.)
+	panel_i = [NSSavePanel savePanel];
 	ExtractFileBase (filename, dir);
-	[panel_i setRequiredFileType: "map"];
-	if ( [panel_i runModalForDirectory:[project_i getMapDirectory] file: dir] != NX_OKTAG)
+	[panel_i setRequiredFileType:@"map"];
+	if ( [panel_i runModalForDirectory:@"" file:@""] != NSOKButton)
 		return self;
 	
-	strcpy (filename, [panel_i filename]);
+	strcpy (filename, [[panel_i filename] cString]);
 	
-	[self setTitleAsFilename:filename];
+	[self setTitleWithRepresentedFilename:[NSString stringWithCString:filename]];
 	
 	[self save: self];	
 	
@@ -876,57 +868,58 @@ keyDown
 #define	KEY_UPARROW			0xad
 #define	KEY_DOWNARROW		0xaf
 
-- keyDown:(NXEvent *)theEvent
+- (void)keyDown:(NSEvent *)theEvent 
 {
     int		ch;
 	
 // function keys
-	switch (theEvent->data.key.keyCode)
+	switch ([theEvent keyCode])
 	{
 	case 60:	// F2
 		[cameraview_i setDrawMode: dr_wire];
 		qprintf ("wire draw mode");
-		return self;
+		return;
 	case 61:	// F3
 		[cameraview_i setDrawMode: dr_flat];
 		qprintf ("flat draw mode");
-		return self;
+		return;
 	case 62:	// F4
 		[cameraview_i setDrawMode: dr_texture];
 		qprintf ("texture draw mode");
-		return self;
+		return;
 
 	case 63:	// F5
 		[xyview_i setDrawMode: dr_wire];
 		qprintf ("wire draw mode");
-		return self;
+		return;
 	case 64:	// F6
 		qprintf ("texture draw mode");
-		return self;
+		return;
 		
 	case 66:	// F8
 		[cameraview_i homeView: self];
-		return self;
+		return;
 		
 	case 88:	// F12
 		[map_i subtractSelection: self];
-		return self;
+		return;
 
 	case 106:	// page up
 		[cameraview_i upFloor: self];
-		return self;
+		return;
 		
 	case 107:	// page down
 		[cameraview_i downFloor: self];
-		return self;
+		return;
 		
 	case 109:	// end
 		[self deselect: self];
-		return self;
+		return;
 	}
 
 // portable things
-    ch = tolower(theEvent->data.key.charCode);
+#error EventConversion: the 'characters' method of NSEvent replaces the '.data.key.charCode' field of NXEvent. Use 'charactersIgnoringModifiers' to get the chars that would have been generated regardless of modifier keys (except shift)
+    ch = tolower([theEvent characters]);
 		
 	switch (ch)
 	{
@@ -946,7 +939,7 @@ keyDown
 	case 27:	// escape
 		autodirty = dirty = YES;
 		[self deselect: self];
-		return self;
+		return;
 		
 	case 127:	// delete
 		autodirty = dirty = YES;
@@ -1018,8 +1011,6 @@ keyDown
 		NopSound ();
 		break;
 	}
-
-    return self;
 }
 
 

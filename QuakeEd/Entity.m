@@ -43,7 +43,7 @@ vec3_t bad_maxs = {8, 8, 8};
 	return self;
 }
 
-- copyFromZone:(NXZone *)zone
+- copyWithZone:(NSZone *)zone
 {
 	id	new, nb;
 	epair_t	*e;
@@ -108,7 +108,7 @@ vec3_t bad_maxs = {8, 8, 8};
 }
 
 
-- free
+- (void)dealloc
 {
 	epair_t	*e, *n;
 	
@@ -117,7 +117,7 @@ vec3_t bad_maxs = {8, 8, 8};
 		n = e->next;
 		free (e);
 	}
-	return [super free];
+	{ [super dealloc]; return; };
 }
 
 - (BOOL)modifiable
@@ -141,7 +141,7 @@ vec3_t bad_maxs = {8, 8, 8};
 		return o;	// never remove the world
 		
 	[map_i removeObject: self];
-	[self free];
+	[self release];
 
 	return o;
 }
@@ -329,7 +329,7 @@ int	nument;
 
 	if (!GetToken (true))
 	{
-		[self free];
+		[self release];
 		return nil;
 	}
 

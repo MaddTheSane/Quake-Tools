@@ -14,12 +14,12 @@ float		xy_viewdist;		// clip behind this plane
 initFrame:
 ==================
 */
-- initFrame:(const NXRect *)frameRect
+- initWithFrame:(NSRect)frameRect
 {
-	[super initFrame:frameRect];
+	[super initWithFrame:frameRect];
 	[self allocateGState];
 	
-	NXSetRect (&realbounds, 0,0,0,0);
+	realbounds = NSMakeRect(0, 0, 0, 0);
 	
 	gridsize = 16;
 	scale = 1.0;
@@ -31,49 +31,53 @@ initFrame:
 //		
 // initialize the pop up menus
 //
-	scalemenu_i = [[PopUpList alloc] init];
-	[scalemenu_i setTarget: self];
-	[scalemenu_i setAction: @selector(scaleMenuTarget:)];
+	scalemenu_i = [[NSPopUpButton alloc] init];
+	[scalemenu_i setTarget:self];
+	[scalemenu_i setAction:@selector(scaleMenuTarget:)];
 
-	[scalemenu_i addItem: "12.5%"];
-	[scalemenu_i addItem: "25%"];
-	[scalemenu_i addItem: "50%"];
-	[scalemenu_i addItem: "75%"];
-	[scalemenu_i addItem: "100%"];
-	[scalemenu_i addItem: "200%"];
-	[scalemenu_i addItem: "300%"];
-	[[scalemenu_i itemList] selectCellAt: 4 : 0];
+	[scalemenu_i addItem:@"12.5%"];
+	[scalemenu_i addItem:@"25%"];
+	[scalemenu_i addItem:@"50%"];
+	[scalemenu_i addItem:@"75%"];
+	[scalemenu_i addItem:@"100%"];
+	[scalemenu_i addItem:@"200%"];
+	[scalemenu_i addItem:@"300%"];
+#warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
+#warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
+	[[scalemenu_i itemMatrix] selectCellAtRow:4 column:0];
 	
-	scalebutton_i = NXCreatePopUpListButton(scalemenu_i);
+	scalebutton_i = NSCreatePopUpListButton(scalemenu_i);
 
 
-	gridmenu_i = [[PopUpList alloc] init];
-	[gridmenu_i setTarget: self];
-	[gridmenu_i setAction: @selector(gridMenuTarget:)];
+	gridmenu_i = [[NSPopUpButton alloc] init];
+	[gridmenu_i setTarget:self];
+	[gridmenu_i setAction:@selector(gridMenuTarget:)];
 
-	[gridmenu_i addItem: "grid 1"];
-	[gridmenu_i addItem: "grid 2"];
-	[gridmenu_i addItem: "grid 4"];
-	[gridmenu_i addItem: "grid 8"];
-	[gridmenu_i addItem: "grid 16"];
-	[gridmenu_i addItem: "grid 32"];
-	[gridmenu_i addItem: "grid 64"];
+	[gridmenu_i addItem:@"grid 1"];
+	[gridmenu_i addItem:@"grid 2"];
+	[gridmenu_i addItem:@"grid 4"];
+	[gridmenu_i addItem:@"grid 8"];
+	[gridmenu_i addItem:@"grid 16"];
+	[gridmenu_i addItem:@"grid 32"];
+	[gridmenu_i addItem:@"grid 64"];
 	
-	[[gridmenu_i itemList] selectCellAt: 4 : 0];
+#warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
+#warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
+	[[gridmenu_i itemMatrix] selectCellAtRow:4 column:0];
 	
-	gridbutton_i = NXCreatePopUpListButton(gridmenu_i);
+	gridbutton_i = NSCreatePopUpListButton(gridmenu_i);
 
 // initialize the scroll view
 	scrollview_i = [[PopScrollView alloc] 
-		initFrame: 		frameRect 
+		initFrame: 		&frameRect 
 		button1: 		scalebutton_i
 		button2:		gridbutton_i
 	];
-	[scrollview_i setLineScroll: 64];
-	[scrollview_i setAutosizing: NX_WIDTHSIZABLE | NX_HEIGHTSIZABLE];
+	[scrollview_i setLineScroll:64];
+	[scrollview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	
 // link objects together
-	[[scrollview_i setDocView: self] free];
+	[[scrollview_i setDocumentView:self] release];
 	
 	return scrollview_i;
 
@@ -88,14 +92,14 @@ initFrame:
 { // this should be set from IB, but because I toss myself in a popscrollview
 // the connection gets lost
 	mode_radio_i = m;
-	[mode_radio_i setTarget: self];
-	[mode_radio_i setAction: @selector(drawMode:)];
+	[mode_radio_i setTarget:self];
+	[mode_radio_i setAction:@selector(drawMode:)];
 	return self;
 }
 
 - drawMode: sender
 {
-	drawmode = [sender selectedCol];
+	drawmode = [sender selectedColumn];
 	[quakeed_i updateXY];
 	return self;
 }
@@ -103,7 +107,7 @@ initFrame:
 - setDrawMode: (drawmode_t)mode
 {
 	drawmode = mode;
-	[mode_radio_i selectCellAt:0: mode];
+	[mode_radio_i selectCellAtRow:0 column:mode];
 	[quakeed_i updateXY];
 	return self;
 }
@@ -119,18 +123,18 @@ initFrame:
 setOrigin:scale:
 ===================
 */
-- setOrigin: (NXPoint *)pt scale: (float)sc
+- setOrigin: (NSPoint *)pt scale: (float)sc
 {
-	NXRect		sframe;
-	NXRect		newbounds;
+	NSRect		sframe;
+	NSRect		newbounds;
 	
 //
 // calculate the area visible in the cliprect
 //
 	scale = sc;
 	
-	[superview getFrame: &sframe];
-	[superview getFrame: &newbounds];
+	sframe = [[self superview] frame];
+	newbounds = [[self superview] frame];
 	newbounds.origin = *pt;
 	newbounds.size.width /= scale; 
 	newbounds.size.height /= scale; 
@@ -138,28 +142,28 @@ setOrigin:scale:
 //
 // union with the realbounds
 //
-	NXUnionRect (&realbounds, &newbounds);
+	newbounds  = NSUnionRect(realbounds , newbounds);
 
 //
 // redisplay everything
 //
+#error WindowConversion: 'disableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
 	[quakeed_i disableDisplay];
 
 //
 // size this view
 //
-	[self sizeTo: newbounds.size.width : newbounds.size.height];
-	[self setDrawOrigin: newbounds.origin.x : newbounds.origin.y];
-	[self moveTo: newbounds.origin.x : newbounds.origin.y];
+	[self setFrameSize:NSMakeSize(newbounds.size.width, newbounds.size.height)];
+	[self setBoundsOrigin:NSMakePoint(newbounds.origin.x, newbounds.origin.y)];
+	[self setFrameOrigin:NSMakePoint(newbounds.origin.x, newbounds.origin.y)];
 	
 //
 // scroll and scale the clip view
 //
-	[superview setDrawSize
-		: sframe.size.width/scale 
-		: sframe.size.height/scale];
-	[superview setDrawOrigin: pt->x : pt->y];
+	[[self superview] setBoundsSize:NSMakeSize(sframe.size.width/scale, sframe.size.height/scale)];
+	[[self superview] setBoundsOrigin:NSMakePoint(pt->x, pt->y)];
 
+#error WindowConversion: 'reenableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
 	[quakeed_i reenableDisplay];
 	[scrollview_i display];
 	
@@ -168,10 +172,10 @@ setOrigin:scale:
 
 - centerOn: (vec3_t)org
 {
-	NXRect	sbounds;
-	NXPoint	mid, delta;
+	NSRect	sbounds;
+	NSPoint	mid, delta;
 	
-	[[xyview_i superview] getBounds: &sbounds];
+	sbounds = [[xyview_i superview] bounds];
 	
 	mid.x = sbounds.origin.x + sbounds.size.width/2;
 	mid.y = sbounds.origin.y + sbounds.size.height/2;
@@ -195,9 +199,9 @@ When superview is resized
 */
 - newSuperBounds
 {
-	NXRect	r;
+	NSRect	r;
 	
-	[superview getBounds: &r];
+	r = [[self superview] bounds];
 	[self newRealBounds: &r];
 	
 	return self;
@@ -212,34 +216,36 @@ Should only change the scroll bars, not cause any redraws.
 If realbounds has shrunk, nothing will change.
 ===================
 */
-- newRealBounds: (NXRect *)nb
+- newRealBounds: (NSRect *)nb
 {
-	NXRect		sbounds;
+	NSRect		sbounds;
 	
 	realbounds = *nb;
 	
 //
 // calculate the area visible in the cliprect
 //
-	[superview getBounds: &sbounds];
-	NXUnionRect (nb, &sbounds);
+	sbounds = [[self superview] bounds];
+	sbounds  = NSUnionRect(*nb , sbounds);
 
 //
 // size this view
 //
+#error WindowConversion: 'disableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
 	[quakeed_i disableDisplay];
 
-	[self suspendNotifyAncestorWhenFrameChanged:YES];
-	[self sizeTo: sbounds.size.width : sbounds.size.height];
-	[self setDrawOrigin: sbounds.origin.x : sbounds.origin.y];
-	[self moveTo: sbounds.origin.x : sbounds.origin.y];
-	[self suspendNotifyAncestorWhenFrameChanged:NO];
+	[self setPostsFrameChangedNotifications:NO];
+	[self setFrameSize:NSMakeSize(sbounds.size.width, sbounds.size.height)];
+	[self setBoundsOrigin:NSMakePoint(sbounds.origin.x, sbounds.origin.y)];
+	[self setFrameOrigin:NSMakePoint(sbounds.origin.x, sbounds.origin.y)];
+	[self setPostsFrameChangedNotifications:YES];
 
-	[scrollview_i reflectScroll: superview];
+	[scrollview_i reflectScrolledClipView:[self superview]];
+#error WindowConversion: 'reenableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
 	[quakeed_i reenableDisplay];
 	
-	[[scrollview_i horizScroller] display];
-	[[scrollview_i vertScroller] display];
+	[[scrollview_i horizontalScroller] display];
+	[[scrollview_i verticalScroller] display];
 	
 	return self;
 }
@@ -256,10 +262,10 @@ Called when the scaler popup on the window is used
 - scaleMenuTarget: sender
 {
 	char	const	*item;
-	NXRect		visrect, sframe;
+	NSRect		visrect, sframe;
 	float		nscale;
 	
-	item = [[sender selectedCell] title];
+	item = [[[sender selectedCell] title] cString];
 	sscanf (item,"%f",&nscale);
 	nscale /= 100;
 	
@@ -267,8 +273,8 @@ Called when the scaler popup on the window is used
 		return NULL;
 		
 // keep the center of the view constant
-	[superview getBounds: &visrect];
-	[superview getFrame: &sframe];
+	visrect = [[self superview] bounds];
+	sframe = [[self superview] frame];
 	visrect.origin.x += visrect.size.width/2;
 	visrect.origin.y += visrect.size.height/2;
 	
@@ -285,31 +291,33 @@ Called when the scaler popup on the window is used
 zoomIn
 ==============
 */
-- zoomIn: (NXPoint *)constant
+- zoomIn: (NSPoint *)constant
 {
 	id			itemlist;
 	int			selected, numrows, numcollumns;
 
-	NXRect		visrect;
-	NXPoint		ofs, new;
+	NSRect		visrect;
+	NSPoint		ofs, new;
 
 //
 // set the popup
 //
-	itemlist = [scalemenu_i itemList];
-	[itemlist getNumRows: &numrows numCols:&numcollumns];
+#warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
+#warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
+	itemlist = [scalemenu_i itemMatrix];
+	[itemlist getNumberOfRows:&numrows columns:&numcollumns];
 	
 	selected = [itemlist selectedRow] + 1;
 	if (selected >= numrows)
 		return NULL;
 		
-	[itemlist selectCellAt: selected : 0];
-	[scalebutton_i setTitle: [[itemlist selectedCell] title]];
+	[itemlist selectCellAtRow:selected column:0];
+	[scalebutton_i setTitle:[[itemlist selectedCell] title]];
 
 //
 // zoom the view
 //
-	[superview getBounds: &visrect];
+	visrect = [[self superview] bounds];
 	ofs.x = constant->x - visrect.origin.x;
 	ofs.y = constant->y - visrect.origin.y;
 	
@@ -327,31 +335,33 @@ zoomIn
 zoomOut
 ==============
 */
-- zoomOut: (NXPoint *)constant
+- zoomOut: (NSPoint *)constant
 {
 	id			itemlist;
 	int			selected, numrows, numcollumns;
 
-	NXRect		visrect;
-	NXPoint		ofs, new;
+	NSRect		visrect;
+	NSPoint		ofs, new;
 	
 //
 // set the popup
 //
-	itemlist = [scalemenu_i itemList];
-	[itemlist getNumRows: &numrows numCols:&numcollumns];
+#warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
+#warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
+	itemlist = [scalemenu_i itemMatrix];
+	[itemlist getNumberOfRows:&numrows columns:&numcollumns];
 	
 	selected = [itemlist selectedRow] - 1;
 	if (selected < 0)
 		return NULL;
 		
-	[itemlist selectCellAt: selected : 0];
-	[scalebutton_i setTitle: [[itemlist selectedCell] title]];
+	[itemlist selectCellAtRow:selected column:0];
+	[scalebutton_i setTitle:[[itemlist selectedCell] title]];
 
 //
 // zoom the view
 //
-	[superview getBounds: &visrect];
+	visrect = [[self superview] bounds];
 	ofs.x = constant->x - visrect.origin.x;
 	ofs.y = constant->y - visrect.origin.y;
 	
@@ -377,7 +387,7 @@ Called when the scaler popup on the window is used
 	char	const	*item;
 	int			grid;
 	
-	item = [[sender selectedCell] title];
+	item = [[[sender selectedCell] title] cString];
 	sscanf (item,"grid %d",&grid);
 
 	if (grid == gridsize)
@@ -513,7 +523,7 @@ Rect is in global world (unscaled) coordinates
 ============
 */
 
-- drawGrid: (const NXRect *)rect
+- drawGrid: (const NSRect *)rect
 {
 	int	x,y, stopx, stopy;
 	float	top,bottom,right,left;
@@ -640,9 +650,9 @@ PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
 drawWire
 ==================
 */
-- drawWire: (const NXRect *)rects
+- drawWire: (const NSRect *)rects
 {
-	NXRect	visRect;
+	NSRect	visRect;
 	int	i,j, c, c2;
 	id	ent, brush;
 	vec3_t	mins, maxs;
@@ -652,16 +662,16 @@ drawWire
 	
 	if ([quakeed_i showCoordinates])	// if coords are showing, update everything
 	{
-		[self getVisibleRect:&visRect];
+		visRect = [self visibleRect];
 		rects = &visRect;
 		xy_draw_rect = *rects;
 	}
 
 	
-	NXRectClip(rects);
+	NSRectClip(*rects);
 		
 // erase window
-	NXEraseRect (rects);
+	NSEraseRect(*rects);
 	
 // draw grid
 	[self drawGrid: rects];
@@ -703,7 +713,7 @@ drawWire
 	newrect.origin.y -= gridsize;
 	newrect.size.width += 2*gridsize;
 	newrect.size.height += 2*gridsize;
-	if (!NXEqualRect (&newrect, &realbounds))
+	if (!NSEqualRects(newrect , realbounds))
 		[self newRealBounds: &newrect];
 
 	return self;
@@ -718,9 +728,9 @@ drawSolid
 - drawSolid
 {
 	unsigned char	*planes[5];
-	NXRect	visRect;
+	NSRect	visRect;
 
-	[self getVisibleRect:&visRect];
+	visRect = [self visibleRect];
 
 //
 // draw the image into imagebuffer
@@ -762,12 +772,10 @@ drawSolid
 // display the output
 //
 	[self lockFocus];
-	[[self window] setBackingType:NX_RETAINED];
+	[[self window] setBackingType:NSBackingStoreRetained];
 
 	planes[0] = (unsigned char *)r_picbuffer;
-	NXDrawBitmap(
-		&visRect,  
-		r_width, 
+	NSDrawBitmap(visRect , r_width, 
 		r_height,
 		8,
 		3,
@@ -775,12 +783,11 @@ drawSolid
 		r_width*4,
 		NO,
 		NO,
-		NX_RGBColorSpace,
-		planes
-	);
+		NSCalibratedRGBColorSpace,
+		planes);
 	
-	NXPing ();
-	[[self window] setBackingType:NX_BUFFERED];
+	PSWait ();
+	[[self window] setBackingType:NSBackingStoreBuffered];
 	[self unlockFocus];
 	
 	return self;
@@ -791,15 +798,16 @@ drawSolid
 drawSelf
 ===================
 */
-NXRect	xy_draw_rect;
-- drawSelf:(const NXRect *)rects :(int)rectCount
+NSRect	xy_draw_rect;
+#warning RectConversion: drawRect:(NSRect)rects (used to be drawSelf:(const NXRect *)rects :(int)rectCount) no longer takes an array of rects
+- (void)drawRect:(NSRect)rects
 {
 	static float	drawtime;	// static to shut up compiler warning
 
 	if (timedrawing)
 		drawtime = I_FloatTime ();
 
-	xy_draw_rect = *rects;
+	xy_draw_rect = rects;
 	newrect.origin.x = newrect.origin.y = 99999;
 	newrect.size.width = newrect.size.height = -2*99999;
 
@@ -810,16 +818,14 @@ NXRect	xy_draw_rect;
 	if (drawmode == dr_texture || drawmode == dr_flat)
 		[self drawSolid];
 	else
-		[self drawWire: rects];
+		[self drawWire: &rects];
 	
 	if (timedrawing)
 	{
-		NXPing ();
+		PSWait ();
 		drawtime = I_FloatTime() - drawtime;
 		printf ("CameraView drawtime: %5.3f\n", drawtime);
 	}
-
-	return self;
 }
 
 
@@ -837,17 +843,16 @@ NXRect	xy_draw_rect;
 dragLoop:
 ================
 */
-static	NXPoint		oldreletive;
-- dragFrom: (NXEvent *)startevent 
-	useGrid: (BOOL)ug
+static	NSPoint		oldreletive;
+- dragFrom:(NSEvent *)startevent useGrid: (BOOL)ug
 	callback: (void (*) (float dx, float dy)) callback
 {
-	NXEvent		*event;
-	NXPoint		startpt, newpt;
-	NXPoint		reletive, delta;
+	NSEvent *event;
+	NSPoint		startpt, newpt;
+	NSPoint		reletive, delta;
 
-	startpt = startevent->location;
-	[self convertPoint:&startpt  fromView:NULL];
+	startpt = [startevent locationInWindow];
+	startpt = [self convertPoint:startpt fromView:NULL];
 	
 	oldreletive.x = oldreletive.y = 0;
 	
@@ -859,19 +864,20 @@ static	NXPoint		oldreletive;
 	
 	while (1)
 	{
-		event = [NXApp getNextEvent: NX_LMOUSEUPMASK | NX_LMOUSEDRAGGEDMASK
-			| NX_RMOUSEUPMASK | NX_RMOUSEDRAGGEDMASK | NX_APPDEFINEDMASK];
+		event = [[self window] nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask
+			| NSRightMouseUpMask | NSRightMouseDraggedMask | NSSystemDefinedMask];
 
-		if (event->type == NX_LMOUSEUP || event->type == NX_RMOUSEUP)
+		if ([event type] == NSLeftMouseUp || [event type] == NSRightMouseUp)
 			break;
-		if (event->type == NX_APPDEFINED)
+		if ([event type] == NSApplicationDefined)
 		{	// doesn't work.  grrr.
+#error Application Conversion: 'applicationDefined:' is obsolete. Override sendEvent to catch this event
 			[quakeed_i applicationDefined:event];
 			continue;
 		}
 		
-		newpt = event->location;
-		[self convertPoint:&newpt  fromView:NULL];
+		newpt = [event locationInWindow];
+		newpt = [self convertPoint:newpt fromView:NULL];
 
 		if (ug)
 		{
@@ -909,7 +915,7 @@ void DragCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- selectionDragFrom: (NXEvent*)theEvent	
+- selectionDragFrom:(NSEvent *)theEvent 	
 {
 	qprintf ("dragging selection");
 	[self	dragFrom:	theEvent 
@@ -925,12 +931,12 @@ void DragCallback (float dx, float dy)
 
 void ScrollCallback (float dx, float dy)
 {
-	NXRect		basebounds;
-	NXPoint		neworg;
+	NSRect		basebounds;
+	NSPoint		neworg;
 	float		scale;
 	
-	[ [xyview_i superview] getBounds: &basebounds];
-	[xyview_i convertRectFromSuperview: &basebounds];
+	basebounds = [[xyview_i superview] bounds];
+	[xyview_i convertRect:basebounds fromView:[xyview_i superview]];
 
 	neworg.x = basebounds.origin.x - dx;
 	neworg.y = basebounds.origin.y - dy;
@@ -942,7 +948,7 @@ void ScrollCallback (float dx, float dy)
 	[xyview_i setOrigin: &neworg scale: scale];
 }
 
-- scrollDragFrom: (NXEvent*)theEvent	
+- scrollDragFrom:(NSEvent *)theEvent 	
 {
 	qprintf ("scrolling view");
 	[self	dragFrom:	theEvent 
@@ -977,14 +983,14 @@ void DirectionCallback (float dx, float dy)
 	[cameraview_i display];
 }
 
-- directionDragFrom: (NXEvent*)theEvent	
+- directionDragFrom:(NSEvent *)theEvent 	
 {
-	NXPoint			pt;
+	NSPoint			pt;
 
 	qprintf ("changing camera direction");
 
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 	direction[0] = pt.x;
 	direction[1] = pt.y;
@@ -1030,16 +1036,16 @@ void NewCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- newBrushDragFrom: (NXEvent*)theEvent	
+- newBrushDragFrom:(NSEvent *)theEvent 	
 {
 	id				owner;
 	texturedef_t	td;
-	NXPoint			pt;
+	NSPoint			pt;
 
 	qprintf ("sizing new brush");
 	
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 	neworg[0] = [self snapToGrid: pt.x];
 	neworg[1] = [self snapToGrid: pt.y];
@@ -1087,16 +1093,16 @@ void ControlCallback (float dx, float dy)
 	[quakeed_i redrawInstance];
 }
 
-- (BOOL)planeDragFrom: (NXEvent*)theEvent	
+- (BOOL)planeDragFrom:(NSEvent *)theEvent 	
 {
-	NXPoint			pt;
+	NSPoint			pt;
 	vec3_t			dragpoint;
 
 	if ([map_i numSelected] != 1)
 		return NO;
 		
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 	dragpoint[0] = pt.x;
 	dragpoint[1] = pt.y;
@@ -1108,8 +1114,8 @@ void ControlCallback (float dx, float dy)
 	
 	qprintf ("dragging brush plane");
 	
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 	[self	dragFrom:	theEvent 
 			useGrid:	YES
@@ -1123,9 +1129,9 @@ void ControlCallback (float dx, float dy)
 	return YES;
 }
 
-- (BOOL)shearDragFrom: (NXEvent*)theEvent	
+- (BOOL)shearDragFrom:(NSEvent *)theEvent 	
 {
-	NXPoint			pt;
+	NSPoint			pt;
 	vec3_t			dragpoint;
 	vec3_t			p1, p2;
 	float			time;
@@ -1136,8 +1142,8 @@ void ControlCallback (float dx, float dy)
 		return NO;
 	br = [map_i selectedBrush];
 	
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 // if the XY point is inside the brush, make the point on top
 	p1[0] = pt.x;
@@ -1167,8 +1173,8 @@ void ControlCallback (float dx, float dy)
 	
 	qprintf ("dragging brush plane");
 	
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 	[self	dragFrom:	theEvent 
 			useGrid:	YES
@@ -1196,39 +1202,39 @@ void ControlCallback (float dx, float dy)
 mouseDown
 ===================
 */
-- mouseDown:(NXEvent *)theEvent
+- (void)mouseDown:(NSEvent *)theEvent 
 {
-	NXPoint	pt;
+	NSPoint	pt;
 	id		ent;
 	vec3_t	p1, p2;
 	int		flags;
 	
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
 	p1[0] = p2[0] = pt.x;
 	p1[1] = p2[1] = pt.y;
 	p1[2] = xy_viewnormal[2] * -4096;
 	p2[2] = xy_viewnormal[2] * 4096;
 
-	flags = theEvent->flags & (NX_SHIFTMASK | NX_CONTROLMASK | NX_ALTERNATEMASK | NX_COMMANDMASK);
+	flags = [theEvent modifierFlags] & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 	
 //
 // shift click to select / deselect a brush from the world
 //
-	if (flags == NX_SHIFTMASK)
+	if (flags == NSShiftKeyMask)
 	{		
 		[map_i selectRay: p1 : p2 : YES];
-		return self;
+		return;
 	}
 	
 //
 // cmd-shift click to set a target/targetname entity connection
 //
-	if (flags == (NX_SHIFTMASK|NX_COMMANDMASK) )
+	if (flags == (NSShiftKeyMask|NSCommandKeyMask) )
 	{
 		[map_i entityConnect: p1 : p2];
-		return self;
+		return;
 	}
 	
 //
@@ -1237,30 +1243,30 @@ mouseDown
 	if ( flags == 0 )
 	{
 	// if double click, position Z checker
-		if (theEvent->data.mouse.click > 1)
+		if ([theEvent clickCount] > 1)
 		{
 			qprintf ("positioned Z checker");
 			[zview_i setPoint: &pt];
 			[quakeed_i newinstance];
 			[quakeed_i updateZ];
-			return self;
+			return;
 		}
 		
 	// check eye
-		if ( [cameraview_i XYmouseDown: &pt flags: theEvent->flags] )
-			return self;		// camera move
+		if ( [cameraview_i XYmouseDown: &pt flags: [theEvent modifierFlags]] )
+			return;		// camera move
 			
 	// check z post
 		if ( [zview_i XYmouseDown: &pt] )
-			return self;		// z view move
+			return;		// z view move
 
 	// check clippers
 		if ( [clipper_i XYDrag: &pt] )
-			return self;
+			return;
 
 	// check single plane dragging
 		if ( [self planeDragFrom: theEvent] )
-			return self;
+			return;
 
 	// check selection
 		ent = [map_i grabRay: p1 : p2];
@@ -1270,7 +1276,7 @@ mouseDown
 		if ([map_i numSelected])
 		{
 			qprintf ("missed");
-			return self;
+			return;
 		}
 		
 		return [self newBrushDragFrom: theEvent];
@@ -1279,68 +1285,67 @@ mouseDown
 //
 // control click = position and drag camera 
 //
-	if (flags == NX_CONTROLMASK)
+	if (flags == NSControlKeyMask)
 	{
 		[cameraview_i setXYOrigin: &pt];
 		[quakeed_i newinstance];
 		[cameraview_i display];
-		[cameraview_i XYmouseDown: &pt flags: theEvent->flags];
+		[cameraview_i XYmouseDown: &pt flags: [theEvent modifierFlags]];
 		qprintf ("");
-		return self;
+		return;
 	}
 		
 //
 // command click = drag Z checker
 //
-	if (flags == NX_COMMANDMASK)
+	if (flags == NSCommandKeyMask)
 	{
 // check single plane dragging
 [self shearDragFrom: theEvent];
-return self;
+return;
 
 		qprintf ("moving Z checker");
 		[zview_i setXYOrigin: &pt];
 		[quakeed_i updateAll];
 		[zview_i XYmouseDown: &pt];
 		qprintf ("");
-		return self;
+		return;
 	}
 
 //
 // alt click = set entire brush texture
 //
-	if (flags == NX_ALTERNATEMASK)
+	if (flags == NSAlternateKeyMask)
 	{
 		if (drawmode != dr_texture)
 		{
 			qprintf ("No texture setting except in texture mode!\n");
 			NopSound ();
-			return self;
+			return;
 		}
 		[map_i setTextureRay: p1 : p2 : YES];
 		[quakeed_i updateAll];
-		return self;
+		return;
 	}
 		
 //
 // ctrl-alt click = set single face texture
 //
-	if (flags == (NX_CONTROLMASK | NX_ALTERNATEMASK) )
+	if (flags == (NSControlKeyMask | NSAlternateKeyMask) )
 	{
 		if (drawmode != dr_texture)
 		{
 			qprintf ("No texture setting except in texture mode!\n");
 			NopSound ();
-			return self;
+			return;
 		}
 		[map_i setTextureRay: p1 : p2 : NO];
 		[quakeed_i updateAll];
-		return self;
+		return;
 	}
 		
 	qprintf ("bad flags for click");
 	NopSound ();
-	return self;
 }
 
 /*
@@ -1348,35 +1353,33 @@ return self;
 rightMouseDown
 ===================
 */
-- rightMouseDown:(NXEvent *)theEvent
+- (void)rightMouseDown:(NSEvent *)theEvent 
 {
-	NXPoint	pt;
+	NSPoint	pt;
 	int		flags;
 		
-	pt= theEvent->location;
-	[self convertPoint:&pt  fromView:NULL];
+	pt= [theEvent locationInWindow];
+	pt = [self convertPoint:pt fromView:NULL];
 
-	flags = theEvent->flags & (NX_SHIFTMASK | NX_CONTROLMASK | NX_ALTERNATEMASK | NX_COMMANDMASK);
+	flags = [theEvent modifierFlags] & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask);
 
-	if (flags == NX_COMMANDMASK)
+	if (flags == NSCommandKeyMask)
 	{
 		return [self scrollDragFrom: theEvent];		
 	}
 
-	if (flags == NX_ALTERNATEMASK)
+	if (flags == NSAlternateKeyMask)
 	{
 		return [clipper_i XYClick: pt];
 	}
 	
-	if (flags == 0 || flags == NX_CONTROLMASK)
+	if (flags == 0 || flags == NSControlKeyMask)
 	{
 		return [self directionDragFrom: theEvent];
 	}
 	
 	qprintf ("bad flags for click");
 	NopSound ();
-
-	return self;
 }
 
 

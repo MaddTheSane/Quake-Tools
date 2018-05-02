@@ -10,7 +10,7 @@ id		inspcontrol_i;
 
 @implementation InspectorControl
 
-- awakeFromNib
+- (void)awakeFromNib
 {
 	inspcontrol_i = self;
 		
@@ -24,50 +24,55 @@ id		inspcontrol_i;
 
 	[windowList addObject:win_project_i];
 	[contentList addObject:[win_project_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemProject_i setKeyEquivalent:'1'];
 	[itemList addObject:itemProject_i];
 
 	[windowList addObject:win_textures_i];
 	[contentList addObject:[win_textures_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemTextures_i setKeyEquivalent:'2'];
 	[itemList addObject:itemTextures_i];
 
 	[windowList addObject:win_things_i];
 	[contentList addObject:[win_things_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemThings_i setKeyEquivalent:'3'];
 	[itemList addObject:itemThings_i];
 	
 	[windowList addObject:win_prefs_i];
 	[contentList addObject:[win_prefs_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemPrefs_i setKeyEquivalent:'4'];
 	[itemList addObject:itemPrefs_i];
 
 	[windowList addObject:win_settings_i];
 	[contentList addObject:[win_settings_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemSettings_i setKeyEquivalent:'5'];
 	[itemList addObject:itemSettings_i];
 
 	[windowList addObject:win_output_i];
 	[contentList addObject:[win_output_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemOutput_i setKeyEquivalent:'6'];
 	[itemList addObject:itemOutput_i];
 
 	[windowList addObject:win_help_i];
 	[contentList addObject:[win_help_i contentView]];
+#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
 	[itemHelp_i setKeyEquivalent:'7'];
 	[itemList addObject:itemHelp_i];
 
 	// Setup inspector window with project subview first
 
-	[inspectorView_i setAutoresizeSubviews:YES];
+	[inspectorView_i setAutoresizesSubviews:YES];
 
 	inspectorSubview_i = [contentList objectAt:i_project];
 	[inspectorView_i addSubview:inspectorSubview_i];
 
 	currentInspectorType = -1;
 	[self changeInspectorTo:i_project];
-
-	return self;
 }
 
 
@@ -90,9 +95,9 @@ id		inspcontrol_i;
 - changeInspectorTo:(insp_e)which
 {
 	id		newView;
-	NXRect	r;
+	NSRect	r;
 	id		cell;
-	NXRect	f;
+	NSRect	f;
 	
 	if (which == currentInspectorType)
 		return self;
@@ -104,15 +109,15 @@ id		inspcontrol_i;
 	[popUpButton_i setTitle:[cell title]];
 	
 	[inspectorView_i replaceSubview:inspectorSubview_i with:newView];
-	[inspectorView_i getFrame:&r];
+	r = [inspectorView_i frame];
 	inspectorSubview_i = newView;
-	[inspectorSubview_i setAutosizing:NX_WIDTHSIZABLE | NX_HEIGHTSIZABLE];
-	[inspectorSubview_i sizeTo:r.size.width - 4 :r.size.height - 4];
+	[inspectorSubview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+	[inspectorSubview_i setFrameSize:NSMakeSize(r.size.width - 4, r.size.height - 4)];
 	
 	[inspectorSubview_i lockFocus];
-	[inspectorSubview_i getBounds:&f];
-	PSsetgray(NX_LTGRAY);
-	NXRectFill(&f);
+	f = [inspectorSubview_i bounds];
+	PSsetgray(NSLightGray);
+	NSRectFill(f);
 	[inspectorSubview_i unlockFocus];
 	[inspectorView_i display];
 	

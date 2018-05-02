@@ -1,5 +1,5 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
 #define MINIWINICON	"DoomEdIcon"
 
@@ -17,7 +17,7 @@ typedef enum
 
 extern	id		inspcontrol_i;
 
-@interface InspectorControl:Object
+@interface InspectorControl:NSObject
 {
 	id	inspectorView_i;	// inspector view
 	id	inspectorSubview_i;	// inspector view's current subview (gets replaced)
@@ -59,7 +59,7 @@ extern	id		inspcontrol_i;
 	id	itemHelp_i;			// docs
 }
 
-- awakeFromNib;
+- (void)awakeFromNib;
 - changeInspector:sender;
 - changeInspectorTo:(insp_e)which;
 - (insp_e)getCurrentInspector;

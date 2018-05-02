@@ -1,11 +1,11 @@
 
-#import <appkit/appkit.h>
+#import <AppKit/AppKit.h>
 
 extern	id	things_i;
 
 #define	ENTITYNAMEKEY	"spawn"
 
-@interface Things:Object
+@interface Things:NSObject
 {
 	id	entity_browser_i;	// browser
 	id	entity_comment_i;	// scrolling text window

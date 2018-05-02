@@ -19,7 +19,7 @@ typedef struct epair_s
 - initClass: (char *)classname;
 - initFromTokens;
 
-- free;
+- (void)dealloc;
 
 - (BOOL)modifiable;
 - setModifiable: (BOOL)m;

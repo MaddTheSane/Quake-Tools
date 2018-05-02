@@ -13,7 +13,7 @@ FILESTABLE = {
     OTHER_LINKED = ();
     M_FILES = (misc.m, QuakeEd_main.m, render.m);
 };
-APPCLASS = Application;
+APPCLASS = NSApplication;
 MAINNIB = QuakeEd;
 DOCEXTENSIONS = ();
 PROJECTTYPE = Application;
