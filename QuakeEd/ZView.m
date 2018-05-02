@@ -3,7 +3,9 @@
 
 id zview_i;
 
-id zscrollview_i, zscalemenu_i, zscalebutton_i;
+NSScrollView *zscrollview_i;
+NSPopUpButton *zscalemenu_i;
+id zscalebutton_i;
 
 float	zplane;
 float	zplanedir;
@@ -22,7 +24,7 @@ initFrame:
 	origin[0] = 0.333;
 	origin[1] = 0.333;
 	
-	[super initWithFrame:frameRect];
+	if (self = [super initWithFrame:frameRect]) {
 	[self allocateGState];
 	[self clearBounds];
 	
@@ -36,16 +38,16 @@ initFrame:
 	[zscalemenu_i setTarget:self];
 	[zscalemenu_i setAction:@selector(scaleMenuTarget:)];
 
-	[zscalemenu_i addItem:@"12.5%"];
-	[zscalemenu_i addItem:@"25%"];
-	[zscalemenu_i addItem:@"50%"];
-	[zscalemenu_i addItem:@"75%"];
-	[zscalemenu_i addItem:@"100%"];
-	[zscalemenu_i addItem:@"200%"];
-	[zscalemenu_i addItem:@"300%"];
+	[zscalemenu_i addItemWithTitle:@"12.5%"];
+	[zscalemenu_i addItemWithTitle:@"25%"];
+	[zscalemenu_i addItemWithTitle:@"50%"];
+	[zscalemenu_i addItemWithTitle:@"75%"];
+	[zscalemenu_i addItemWithTitle:@"100%"];
+	[zscalemenu_i addItemWithTitle:@"200%"];
+	[zscalemenu_i addItemWithTitle:@"300%"];
 #warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
 #warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
-	[[zscalemenu_i itemMatrix] selectCellAtRow:4 column:0];
+		[zscalemenu_i selectItemAtIndex:4];
 	
 	zscalebutton_i = NSCreatePopUpListButton(zscalemenu_i);
 
@@ -57,7 +59,7 @@ initFrame:
 	];
 	[zscrollview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
-	[[zscrollview_i setDocumentView:self] release];
+	[zscrollview_i setDocumentView:self];
 
 //	[superview setDrawOrigin: 0 : 0];
 
@@ -70,8 +72,9 @@ initFrame:
 	[self newRealBounds];
 	
 	[self setOrigin: &pt scale: 1];
+	}
 	
-	return zscrollview_i;
+	return self;
 }
 
 - setXYOrigin: (NSPoint *)pt
@@ -124,8 +127,6 @@ setOrigin:scale:
 //
 // redisplay everything
 //
-#error WindowConversion: 'disableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i disableDisplay];
 
 //
 // size this view
@@ -140,8 +141,6 @@ setOrigin:scale:
 	[[self superview] setBoundsSize:NSMakeSize(sframe.size.width/scale, sframe.size.height/scale)];
 	[[self superview] setBoundsOrigin:NSMakePoint(pt->x, pt->y)];
 
-#error WindowConversion: 'reenableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i reenableDisplay];
 	[zscrollview_i display];
 	
 	return self;
@@ -272,20 +271,15 @@ If realbounds has shrunk, nothing will change.
 //
 // size this view
 //
-#error WindowConversion: 'disableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i disableDisplay];
 
 	[self setPostsFrameChangedNotifications:NO];
 	[self setFrameSize:NSMakeSize(sbounds.size.width, sbounds.size.height)];
 	[self setBoundsOrigin:NSMakePoint(-sbounds.size.width/2, sbounds.origin.y)];
 	[self setFrameOrigin:NSMakePoint(-sbounds.size.width/2, sbounds.origin.y)];
 	[self setPostsFrameChangedNotifications:YES];
-	[[[self superview] superview] reflectScrolledClipView:[self superview]];
-
-#error WindowConversion: 'reenableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i reenableDisplay];
+	[[self enclosingScrollView] reflectScrolledClipView:[self superview]];
 	
-	[[[[self superview] superview] verticalScroller] display];
+	[[[self enclosingScrollView] verticalScroller] display];
 	
 	return self;
 }
@@ -306,7 +300,7 @@ Rect is in global world (unscaled) coordinates
 - drawGrid: (const NSRect *)rect
 {
 	int		y, stopy;
-	float	top,bottom;
+	CGFloat	top,bottom;
 	int		left, right;
 	int		gridsize;
 	char	text[10];
@@ -367,18 +361,19 @@ Rect is in global world (unscaled) coordinates
 	if (stopy >= top)
 		stopy -= 32;
 	
-	beginUserPath (upath,NO);
-	
-	for ( ; y<=stopy ; y+= 64)
 	{
-		UPmoveto (upath, left, y);
-		UPlineto (upath, right, y);
+		NSBezierPath *upath2 = [NSBezierPath bezierPath];
+		
+		for ( ; y<=stopy ; y+= 64)
+		{
+			[upath2 moveToPoint:NSMakePoint(left, y)];
+			[upath2 lineToPoint:NSMakePoint(right, y)];
+		}
+		
+		PSsetgray (12.0/16.0);
+		[upath2 stroke];
 	}
-
-	endUserPath (upath, dps_ustroke);
-	PSsetgray (12.0/16.0);
-	sendUserPath (upath);
-
+	
 //
 // tiles
 //
@@ -445,7 +440,6 @@ drawSelf
 ===============================================================================
 */
 
-#warning RectConversion: drawRect:(NSRect)rects (used to be drawSelf:(const NXRect *)rects :(int)rectCount) no longer takes an array of rects
 - (void)drawRect:(NSRect)rects
 {
 	NSRect		visRect;
@@ -455,13 +449,13 @@ drawSelf
 
 // allways draw the entire bar	
 	visRect = [self visibleRect];
-	&rects = &visRect;
+	rects = visRect;
 
 // erase window
-	NSEraseRect(&rects[0]);
+	NSEraseRect(rects);
 	
 // draw grid
-	[self drawGrid: &&rects[0]];
+	[self drawGrid: &rects];
 	
 // draw zplane
 //	[self drawZplane];
@@ -772,7 +766,8 @@ rightMouseDown
 //
 	if (flags == 0)
 	{
-		return [self scrollDragFrom: theEvent];		
+		[self scrollDragFrom: theEvent];
+		return;
 	}
 
 	qprintf ("bad flags for click");

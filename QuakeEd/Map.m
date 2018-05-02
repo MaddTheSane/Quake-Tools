@@ -1056,14 +1056,14 @@ subtractSelection
 {
 	int		i, j, c, c2;
 	id		o, o2;
-	id		sellist, sourcelist;
+	NSMutableArray		*sellist, *sourcelist;
 	
 	qprintf ("performing brush subtraction...");
 
-	sourcelist = [[List alloc] init];
-	sellist = [[List alloc] init];
-	carve_in = [[List alloc] init];
-	carve_out = [[List alloc] init];
+	sourcelist = [[NSMutableArray alloc] init];
+	sellist = [[NSMutableArray alloc] init];
+	carve_in = [[NSMutableArray alloc] init];
+	carve_out = [[NSMutableArray alloc] init];
 	
 	c = [currentEntity count];
 	for (i=0 ; i<c ; i++)
@@ -1092,7 +1092,7 @@ subtractSelection
 
 		[sourcelist release];	// the individual have been moved/freed
 		sourcelist = carve_out;
-		carve_out = [[List alloc] init];
+		carve_out = [[NSMutableArray alloc] init];
 	}
 
 // add the selection back to the remnants
