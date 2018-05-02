@@ -1,0 +1,473 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; };
+		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; };
+		5531416A1B98E61F00390795 /* Clipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141241B98E61F00390795 /* Clipper.m */; };
+		5531416B1B98E61F00390795 /* cmdlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 553141251B98E61F00390795 /* cmdlib.c */; };
+		5531416C1B98E61F00390795 /* Dict.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141281B98E61F00390795 /* Dict.m */; };
+		5531416D1B98E61F00390795 /* DictList.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531412A1B98E61F00390795 /* DictList.m */; };
+		553141701B98E61F00390795 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141311B98E61F00390795 /* Entity.m */; };
+		553141711B98E61F00390795 /* EntityClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141331B98E61F00390795 /* EntityClass.m */; };
+		553141721B98E61F00390795 /* help.txt in Resources */ = {isa = PBXBuildFile; fileRef = 553141341B98E61F00390795 /* help.txt */; };
+		553141781B98E61F00390795 /* i_quakeed.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 5531413A1B98E61F00390795 /* i_quakeed.tiff */; };
+		5531417B1B98E61F00390795 /* InspectorControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531413E1B98E61F00390795 /* InspectorControl.m */; };
+		5531417C1B98E61F00390795 /* KeypairView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141411B98E61F00390795 /* KeypairView.m */; };
+		5531417D1B98E61F00390795 /* Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141431B98E61F00390795 /* Map.m */; };
+		5531417E1B98E61F00390795 /* mathlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 553141441B98E61F00390795 /* mathlib.c */; };
+		5531417F1B98E61F00390795 /* misc.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141461B98E61F00390795 /* misc.m */; };
+		553141801B98E61F00390795 /* PopScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141481B98E61F00390795 /* PopScrollView.m */; };
+		553141811B98E61F00390795 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531414A1B98E61F00390795 /* Preferences.m */; };
+		553141821B98E61F00390795 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531414C1B98E61F00390795 /* Project.m */; };
+		553141831B98E61F00390795 /* quake.qpr in Resources */ = {isa = PBXBuildFile; fileRef = 5531414E1B98E61F00390795 /* quake.qpr */; };
+		553141841B98E61F00390795 /* QuakeEd_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531414F1B98E61F00390795 /* QuakeEd_main.m */; };
+		553141851B98E61F00390795 /* QuakeEd.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141511B98E61F00390795 /* QuakeEd.m */; };
+		553141861B98E61F00390795 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 553141521B98E61F00390795 /* README */; };
+		553141871B98E61F00390795 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 553141531B98E61F00390795 /* readme.txt */; };
+		553141881B98E61F00390795 /* render.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141551B98E61F00390795 /* render.m */; };
+		553141891B98E61F00390795 /* SetBrush.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141571B98E61F00390795 /* SetBrush.m */; };
+		5531418C1B98E61F00390795 /* TexturePalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531415B1B98E61F00390795 /* TexturePalette.m */; };
+		5531418D1B98E61F00390795 /* TextureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531415D1B98E61F00390795 /* TextureView.m */; };
+		5531418E1B98E61F00390795 /* Things.m in Sources */ = {isa = PBXBuildFile; fileRef = 5531415F1B98E61F00390795 /* Things.m */; };
+		5531418F1B98E61F00390795 /* triggers.qc in Resources */ = {isa = PBXBuildFile; fileRef = 553141601B98E61F00390795 /* triggers.qc */; };
+		553141901B98E61F00390795 /* UserPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141621B98E61F00390795 /* UserPath.m */; };
+		553141911B98E61F00390795 /* XYView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141641B98E61F00390795 /* XYView.m */; };
+		553141921B98E61F00390795 /* ZScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141661B98E61F00390795 /* ZScrollView.m */; };
+		553141931B98E61F00390795 /* ZView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141681B98E61F00390795 /* ZView.m */; };
+		555070A91CD1573A007D6E08 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 555070A81CD1573A007D6E08 /* Icons.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		552A27021B9D402E0055D5D9 /* QuakeEd.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuakeEd.xib; sourceTree = "<group>"; };
+		553141091B98E46B00390795 /* QuakeEd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuakeEd.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5531411D1B98E5C400390795 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		553141201B98E61F00390795 /* Brush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Brush.h; sourceTree = "<group>"; };
+		553141211B98E61F00390795 /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
+		553141221B98E61F00390795 /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
+		553141231B98E61F00390795 /* Clipper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clipper.h; sourceTree = "<group>"; };
+		553141241B98E61F00390795 /* Clipper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Clipper.m; sourceTree = "<group>"; };
+		553141251B98E61F00390795 /* cmdlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmdlib.c; sourceTree = "<group>"; };
+		553141261B98E61F00390795 /* cmdlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmdlib.h; sourceTree = "<group>"; };
+		553141271B98E61F00390795 /* Dict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dict.h; sourceTree = "<group>"; };
+		553141281B98E61F00390795 /* Dict.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dict.m; sourceTree = "<group>"; };
+		553141291B98E61F00390795 /* DictList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DictList.h; sourceTree = "<group>"; };
+		5531412A1B98E61F00390795 /* DictList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DictList.m; sourceTree = "<group>"; };
+		553141301B98E61F00390795 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		553141311B98E61F00390795 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
+		553141321B98E61F00390795 /* EntityClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityClass.h; sourceTree = "<group>"; };
+		553141331B98E61F00390795 /* EntityClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityClass.m; sourceTree = "<group>"; };
+		553141341B98E61F00390795 /* help.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = help.txt; sourceTree = "<group>"; };
+		5531413A1B98E61F00390795 /* i_quakeed.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = i_quakeed.tiff; sourceTree = "<group>"; };
+		5531413D1B98E61F00390795 /* InspectorControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InspectorControl.h; sourceTree = "<group>"; };
+		5531413E1B98E61F00390795 /* InspectorControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InspectorControl.m; sourceTree = "<group>"; };
+		5531413F1B98E61F00390795 /* jrbase1.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = jrbase1.map; sourceTree = "<group>"; };
+		553141401B98E61F00390795 /* KeypairView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypairView.h; sourceTree = "<group>"; };
+		553141411B98E61F00390795 /* KeypairView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeypairView.m; sourceTree = "<group>"; };
+		553141421B98E61F00390795 /* Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		553141431B98E61F00390795 /* Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Map.m; sourceTree = "<group>"; };
+		553141441B98E61F00390795 /* mathlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mathlib.c; sourceTree = "<group>"; };
+		553141451B98E61F00390795 /* mathlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mathlib.h; sourceTree = "<group>"; };
+		553141461B98E61F00390795 /* misc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = misc.m; sourceTree = "<group>"; };
+		553141471B98E61F00390795 /* PopScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopScrollView.h; sourceTree = "<group>"; };
+		553141481B98E61F00390795 /* PopScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopScrollView.m; sourceTree = "<group>"; };
+		553141491B98E61F00390795 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
+		5531414A1B98E61F00390795 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
+		5531414B1B98E61F00390795 /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
+		5531414C1B98E61F00390795 /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Project.m; sourceTree = "<group>"; };
+		5531414D1B98E61F00390795 /* qedefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qedefs.h; sourceTree = "<group>"; };
+		5531414E1B98E61F00390795 /* quake.qpr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = quake.qpr; sourceTree = "<group>"; };
+		5531414F1B98E61F00390795 /* QuakeEd_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuakeEd_main.m; sourceTree = "<group>"; };
+		553141501B98E61F00390795 /* QuakeEd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuakeEd.h; sourceTree = "<group>"; };
+		553141511B98E61F00390795 /* QuakeEd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuakeEd.m; sourceTree = "<group>"; };
+		553141521B98E61F00390795 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		553141531B98E61F00390795 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		553141541B98E61F00390795 /* render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render.h; sourceTree = "<group>"; };
+		553141551B98E61F00390795 /* render.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = render.m; sourceTree = "<group>"; };
+		553141561B98E61F00390795 /* SetBrush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetBrush.h; sourceTree = "<group>"; };
+		553141571B98E61F00390795 /* SetBrush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetBrush.m; sourceTree = "<group>"; };
+		5531415A1B98E61F00390795 /* TexturePalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TexturePalette.h; sourceTree = "<group>"; };
+		5531415B1B98E61F00390795 /* TexturePalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TexturePalette.m; sourceTree = "<group>"; };
+		5531415C1B98E61F00390795 /* TextureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureView.h; sourceTree = "<group>"; };
+		5531415D1B98E61F00390795 /* TextureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureView.m; sourceTree = "<group>"; };
+		5531415E1B98E61F00390795 /* Things.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Things.h; sourceTree = "<group>"; };
+		5531415F1B98E61F00390795 /* Things.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Things.m; sourceTree = "<group>"; };
+		553141601B98E61F00390795 /* triggers.qc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = triggers.qc; sourceTree = "<group>"; };
+		553141611B98E61F00390795 /* UserPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPath.h; sourceTree = "<group>"; usesTabs = 0; };
+		553141621B98E61F00390795 /* UserPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPath.m; sourceTree = "<group>"; usesTabs = 0; };
+		553141631B98E61F00390795 /* XYView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYView.h; sourceTree = "<group>"; };
+		553141641B98E61F00390795 /* XYView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYView.m; sourceTree = "<group>"; };
+		553141651B98E61F00390795 /* ZScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZScrollView.h; sourceTree = "<group>"; };
+		553141661B98E61F00390795 /* ZScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZScrollView.m; sourceTree = "<group>"; };
+		553141671B98E61F00390795 /* ZView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZView.h; sourceTree = "<group>"; };
+		553141681B98E61F00390795 /* ZView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZView.m; sourceTree = "<group>"; };
+		555070A81CD1573A007D6E08 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		553141061B98E46B00390795 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		553141001B98E46B00390795 = {
+			isa = PBXGroup;
+			children = (
+				5531410B1B98E46B00390795 /* QuakeEd */,
+				5531410A1B98E46B00390795 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5531410A1B98E46B00390795 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				553141091B98E46B00390795 /* QuakeEd.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5531410B1B98E46B00390795 /* QuakeEd */ = {
+			isa = PBXGroup;
+			children = (
+				5531411F1B98E5E800390795 /* Classes */,
+				553141941B98E64900390795 /* Resources */,
+				5531410F1B98E46B00390795 /* Supporting Files */,
+			);
+			name = QuakeEd;
+			sourceTree = "<group>";
+		};
+		5531410F1B98E46B00390795 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5531411D1B98E5C400390795 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5531411F1B98E5E800390795 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				553141201B98E61F00390795 /* Brush.h */,
+				553141211B98E61F00390795 /* CameraView.h */,
+				553141221B98E61F00390795 /* CameraView.m */,
+				553141231B98E61F00390795 /* Clipper.h */,
+				553141241B98E61F00390795 /* Clipper.m */,
+				553141251B98E61F00390795 /* cmdlib.c */,
+				553141261B98E61F00390795 /* cmdlib.h */,
+				553141271B98E61F00390795 /* Dict.h */,
+				553141281B98E61F00390795 /* Dict.m */,
+				553141291B98E61F00390795 /* DictList.h */,
+				5531412A1B98E61F00390795 /* DictList.m */,
+				553141301B98E61F00390795 /* Entity.h */,
+				553141311B98E61F00390795 /* Entity.m */,
+				553141321B98E61F00390795 /* EntityClass.h */,
+				553141331B98E61F00390795 /* EntityClass.m */,
+				5531413D1B98E61F00390795 /* InspectorControl.h */,
+				5531413E1B98E61F00390795 /* InspectorControl.m */,
+				553141401B98E61F00390795 /* KeypairView.h */,
+				553141411B98E61F00390795 /* KeypairView.m */,
+				553141421B98E61F00390795 /* Map.h */,
+				553141431B98E61F00390795 /* Map.m */,
+				553141441B98E61F00390795 /* mathlib.c */,
+				553141451B98E61F00390795 /* mathlib.h */,
+				553141461B98E61F00390795 /* misc.m */,
+				553141471B98E61F00390795 /* PopScrollView.h */,
+				553141481B98E61F00390795 /* PopScrollView.m */,
+				553141491B98E61F00390795 /* Preferences.h */,
+				5531414A1B98E61F00390795 /* Preferences.m */,
+				5531414B1B98E61F00390795 /* Project.h */,
+				5531414C1B98E61F00390795 /* Project.m */,
+				5531414D1B98E61F00390795 /* qedefs.h */,
+				5531414F1B98E61F00390795 /* QuakeEd_main.m */,
+				553141501B98E61F00390795 /* QuakeEd.h */,
+				553141511B98E61F00390795 /* QuakeEd.m */,
+				553141541B98E61F00390795 /* render.h */,
+				553141551B98E61F00390795 /* render.m */,
+				553141561B98E61F00390795 /* SetBrush.h */,
+				553141571B98E61F00390795 /* SetBrush.m */,
+				5531415A1B98E61F00390795 /* TexturePalette.h */,
+				5531415B1B98E61F00390795 /* TexturePalette.m */,
+				5531415C1B98E61F00390795 /* TextureView.h */,
+				5531415D1B98E61F00390795 /* TextureView.m */,
+				5531415E1B98E61F00390795 /* Things.h */,
+				5531415F1B98E61F00390795 /* Things.m */,
+				553141611B98E61F00390795 /* UserPath.h */,
+				553141621B98E61F00390795 /* UserPath.m */,
+				553141631B98E61F00390795 /* XYView.h */,
+				553141641B98E61F00390795 /* XYView.m */,
+				553141651B98E61F00390795 /* ZScrollView.h */,
+				553141661B98E61F00390795 /* ZScrollView.m */,
+				553141671B98E61F00390795 /* ZView.h */,
+				553141681B98E61F00390795 /* ZView.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		553141941B98E64900390795 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				552A27021B9D402E0055D5D9 /* QuakeEd.xib */,
+				553141341B98E61F00390795 /* help.txt */,
+				5531413A1B98E61F00390795 /* i_quakeed.tiff */,
+				5531413F1B98E61F00390795 /* jrbase1.map */,
+				5531414E1B98E61F00390795 /* quake.qpr */,
+				553141521B98E61F00390795 /* README */,
+				553141531B98E61F00390795 /* readme.txt */,
+				553141601B98E61F00390795 /* triggers.qc */,
+				555070A81CD1573A007D6E08 /* Icons.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		553141081B98E46B00390795 /* QuakeEd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5531411A1B98E46B00390795 /* Build configuration list for PBXNativeTarget "QuakeEd" */;
+			buildPhases = (
+				553141051B98E46B00390795 /* Sources */,
+				553141061B98E46B00390795 /* Frameworks */,
+				553141071B98E46B00390795 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QuakeEd;
+			productName = QuakeEd;
+			productReference = 553141091B98E46B00390795 /* QuakeEd.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		553141011B98E46B00390795 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "C.W. Betts";
+				TargetAttributes = {
+					553141081B98E46B00390795 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+				};
+			};
+			buildConfigurationList = 553141041B98E46B00390795 /* Build configuration list for PBXProject "QuakeEd" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				English,
+			);
+			mainGroup = 553141001B98E46B00390795;
+			productRefGroup = 5531410A1B98E46B00390795 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				553141081B98E46B00390795 /* QuakeEd */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		553141071B98E46B00390795 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				553141871B98E61F00390795 /* readme.txt in Resources */,
+				5531418F1B98E61F00390795 /* triggers.qc in Resources */,
+				555070A91CD1573A007D6E08 /* Icons.xcassets in Resources */,
+				553141861B98E61F00390795 /* README in Resources */,
+				553141831B98E61F00390795 /* quake.qpr in Resources */,
+				553141781B98E61F00390795 /* i_quakeed.tiff in Resources */,
+				553141721B98E61F00390795 /* help.txt in Resources */,
+				552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		553141051B98E46B00390795 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				553141711B98E61F00390795 /* EntityClass.m in Sources */,
+				553141701B98E61F00390795 /* Entity.m in Sources */,
+				5531416B1B98E61F00390795 /* cmdlib.c in Sources */,
+				553141821B98E61F00390795 /* Project.m in Sources */,
+				553141801B98E61F00390795 /* PopScrollView.m in Sources */,
+				5531417C1B98E61F00390795 /* KeypairView.m in Sources */,
+				5531416C1B98E61F00390795 /* Dict.m in Sources */,
+				5531417F1B98E61F00390795 /* misc.m in Sources */,
+				5531416D1B98E61F00390795 /* DictList.m in Sources */,
+				553141881B98E61F00390795 /* render.m in Sources */,
+				5531418D1B98E61F00390795 /* TextureView.m in Sources */,
+				5531417D1B98E61F00390795 /* Map.m in Sources */,
+				5531417B1B98E61F00390795 /* InspectorControl.m in Sources */,
+				553141851B98E61F00390795 /* QuakeEd.m in Sources */,
+				553141811B98E61F00390795 /* Preferences.m in Sources */,
+				553141691B98E61F00390795 /* CameraView.m in Sources */,
+				5531418E1B98E61F00390795 /* Things.m in Sources */,
+				5531418C1B98E61F00390795 /* TexturePalette.m in Sources */,
+				553141841B98E61F00390795 /* QuakeEd_main.m in Sources */,
+				553141891B98E61F00390795 /* SetBrush.m in Sources */,
+				5531416A1B98E61F00390795 /* Clipper.m in Sources */,
+				553141901B98E61F00390795 /* UserPath.m in Sources */,
+				553141921B98E61F00390795 /* ZScrollView.m in Sources */,
+				553141931B98E61F00390795 /* ZView.m in Sources */,
+				5531417E1B98E61F00390795 /* mathlib.c in Sources */,
+				553141911B98E61F00390795 /* XYView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		553141181B98E46B00390795 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		553141191B98E46B00390795 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5531411B1B98E46B00390795 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREFIX_HEADER = oldPSFuncs.h;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.id.quake.QuakeEd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QuakeEd-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5531411C1B98E46B00390795 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREFIX_HEADER = oldPSFuncs.h;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.id.quake.QuakeEd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "QuakeEd-Bridging-Header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		553141041B98E46B00390795 /* Build configuration list for PBXProject "QuakeEd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				553141181B98E46B00390795 /* Debug */,
+				553141191B98E46B00390795 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5531411A1B98E46B00390795 /* Build configuration list for PBXNativeTarget "QuakeEd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5531411B1B98E46B00390795 /* Debug */,
+				5531411C1B98E46B00390795 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 553141011B98E46B00390795 /* Project object */;
+}
