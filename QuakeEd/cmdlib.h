@@ -6,6 +6,7 @@
 #include <libc.h>
 #include <errno.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <sys/types.h>
 
 #define strcmpi strcasecmp
@@ -17,7 +18,7 @@ int tell (int handle);
 
 #ifndef __BYTEBOOL__
 #define __BYTEBOOL__
-typedef enum {false, true} boolean;
+typedef bool boolean;
 typedef unsigned char byte;
 #endif
 
@@ -58,7 +59,6 @@ float	LittleFloat (float l);
 
 extern	char		com_token[1024];
 extern	boolean		com_eof;
-
 
 char *COM_Parse (char *data);
 

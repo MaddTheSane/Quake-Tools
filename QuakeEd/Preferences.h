@@ -8,11 +8,11 @@ extern	float		lightaxis[3];
 
 @interface Preferences:NSObject
 {
-	id		bspSound_i;			// actual sound object
+	NSSound		*bspSound_i;			// actual sound object
 
 // internal state
-	char	projectpath[1024];
-	char	bspSound[1024];
+	NSString	*projectpath;
+	NSString	*bspSound;
 	
 	BOOL	brushOffset;
 	BOOL	showBSP;
@@ -38,33 +38,41 @@ extern	float		lightaxis[3];
 	id	zlight_i;				// Z-side lighting	
 }
 
-- readDefaults;
+- (void)readDefaults;
 
 //
 // validate and set methods called by UI or defaults
 //
-- setProjectPath:(char *)path;
-- setBspSoundPath:(char *)path;	// set the path of the soundfile externally
-- setShowBSP:(int)state;		// set the state of ShowBSP
-- setBrushOffset:(int)state;	// set the state of BrushOffset
-- setStartWad:(int)value;		// set start wad (0-2)
-- setXlight:(float)value;		// set Xlight value for CameraView
-- setYlight:(float)value;		// set Ylight value for CameraView
-- setZlight:(float)value;		// set Zlight value for CameraView
+- (void)setProjectPath:(NSString *)path;
+- (void)setBspSoundPath:(NSString *)path;	// set the path of the soundfile externally
+- (void)setShowBSP:(BOOL)state;		// set the state of ShowBSP
+- (void)setBrushOffset:(BOOL)state;	// set the state of BrushOffset
+- (void)setStartWad:(int)value;		// set start wad (0-2)
+- (void)setXlight:(float)value;		// set Xlight value for CameraView
+- (void)setYlight:(float)value;		// set Ylight value for CameraView
+- (void)setZlight:(float)value;		// set Zlight value for CameraView
+
+@property (nonatomic, copy) NSString *projectPath;
+@property (nonatomic) BOOL showBSP;
+@property (nonatomic) BOOL brushOffset;
+@property (nonatomic) int startWad;
+@property (nonatomic) float xLight;
+@property (nonatomic) float yLight;
+@property (nonatomic) float zLight;
 
 //
 // UI targets
 //
-- setBspSound:sender;			// use OpenPanel to select sound
-- setCurrentProject:sender;		// make current roject the default
-- UIChanged: sender;			// target for all checks and fields
+- (IBAction)setBspSound:sender;			// use OpenPanel to select sound
+- (IBAction)setCurrentProject:sender;		// make current roject the default
+- (IBAction)UIChanged: sender;			// target for all checks and fields
 
 //
 // methods used by other objects to retreive defaults
 //
-- playBspSound;
+- (void)playBspSound;
 
-- (char *)getProjectPath;
+- (const char *)getProjectPath NS_RETURNS_INNER_POINTER;
 - (int)getBrushOffset;			// get the state
 - (int)getShowBSP;				// get the state
 

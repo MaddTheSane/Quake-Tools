@@ -1,10 +1,11 @@
 
-extern	id	quakeed_i;
+@class QuakeEd;
+extern QuakeEd *quakeed_i;
 
 extern	BOOL	filter_light, filter_path, filter_entities;
 extern	BOOL	filter_clip_brushes, filter_water_brushes, filter_world;
 
-extern	UserPath	*upath;
+extern	NSBezierPath	*upath;
 
 extern	id	g_cmd_out_i;
 
@@ -14,7 +15,7 @@ void NopSound (void);
 
 void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 
-@interface QuakeEd : NSWindow
+@interface QuakeEd : NSWindow <NSApplicationDelegate>
 {
 	BOOL	dirty;
 	char	filename[1024];		// full path with .map extension
@@ -48,46 +49,45 @@ void qprintf (char *fmt, ...);		// prints text to cmd_out_i
 - updateXY;
 - updateZ;
 
-- updateAll:sender;
+- (IBAction)updateAll:sender;
 
 - newinstance;		// force next flushwindow to clear all instance drawing
 - redrawInstance;	// erase and redraw all instance now
 
-#warning NotificationConversion: applicationDidFinishLaunching:(NSNotification *)notification (used to be appDidInit:) is an NSApplication notification method (used to be a delegate method); delegates of NSApplication are automatically set to observe this notification; subclasses of NSApplication do not automatically receive this notification
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
-- (BOOL)applicationShouldTerminate:(id)sender;
+- (NSApplicationTerminateReply)applicationShouldTerminate:(id)sender;
 
-- openProject:sender;
+- (IBAction)openProject:sender;
 
-- textCommand: sender;
+- (IBAction)textCommand: sender;
 
-- applyRegion: sender;
+- (IBAction)applyRegion: sender;
 
 - (BOOL)dirty;
 
 - (void)clear:(id)sender;
-- centerCamera: sender;
-- centerZChecker: sender;
+- (IBAction)centerCamera: sender;
+- (IBAction)centerZChecker: sender;
 
-- changeXYLookUp: sender;
+- (IBAction)changeXYLookUp: sender;
 
-- setBrushRegion: sender;
-- setXYRegion: sender;
+- (IBAction)setBrushRegion: sender;
+- (IBAction)setXYRegion: sender;
 
-- open: sender;
-- save: sender;
-- saveAs: sender;
+- (IBAction)open: sender;
+- (IBAction)save: sender;
+- (IBAction)saveAs: sender;
 
 - doOpen: (char *)fname;
 
 - saveBSP:(char *)cmdline dialog:(BOOL)wt;
 
-- BSP_Full: sender;
-- BSP_FastVis: sender;
-- BSP_NoVis: sender;
-- BSP_relight: sender;
-- BSP_stop: sender;
-- BSP_entities: sender;
+- (IBAction)BSP_Full: sender;
+- (IBAction)BSP_FastVis: sender;
+- (IBAction)BSP_NoVis: sender;
+- (IBAction)BSP_relight: sender;
+- (IBAction)BSP_stop: sender;
+- (IBAction)BSP_entities: sender;
 
 //
 // UI querie for other objects

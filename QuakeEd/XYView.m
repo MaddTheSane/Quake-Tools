@@ -2,7 +2,11 @@
 
 id xyview_i;
 
-id	scalemenu_i, gridmenu_i, scrollview_i, gridbutton_i, scalebutton_i;
+NSPopUpButton *scalemenu_i, *gridmenu_i;
+PopScrollView *scrollview_i;
+NSButton *gridbutton_i, *scalebutton_i;
+
+#define NSCreatePopUpListButton(__X) __X
 
 vec3_t		xy_viewnormal;		// v_forward for xy view
 float		xy_viewdist;		// clip behind this plane
@@ -16,7 +20,7 @@ initFrame:
 */
 - initWithFrame:(NSRect)frameRect
 {
-	[super initWithFrame:frameRect];
+	if (self = [super initWithFrame:frameRect]) {
 	[self allocateGState];
 	
 	realbounds = NSMakeRect(0, 0, 0, 0);
@@ -44,7 +48,7 @@ initFrame:
 	[scalemenu_i addItem:@"300%"];
 #warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
 #warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
-	[[scalemenu_i itemMatrix] selectCellAtRow:4 column:0];
+	[scalemenu_i selectItemAtIndex:4];
 	
 	scalebutton_i = NSCreatePopUpListButton(scalemenu_i);
 
@@ -63,7 +67,7 @@ initFrame:
 	
 #warning PopUpConversion: This message should be sent to an NSPopUpButton, but is probably being sent to an NSPopUpList
 #warning PopUpConversion: Consider NSPopUpButton methods instead of using itemMatrix to access items in a pop-up list.
-	[[gridmenu_i itemMatrix] selectCellAtRow:4 column:0];
+		[gridmenu_i selectItemAtIndex:4];
 	
 	gridbutton_i = NSCreatePopUpListButton(gridmenu_i);
 
@@ -77,10 +81,11 @@ initFrame:
 	[scrollview_i setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	
 // link objects together
-	[[scrollview_i setDocumentView:self] release];
+	[scrollview_i setDocumentView:self];
+	[scrollview_i release];
 	
-	return scrollview_i;
-
+	return self;
+	}
 }
 
 - (BOOL)acceptsFirstResponder
@@ -147,8 +152,6 @@ setOrigin:scale:
 //
 // redisplay everything
 //
-#error WindowConversion: 'disableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i disableDisplay];
 
 //
 // size this view
@@ -163,8 +166,6 @@ setOrigin:scale:
 	[[self superview] setBoundsSize:NSMakeSize(sframe.size.width/scale, sframe.size.height/scale)];
 	[[self superview] setBoundsOrigin:NSMakePoint(pt->x, pt->y)];
 
-#error WindowConversion: 'reenableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i reenableDisplay];
 	[scrollview_i display];
 	
 	return self;
@@ -231,8 +232,6 @@ If realbounds has shrunk, nothing will change.
 //
 // size this view
 //
-#error WindowConversion: 'disableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i disableDisplay];
 
 	[self setPostsFrameChangedNotifications:NO];
 	[self setFrameSize:NSMakeSize(sbounds.size.width, sbounds.size.height)];
@@ -241,8 +240,6 @@ If realbounds has shrunk, nothing will change.
 	[self setPostsFrameChangedNotifications:YES];
 
 	[scrollview_i reflectScrolledClipView:[self superview]];
-#error WindowConversion: 'reenableDisplay' is obsolete.  You can probably remove this call.  Typically drawing should happen as part of the update mechanism after every event.  Display is now optimized using the View setNeedsDisplay: method.  See the conversion doc for more info.
-	[quakeed_i reenableDisplay];
 	
 	[[scrollview_i horizontalScroller] display];
 	[[scrollview_i verticalScroller] display];
@@ -259,18 +256,18 @@ Called when the scaler popup on the window is used
 ====================
 */
 
-- scaleMenuTarget: sender
+- (IBAction)scaleMenuTarget: sender
 {
 	char	const	*item;
 	NSRect		visrect, sframe;
 	float		nscale;
 	
-	item = [[[sender selectedCell] title] cString];
+	item = [[[sender selectedCell] title] UTF8String];
 	sscanf (item,"%f",&nscale);
 	nscale /= 100;
 	
 	if (nscale == scale)
-		return NULL;
+		return;
 		
 // keep the center of the view constant
 	visrect = [[self superview] bounds];
@@ -282,8 +279,6 @@ Called when the scaler popup on the window is used
 	visrect.origin.y -= sframe.size.height/2/nscale;
 	
 	[self setOrigin: &visrect.origin scale: nscale];
-	
-	return self;
 }
 
 /*
@@ -294,7 +289,7 @@ zoomIn
 - zoomIn: (NSPoint *)constant
 {
 	id			itemlist;
-	int			selected, numrows, numcollumns;
+	NSInteger	selected, numrows, numcollumns;
 
 	NSRect		visrect;
 	NSPoint		ofs, new;
@@ -338,7 +333,7 @@ zoomOut
 - zoomOut: (NSPoint *)constant
 {
 	id			itemlist;
-	int			selected, numrows, numcollumns;
+	NSInteger			selected, numrows, numcollumns;
 
 	NSRect		visrect;
 	NSPoint		ofs, new;
@@ -387,7 +382,7 @@ Called when the scaler popup on the window is used
 	char	const	*item;
 	int			grid;
 	
-	item = [[[sender selectedCell] title] cString];
+	item = [[[sender selectedCell] title] UTF8String];
 	sscanf (item,"grid %d",&grid);
 
 	if (grid == gridsize)
@@ -474,7 +469,8 @@ vec3_t	cur_linecolor;
 
 void linestart (float r, float g, float b)
 {
-	beginUserPath (upath,NO);
+	[upath release];
+	upath = [[NSBezierPath bezierPath] retain];
 	cur_linecolor[0] = r;
 	cur_linecolor[1] = g;
 	cur_linecolor[2] = b;
@@ -482,12 +478,13 @@ void linestart (float r, float g, float b)
 
 void lineflush (void)
 {
-	if (!upath->numberOfPoints)
+	if (!upath.elementCount)
 		return;
-	endUserPath (upath, dps_ustroke);
+	//[upath closePath];
 	PSsetrgbcolor (cur_linecolor[0], cur_linecolor[1], cur_linecolor[2]);
-	sendUserPath (upath);
-	beginUserPath (upath,NO);
+	[upath stroke];
+	[upath release];
+	upath = [[NSBezierPath bezierPath] retain];
 }
 
 void linecolor (float r, float g, float b)
@@ -502,14 +499,14 @@ void linecolor (float r, float g, float b)
 
 void XYmoveto (vec3_t pt)
 {
-	if (upath->numberOfPoints > 2048)
+	if (upath.elementCount > 2048)
 		lineflush ();
-	UPmoveto (upath, pt[0], pt[1]);
+	[upath moveToPoint:NSMakePoint(pt[0], pt[1])];
 }
 
 void XYlineto (vec3_t pt)
 {
-	UPlineto (upath, pt[0], pt[1]);
+	[upath lineToPoint:NSMakePoint(pt[0], pt[1])];
 }
 
 /*
@@ -526,7 +523,7 @@ Rect is in global world (unscaled) coordinates
 - drawGrid: (const NSRect *)rect
 {
 	int	x,y, stopx, stopy;
-	float	top,bottom,right,left;
+	CGFloat	top,bottom,right,left;
 	char	text[10];
 	BOOL	showcoords;
 	
@@ -580,10 +577,8 @@ Rect is in global world (unscaled) coordinates
 				UPmoveto (upath, x, top);
 				UPlineto (upath, x, bottom);
 			}
-		endUserPath (upath, dps_ustroke);
-PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
-		sendUserPath (upath);
-	
+		PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
+		[upath stroke];
 	}
 
 //
@@ -610,8 +605,9 @@ PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
 			stopx -= 64;
 		if (stopy >= top)
 			stopy -= 64;
-			
-		beginUserPath (upath,NO);
+		
+		[upath release];
+		upath = [[NSBezierPath bezierPath] retain];
 		
 		for ( ; y<=stopy ; y+= 64)
 		{
@@ -621,8 +617,8 @@ PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
 				PSmoveto(left,y);
 				PSshow(text);
 			}
-			UPmoveto (upath, left, y);
-			UPlineto (upath, right, y);
+			[upath moveToPoint:NSMakePoint(left, y)];
+			[upath lineToPoint:NSMakePoint(right, y)];
 		}
 	
 		for ( ; x<=stopx ; x+= 64)
@@ -633,13 +629,12 @@ PSsetrgbcolor (0.8,0.8,1.0);	// thin grid color
 				PSmoveto(x,bottom+2);
 				PSshow(text);
 			}
-			UPmoveto (upath, x, top);
-			UPlineto (upath, x, bottom);
+			[upath moveToPoint:NSMakePoint(x, top)];
+			[upath lineToPoint:NSMakePoint(x, bottom)];
 		}
 	
-		endUserPath (upath, dps_ustroke);
 		PSsetgray (12.0/16);
-		sendUserPath (upath);
+		[upath stroke];
 	}
 
 	return self;
@@ -871,8 +866,8 @@ static	NSPoint		oldreletive;
 			break;
 		if ([event type] == NSApplicationDefined)
 		{	// doesn't work.  grrr.
-#error Application Conversion: 'applicationDefined:' is obsolete. Override sendEvent to catch this event
-			[quakeed_i applicationDefined:event];
+			//#error Application Conversion: 'applicationDefined:' is obsolete. Override sendEvent to catch this event
+			//[quakeed_i applicationDefined:event];
 			continue;
 		}
 		
@@ -1270,8 +1265,10 @@ mouseDown
 
 	// check selection
 		ent = [map_i grabRay: p1 : p2];
-		if (ent)
-			return [self selectionDragFrom: theEvent];
+		if (ent) {
+			[self selectionDragFrom: theEvent];
+			return;
+		}
 		
 		if ([map_i numSelected])
 		{
@@ -1279,7 +1276,8 @@ mouseDown
 			return;
 		}
 		
-		return [self newBrushDragFrom: theEvent];
+		[self newBrushDragFrom: theEvent];
+		return;
 	}
 	
 //
@@ -1365,17 +1363,20 @@ rightMouseDown
 
 	if (flags == NSCommandKeyMask)
 	{
-		return [self scrollDragFrom: theEvent];		
+		[self scrollDragFrom: theEvent];
+		return;
 	}
 
 	if (flags == NSAlternateKeyMask)
 	{
-		return [clipper_i XYClick: pt];
+		[clipper_i XYClick: pt];
+		return;
 	}
 	
 	if (flags == 0 || flags == NSControlKeyMask)
 	{
-		return [self directionDragFrom: theEvent];
+		[self directionDragFrom: theEvent];
+		return;
 	}
 	
 	qprintf ("bad flags for click");

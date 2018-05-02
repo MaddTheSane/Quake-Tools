@@ -30,6 +30,7 @@
  * which reference objective C methods. 
  */
 
+#if 0
 #import <objc/objc.h>
 #import <AppKit/dpsclient.h>
 #import <AppKit/NSDPSContext.h>
@@ -71,3 +72,5 @@ void addPts(UserPath *up, float x, float y);
 void addOp(UserPath *up, int op);
 void add(UserPath *up, int op, float x, float y);
 void checkBBox(UserPath *up, float x, float y);
+
+#endif

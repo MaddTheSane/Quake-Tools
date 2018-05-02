@@ -57,8 +57,8 @@
 		553141221B98E61F00390795 /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
 		553141231B98E61F00390795 /* Clipper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clipper.h; sourceTree = "<group>"; };
 		553141241B98E61F00390795 /* Clipper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Clipper.m; sourceTree = "<group>"; };
-		553141251B98E61F00390795 /* cmdlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmdlib.c; sourceTree = "<group>"; };
-		553141261B98E61F00390795 /* cmdlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmdlib.h; sourceTree = "<group>"; };
+		553141251B98E61F00390795 /* cmdlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmdlib.c; sourceTree = "<group>"; usesTabs = 1; };
+		553141261B98E61F00390795 /* cmdlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmdlib.h; sourceTree = "<group>"; usesTabs = 1; };
 		553141271B98E61F00390795 /* Dict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dict.h; sourceTree = "<group>"; };
 		553141281B98E61F00390795 /* Dict.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dict.m; sourceTree = "<group>"; };
 		553141291B98E61F00390795 /* DictList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DictList.h; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 				5531410A1B98E46B00390795 /* Products */,
 			);
 			sourceTree = "<group>";
-			usesTabs = 0;
+			usesTabs = 1;
 		};
 		5531410A1B98E46B00390795 /* Products */ = {
 			isa = PBXGroup;

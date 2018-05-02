@@ -24,44 +24,37 @@ id		inspcontrol_i;
 
 	[windowList addObject:win_project_i];
 	[contentList addObject:[win_project_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemProject_i setKeyEquivalent:'1'];
+	[itemProject_i setKeyEquivalent:@"1"];
 	[itemList addObject:itemProject_i];
 
 	[windowList addObject:win_textures_i];
 	[contentList addObject:[win_textures_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemTextures_i setKeyEquivalent:'2'];
+	[itemTextures_i setKeyEquivalent:@"2"];
 	[itemList addObject:itemTextures_i];
 
 	[windowList addObject:win_things_i];
 	[contentList addObject:[win_things_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemThings_i setKeyEquivalent:'3'];
+	[itemThings_i setKeyEquivalent:@"3"];
 	[itemList addObject:itemThings_i];
 	
 	[windowList addObject:win_prefs_i];
 	[contentList addObject:[win_prefs_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemPrefs_i setKeyEquivalent:'4'];
+	[itemPrefs_i setKeyEquivalent:@"4"];
 	[itemList addObject:itemPrefs_i];
 
 	[windowList addObject:win_settings_i];
 	[contentList addObject:[win_settings_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemSettings_i setKeyEquivalent:'5'];
+	[itemSettings_i setKeyEquivalent:@"5"];
 	[itemList addObject:itemSettings_i];
 
 	[windowList addObject:win_output_i];
 	[contentList addObject:[win_output_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemOutput_i setKeyEquivalent:'6'];
+	[itemOutput_i setKeyEquivalent:@"6"];
 	[itemList addObject:itemOutput_i];
 
 	[windowList addObject:win_help_i];
 	[contentList addObject:[win_help_i contentView]];
-#error StringConversion: key equivalents are now instances of NSString. Change your C string variable to an NSString.
-	[itemHelp_i setKeyEquivalent:'7'];
+	[itemHelp_i setKeyEquivalent:@"7"];
 	[itemList addObject:itemHelp_i];
 
 	// Setup inspector window with project subview first

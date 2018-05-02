@@ -30,24 +30,19 @@ int _atof (char *c)
 	return atof(c);
 }
 
-void WriteNumericDefault (char *name, float value)
+void WriteNumericDefault (NSString *name, float value)
 {
-	char	str[128];
-	
-	sprintf (str,"%f", value);
-#warning DefaultsConversion: [<NSUserDefaults> setObject:...forKey:...] used to be NXWriteDefault(DEFOWNER, name, str). Defaults will be synchronized within 30 seconds after this change.  For immediate synchronization, call '-synchronize'. Also note that the first argument of NXWriteDefault is now ignored; to write into a domain other than the apps default, see the NSUserDefaults API.
-	[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithCString:str] forKey:[NSString stringWithCString:name]];
+	[[NSUserDefaults standardUserDefaults] setFloat:value forKey:name];
 }
-void WriteStringDefault (char *name, char *value)
+void WriteStringDefault (NSString *name, NSString *value)
 {
-#warning DefaultsConversion: [<NSUserDefaults> setObject:...forKey:...] used to be NXWriteDefault(DEFOWNER, name, value). Defaults will be synchronized within 30 seconds after this change.  For immediate synchronization, call '-synchronize'. Also note that the first argument of NXWriteDefault is now ignored; to write into a domain other than the apps default, see the NSUserDefaults API.
-	[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithCString:value] forKey:[NSString stringWithCString:name]];
+	[[NSUserDefaults standardUserDefaults] setObject:value forKey:name];
 }
 
 //
 //	Read in at start of program
 //
-- readDefaults
+- (void)readDefaults
 {
 	char *string;
 	float	value;
@@ -83,31 +78,28 @@ void WriteStringDefault (char *name, char *value)
 #warning DefaultsConversion: This used to be a call to NXGetDefaultValue with the owner DEFOWNER.  If the owner was different from your applications name, you may need to modify this code.
 	value = _atof((char *)[[[NSUserDefaults standardUserDefaults] objectForKey:@"Zlight"] cString]);
 	[self setZlight:value];
-
-	return self;
 }
 
-
-- setProjectPath:(char *)path
+@synthesize projectPath=projectpath;
+- (void)setProjectPath:(NSString *)path
 {
 	if (!path)
-		path = "";
-	strcpy (projectpath, path);
-	[startproject_i setStringValue:[NSString stringWithCString:path]];
-	WriteStringDefault ("ProjectPath", path);
-	return self;
+		path = @"";
+	[projectpath autorelease];
+	projectpath = [path copy];
+	[startproject_i setStringValue:path];
+	WriteStringDefault (@"ProjectPath", path);
 }
 
-- setCurrentProject:sender
+- (IBAction)setCurrentProject:sender
 {
 	[startproject_i setStringValue:[NSString stringWithCString:[project_i currentProjectFile]]];
 	[self UIChanged: self];
-	return self;
 }
 
-- (char *)getProjectPath
+- (const char *)getProjectPath
 {
-	return projectpath;
+	return projectpath.fileSystemRepresentation;
 }
 
 
@@ -118,7 +110,7 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the BSP sound using an OpenPanel
 //
-- setBspSound:sender
+- (IBAction)setBspSound:sender
 {
 	id	panel;
 	char	*types[]={"snd",NULL};
@@ -146,44 +138,41 @@ void WriteStringDefault (char *name, char *value)
 		[self setBspSoundPath:bspSound];
 		[self playBspSound];
 	}
-
-	return self;
 }
 
 
 //
 //	Play the BSP sound
 //
-- playBspSound
+- (void)playBspSound
 {
 	[bspSound_i play];	
-	return self;
 }
 
 
 //
 //	Set the bspSound path
 //
-- setBspSoundPath:(char *)path
+- (void)setBspSoundPath:(NSString *)path
 {
 	if (!path)
-		path = "";
-	strcpy(bspSound,path);
+		path = @"";
+	[bspSound release];
+	bspSound = [path copy];
 
 	if (bspSound_i)
 		[bspSound_i release];
-	bspSound_i = [[Sound alloc] initFromSoundfile:bspSound];
+	bspSound_i = [[NSSound alloc] initWithContentsOfFile:bspSound byReference:NO];
 	if (!bspSound_i)
 	{
-		strcpy (bspSound, "/NextLibrary/Sounds/Funk.snd");
-		bspSound_i = [[Sound alloc] initFromSoundfile:bspSound];
+		[bspSound release];
+		bspSound = [@"/System/Library/Sounds/Funk.aiff" retain];
+		bspSound_i = [[NSSound soundNamed:@"Funk"] retain];
 	}
 
-	[bspSoundField_i setStringValue:[NSString stringWithCString:bspSound]];
+	[bspSoundField_i setStringValue:bspSound];
 	
-	WriteStringDefault ("BspSoundPath", bspSound);
-	
-	return self;
+	[[NSUserDefaults standardUserDefaults] setValue:bspSound forKey:@"BspSoundPath"];
 }
 
 //===============================================
@@ -193,13 +182,11 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the state
 //
-- setShowBSP:(int)state
+- (void)setShowBSP:(BOOL)state
 {
 	showBSP = state;
 	[showBSP_i setIntValue:state];
-	WriteNumericDefault ("ShowBSPOutput", showBSP);
-
-	return self;
+	[[NSUserDefaults standardUserDefaults] setBool:showBSP forKey:@"ShowBSPOutput"];
 }
 
 //
@@ -218,12 +205,11 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the state
 //
-- setBrushOffset:(int)state
+- (void)setBrushOffset:(BOOL)state
 {
 	brushOffset = state;
 	[brushOffset_i setIntValue:state];
-	WriteNumericDefault ("OffsetBrushCopy", state);
-	return self;
+	WriteNumericDefault (@"OffsetBrushCopy", state);
 }
 
 //
@@ -234,11 +220,13 @@ void WriteStringDefault (char *name, char *value)
 	return brushOffset;
 }
 
+@synthesize brushOffset=brushOffset;
+
 //===============================================
 //	StartWad
 //===============================================
 
-- setStartWad:(int)value		// set start wad (0-2)
+- (void)setStartWad:(int)value		// set start wad (0-2)
 {
 	startwad = value;
 	if (startwad<0 || startwad>2)
@@ -246,9 +234,10 @@ void WriteStringDefault (char *name, char *value)
 	
 	[startwad_i selectCellAtRow:startwad column:0];
 
-	WriteNumericDefault ("StartWad", value);
-	return self;
+	WriteNumericDefault (@"StartWad", value);
 }
+
+@synthesize startWad=startwad;
 
 - (int)getStartWad
 {
@@ -262,34 +251,34 @@ void WriteStringDefault (char *name, char *value)
 //
 //	Set the state
 //
-- setXlight:(float)value
+- (void)setXlight:(float)value
 {
 	xlight = value;
 	if (xlight < 0.25 || xlight > 1)
 		xlight = 0.6;
 	lightaxis[1] = xlight;
 	[xlight_i setFloatValue:xlight];
-	WriteNumericDefault ("Xlight", xlight);
+	WriteNumericDefault (@"Xlight", xlight);
 	return self;
 }
-- setYlight:(float)value
+- (void)setYlight:(float)value
 {
 	ylight = value;
 	if (ylight < 0.25 || ylight > 1)
 		ylight = 0.75;
 	lightaxis[2] = ylight;
 	[ylight_i setFloatValue:ylight];
-	WriteNumericDefault ("Ylight", ylight);
+	WriteNumericDefault (@"Ylight", ylight);
 	return self;
 }
-- setZlight:(float)value
+- (void)setZlight:(float)value
 {
 	zlight = value;
 	if (zlight < 0.25 || zlight > 1)
 		zlight = 1;
 	lightaxis[0] = zlight;
 	[zlight_i setFloatValue:zlight];
-	WriteNumericDefault ("Zlight", zlight);
+	WriteNumericDefault (@"Zlight", zlight);
 	return self;
 }
 

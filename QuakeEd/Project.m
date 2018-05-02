@@ -195,10 +195,10 @@ id	project_i;
 //	Fill the QuakeEd Maps or wads browser
 //	(Delegate method - delegated in Interface Builder)
 //
-- (void)browser:(NSBrowser *)sender createRowsForColumn:(int)column inMatrix:(NSMatrix *)matrix
+- (void)browser:(NSBrowser *)sender createRowsForColumn:(NSInteger)column inMatrix:(NSMatrix *)matrix
 {
 	id		cell, list;
-	int		max;
+	NSInteger		max;
 	char	*name;
 	int		i;
 
@@ -218,12 +218,25 @@ id	project_i;
 		name = [list elementAt:i];
 		[matrix addRow];
 		cell = [matrix cellAtRow:i column:0];
-		[cell setStringValue:[NSString stringWithCString:name]];
+		[cell setStringValue:@(name)];
 		[cell setLeaf:YES];
 		[cell setLoaded:YES];
 	}
-#error BrowserConversion: Do not return count.  The matrix row count must be correct.
-	return i;
+}
+
+- (NSInteger)browser:(NSBrowser *)sender numberOfRowsInColumn:(NSInteger)column
+{
+    id list;
+    if (sender == mapbrowse_i)
+        list = mapList;
+    else if (sender == pis_wads_i)
+        list = wadList;
+    else
+    {
+        list = nil;
+        Error ("Project: unknown browser to fill");
+    }
+    return [list count];
 }
 
 //
@@ -241,8 +254,8 @@ id	project_i;
 	sprintf(fname,"%s/%s.map",path_mapdirectory,
 		(char *)[mapList elementAt:row]);
 	
-	panel = NSGetAlertPanel("Loading...",
-		"Loading map. Please wait.",NULL,NULL,NULL);
+	panel = NSGetAlertPanel(@"Loading...",
+		@"Loading map. Please wait.",NULL,NULL,NULL);
 	[panel orderFront:NULL];
 
 	[quakeed_i doOpen:fname];
@@ -355,34 +368,26 @@ id	project_i;
 //
 //	Open a project file
 //
-- openProject
+- (BOOL)openProject
 {
-	char	path[128];
-	id		openpanel;
-	int		rtn;
-	char	*projtypes[2] = {"qpr",NULL};
-	char	**filenames;
-	char	*dir;
+	NSOpenPanel		*openpanel;
+	NSModalResponse		rtn;
+	NSArray<NSString*>	*projtypes = @[@"qpr"];
+	NSArray<NSURL*>* filenames;
 	
-#warning FactoryMethods: [OpenPanel openPanel] used to be [OpenPanel new].  Open panels are no longer shared.  'openPanel' returns a new, autoreleased open panel in the default configuration.  To maintain state, retain and reuse one open panel (or manually re-set the state each time.)
 	openpanel = [NSOpenPanel openPanel];
 	[openpanel setAllowsMultipleSelection:NO];
-	[openpanel chooseDirectories:NO];
-#error StringConversion: Open panel types are now stored in an NSArray of NSStrings (used to use char**).  Change your variable declaration.
-	rtn = [openpanel runModalForTypes:projtypes];
-	if (rtn == NSOKButton)
+    openpanel.allowedFileTypes = projtypes;
+	rtn = [openpanel runModal];
+	if (rtn == NSModalResponseOK)
 	{
-#error StringConversion: filenames now returns an NSArray of NSStrings (used to return a NULL terminated array of char * strings).  Change your variable declaration.
-#warning GeneralNamingConversion: 'filenames' now returns absolute paths
-		 (const char *const *)filenames = [openpanel filenames];
-		 dir = (char *)[[openpanel directory] cString];
-		 sprintf(path,"%s/%s",dir,filenames[0]);
-		 strcpy(path_projectinfo,path);
-		 [self openProjectFile:path];
-		 return self;
+		 filenames = [openpanel URLs];
+		 strcpy(path_projectinfo,filenames.firstObject.fileSystemRepresentation);
+		 [self openProjectFile:filenames.firstObject.fileSystemRepresentation];
+		 return YES;
 	}
 	
-	return nil;
+	return NO;
 }
 
 

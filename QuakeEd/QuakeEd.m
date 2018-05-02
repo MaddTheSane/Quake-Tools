@@ -1,5 +1,6 @@
 
 #import "qedefs.h"
+#include <Carbon/Carbon.h>
 
 id	quakeed_i;
 id	entclasses_i;
@@ -29,7 +30,7 @@ void NopSound (void)
 	NSBeep ();
 }
 
-UserPath	*upath;
+NSBezierPath	*upath;
 
 
 void My_Malloc_Error (int code)
@@ -87,7 +88,7 @@ void CheckCmdDone(NSTimer *tag, double now, void *userData)
     union wait statusp;
     struct rusage rusage;
 	
-	if (!wait4(bsppid, &statusp, WNOHANG, &rusage))
+	if (!wait4(bsppid, &statusp.w_status, WNOHANG, &rusage))
 		return;
 	DisplayCmdOutput ();
 	bsppid = 0;
@@ -103,30 +104,31 @@ void CheckCmdDone(NSTimer *tag, double now, void *userData)
 init
 ===============
 */
-- initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)backingType defer:(BOOL)flag
+- initWithContentRect:(NSRect)contentRect styleMask:(NSWindowStyleMask)aStyle backing:(NSBackingStoreType)backingType defer:(BOOL)flag
 {
-	[super initWithContentRect:contentRect styleMask:aStyle|mask backing:backingType defer:flag];
+	if (self = [super initWithContentRect:contentRect styleMask:aStyle backing:backingType defer:flag]) {
 
-#error EventConversion: addToEventMask:NX_RMOUSEDRAGGEDMASK|NX_LMOUSEDRAGGEDMASK: is obsolete; you no longer need to use the eventMask methods; for mouse moved events, see 'setAcceptsMouseMovedEvents:'
-	[self addToEventMask:NSRightMouseDraggedMask|NSLeftMouseDraggedMask];	
+//#error EventConversion: addToEventMask:NX_RMOUSEDRAGGEDMASK|NX_LMOUSEDRAGGEDMASK: is obsolete; you no longer need to use the eventMask methods; for mouse moved events, see 'setAcceptsMouseMovedEvents:'
+	//[self addToEventMask:NSRightMouseDraggedMask|NSLeftMouseDraggedMask];
 	
     malloc_error(My_Malloc_Error);
 	
 	quakeed_i = self;
 	dirty = autodirty = NO;
 
-#error DPSConversion: 'scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:' used to be DPSAddTimedEntry(5*60, AutoSave, self, NSBaseThreshhold).  AutoSave should be converted to a method with one argument (the timer), and <target> should be converted to the implementor of that method ([aTarget aSelector:timer]).  The argument to userInfo: needs to be converted to an object and can be retrieved with [timer userInfo].
-	[[NSTimer scheduledTimerWithTimeInterval:5*60 target:<target> selector:AutoSave userInfo:self repeats:YES] retain];
+//#error DPSConversion: 'scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:' used to be DPSAddTimedEntry(5*60, AutoSave, self, NSBaseThreshhold).  AutoSave should be converted to a method with one argument (the timer), and <target> should be converted to the implementor of that method ([aTarget aSelector:timer]).  The argument to userInfo: needs to be converted to an object and can be retrieved with [timer userInfo].
+	//[[NSTimer scheduledTimerWithTimeInterval:5*60 target:<--target--> selector:AutoSave userInfo:self repeats:YES] retain];
 
 	upath = newUserPath ();
-
+	}
+	
 	return self;
 }
 
 - setDefaultFilename
 {	
 	strcpy (filename, FN_TEMPSAVE);
-	[self setTitleWithRepresentedFilename:[NSString stringWithCString:filename]];
+	[self setTitleWithRepresentedFilename:@(filename)];
 	
 	return self;
 }
@@ -325,12 +327,10 @@ App delegate methods
 	return self;
 }
 
-#warning NotificationConversion: applicationDidFinishLaunching:(NSNotification *)notification (used to be appDidInit:) is an NSApplication notification method (used to be a delegate method); delegates of NSApplication are automatically set to observe this notification; subclasses of NSApplication do not automatically receive this notification
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	NSApplication *theApplication = [notification object];
-    NSScreen *const **screens;
-	int			screencount;
+    NSArray<NSScreen*> *screens;
 	
 	running = YES;
 	g_cmd_out_i = cmd_out_i;	// for qprintf
@@ -346,11 +346,12 @@ App delegate methods
 	[self clear:self];
 
 // go to my second monitor
-#error ScreenConversion: 'getScreens:count:' has been replaced by NSScreen 'screens' (returning an NSArray instance)
-	[NSApp getScreens:screens count:&screencount];
-	if (screencount == 2)
+	screens = [NSScreen screens];
+	if (screens.count >= 2) {
+		//[]
 		[self moveTopLeftTo:0 : [screens[1] frame].size.height
-		screen:screens+1];
+		screen:screens[1]];
+	}
 	
 	[self makeKeyAndOrderFront:self];
 
@@ -360,10 +361,10 @@ App delegate methods
 	qprintf ("ready.");
 }
 
-- (BOOL)applicationShouldTerminate:(id)sender
+- (NSApplicationTerminateReply)applicationShouldTerminate:(id)sender
 {
 // FIXME: save dialog if dirty
-	return YES;
+	return NSTerminateNow;
 }
 
 
@@ -658,7 +659,7 @@ saveBSP
 	{
 		id		panel;
 		
-		panel = NSGetAlertPanel("BSP In Progress",expandedcmd,NULL,NULL,NULL);
+		panel = NSGetAlertPanel(@"BSP In Progress",expandedcmd,NULL,NULL,NULL);
 		[panel makeKeyAndOrderFront:NULL];
 		system(expandedcmd);
 		NSReleaseAlertPanel(panel);
@@ -681,37 +682,37 @@ saveBSP
 }
 
 
-- BSP_Full: sender
+- (IBAction)BSP_Full: sender
 {
 	[self saveBSP:[project_i getFullVisCmd] dialog: NO];
 	return self;
 }
 
-- BSP_FastVis: sender
+- (IBAction)BSP_FastVis: sender
 {
 	[self saveBSP:[project_i getFastVisCmd] dialog: NO];
 	return self;
 }
 
-- BSP_NoVis: sender
+- (IBAction)BSP_NoVis: sender
 {
 	[self saveBSP:[project_i getNoVisCmd] dialog: NO];
 	return self;
 }
 
-- BSP_relight: sender
+- (IBAction)BSP_relight: sender
 {
 	[self saveBSP:[project_i getRelightCmd] dialog: NO];
 	return self;
 }
 
-- BSP_entities: sender
+- (IBAction)BSP_entities: sender
 {
 	[self saveBSP:[project_i getEntitiesCmd] dialog: NO];
 	return self;
 }
 
-- BSP_stop: sender
+- (IBAction)BSP_stop: sender
 {
 	if (!bsppid)
 	{
@@ -756,21 +757,18 @@ Called by open or the project panel
 open
 ==============
 */
-- open: sender;
+- (IBAction)open: sender;
 {
-	id			openpanel;
-	static char	*suffixlist[] = {"map", 0};
+	NSOpenPanel	*openpanel;
+	NSArray<NSString*>*suffixlist = @[@"map"];
 
-#warning FactoryMethods: [OpenPanel openPanel] used to be [OpenPanel new].  Open panels are no longer shared.  'openPanel' returns a new, autoreleased open panel in the default configuration.  To maintain state, retain and reuse one open panel (or manually re-set the state each time.)
 	openpanel = [NSOpenPanel openPanel];
+	openpanel.directoryURL = [NSURL fileURLWithFileSystemRepresentation:[project_i getMapDirectory] isDirectory:YES relativeToURL:nil];
+	openpanel.allowedFileTypes = suffixlist;
+	if ( [openpanel runModal] != NSModalResponseOK)
+		return;
 
-#error StringConversion: Open panel types are now stored in an NSArray of NSStrings (used to use char**).  Change your variable declaration.
-	if ( [openpanel runModalForDirectory:[NSString stringWithCString:[project_i getMapDirectory]] file:@"" types:suffixlist] != NSOKButton)
-		return self;
-
-	[self doOpen: (char *)[[openpanel filename] cString]];
-	
-	return self;
+	[self doOpen: (char *)[[openpanel URL] fileSystemRepresentation]];
 }
 
 
@@ -779,13 +777,15 @@ open
 save:
 ==============
 */
-- save: sender;
+- (IBAction)save: sender;
 {
 	char		backup[1024];
 
 // force a name change if using tempname
-	if (!strcmp (filename, FN_TEMPSAVE) )
-		return [self saveAs: self];
+	if (!strcmp (filename, FN_TEMPSAVE) ) {
+		[self saveAs: self];
+		return;
+	}
 		
 	dirty = autodirty = NO;
 
@@ -795,8 +795,6 @@ save:
 	rename (filename, backup);		// copy old to .bak
 
 	[map_i writeMapFile: filename useRegion: NO];
-
-	return self;
 }
 
 
@@ -805,25 +803,25 @@ save:
 saveAs
 ==============
 */
-- saveAs: sender;
+- (IBAction)saveAs: sender;
 {
-	id		panel_i;
-	char	dir[1024];
+	NSSavePanel	*panel_i;
+	char		dir[1024];
 	
-#warning FactoryMethods: [SavePanel savePanel] used to be [SavePanel new].  Save panels are no longer shared.  'savePanel' returns a new, autoreleased save panel in the default configuration.  To maintain state, retain and reuse one save panel (or manually re-set the state each time.)
 	panel_i = [NSSavePanel savePanel];
 	ExtractFileBase (filename, dir);
-	[panel_i setRequiredFileType:@"map"];
-	if ( [panel_i runModalForDirectory:@"" file:@""] != NSOKButton)
-		return self;
+	panel_i.allowedFileTypes = @[@"map"];
+	panel_i.nameFieldStringValue = @(dir);
+	panel_i.directoryURL = [NSURL fileURLWithFileSystemRepresentation:[project_i getMapDirectory] isDirectory:YES relativeToURL:nil];
 	
-	strcpy (filename, [[panel_i filename] cString]);
+	if ( [panel_i runModal] != NSModalResponseOK)
+		return;
 	
-	[self setTitleWithRepresentedFilename:[NSString stringWithCString:filename]];
+	strcpy (filename, [[panel_i URL] fileSystemRepresentation]);
+	
+	[self setTitleWithRepresentedFilename:[panel_i URL].path];
 	
 	[self save: self];	
-	
-	return self;
 }
 
 
@@ -863,11 +861,6 @@ keyDown
 ===============
 */
 
-#define	KEY_RIGHTARROW		0xae
-#define	KEY_LEFTARROW		0xac
-#define	KEY_UPARROW			0xad
-#define	KEY_DOWNARROW		0xaf
-
 - (void)keyDown:(NSEvent *)theEvent 
 {
     int		ch;
@@ -875,58 +868,81 @@ keyDown
 // function keys
 	switch ([theEvent keyCode])
 	{
-	case 60:	// F2
+	case kVK_F2:	// F2
 		[cameraview_i setDrawMode: dr_wire];
 		qprintf ("wire draw mode");
 		return;
-	case 61:	// F3
+	case kVK_F3:	// F3
 		[cameraview_i setDrawMode: dr_flat];
 		qprintf ("flat draw mode");
 		return;
-	case 62:	// F4
+	case kVK_F4:	// F4
 		[cameraview_i setDrawMode: dr_texture];
 		qprintf ("texture draw mode");
 		return;
 
-	case 63:	// F5
+	case kVK_F5:	// F5
 		[xyview_i setDrawMode: dr_wire];
 		qprintf ("wire draw mode");
 		return;
-	case 64:	// F6
+	case kVK_F6:	// F6
 		qprintf ("texture draw mode");
 		return;
 		
-	case 66:	// F8
+	case kVK_F8:	// F8
 		[cameraview_i homeView: self];
 		return;
 		
-	case 88:	// F12
+	case kVK_F12:	// F12
 		[map_i subtractSelection: self];
 		return;
 
-	case 106:	// page up
+	case kVK_PageUp:	// page up
 		[cameraview_i upFloor: self];
 		return;
 		
-	case 107:	// page down
+	case kVK_PageDown:	// page down
 		[cameraview_i downFloor: self];
 		return;
 		
-	case 109:	// end
+	case kVK_End:	// end
 		[self deselect: self];
 		return;
-	}
-
-// portable things
-#error EventConversion: the 'characters' method of NSEvent replaces the '.data.key.charCode' field of NXEvent. Use 'charactersIgnoringModifiers' to get the chars that would have been generated regardless of modifier keys (except shift)
-    ch = tolower([theEvent characters]);
+			
+	case kVK_RightArrow:
+	case kVK_LeftArrow:
+	case kVK_UpArrow:
+	case kVK_DownArrow:
+		[cameraview_i _keyDown: theEvent];
+		break;
 		
+	case kVK_Escape:	// escape
+		autodirty = dirty = YES;
+		[self deselect: self];
+		return;
+		
+	case kVK_Delete:	// delete
+		autodirty = dirty = YES;
+		[map_i makeSelectedPerform: @selector(remove)];
+		[clipper_i hide];
+		[self updateAll];
+		break;
+
+	case kVK_Return:	// enter
+		[clipper_i carve];
+		[self updateAll];
+		qprintf ("carved brush");
+		break;
+	}
+	
+	// portable things
+
+	NSString *eventChars = [theEvent charactersIgnoringModifiers];
+	unichar aChar;
+	[eventChars getCharacters:&aChar range:NSMakeRange(0, 1)];
+	ch = aChar;
 	switch (ch)
 	{
-	case KEY_RIGHTARROW:
-	case KEY_LEFTARROW:
-	case KEY_UPARROW:
-	case KEY_DOWNARROW:
 	case 'a':
 	case 'z':
 	case 'd':
@@ -936,27 +952,9 @@ keyDown
 		[cameraview_i _keyDown: theEvent];
 		break;
 
-	case 27:	// escape
-		autodirty = dirty = YES;
-		[self deselect: self];
-		return;
-		
-	case 127:	// delete
-		autodirty = dirty = YES;
-		[map_i makeSelectedPerform: @selector(remove)];
-		[clipper_i hide];
-		[self updateAll];
-		break;
-
 	case '/':
 		[clipper_i flipNormal];
 		[self updateAll];
-		break;
-		
-	case 13:	// enter
-		[clipper_i carve];
-		[self updateAll];
-		qprintf ("carved brush");
 		break;
 		
 	case ' ':

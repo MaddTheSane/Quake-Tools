@@ -17,9 +17,10 @@
 #define	SUBDIR_MAPS		"maps"
 #define SUBDIR_GFX		"gfx"
 
-extern	id project_i;
+@class Project;
+extern Project *project_i;
 
-@interface Project:NSObject
+@interface Project:NSObject <NSBrowserDelegate>
 {
 	id	projectInfo;		// dictionary storage of project info
 
@@ -81,7 +82,7 @@ extern	id project_i;
 
 - parseProjectFile;		// read defaultsdatabase for project path
 - openProjectFile:(char *)path;	// called by openProject and newProject
-- openProject;
+- (BOOL)openProject;
 - clickedOnMap:sender;		// called if clicked on map in browser
 - clickedOnWad:sender;		// called if clicked on wad in browser
 

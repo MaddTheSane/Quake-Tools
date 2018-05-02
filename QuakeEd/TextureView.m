@@ -86,7 +86,7 @@ NOTE: I am specifically not using cached image reps, because the data is also ne
 		r.origin.x -= TEX_INDENT/2;
 		r.size.width += TEX_INDENT;
 		r.origin.y += 4;
-		if (!NSIsEmptyRect(NSIntersectionRect(&rects[0] , r)) == YES &&
+		if (!NSIsEmptyRect(NSIntersectionRect(rects , r)) == YES &&
 			t->display)
 		{
 			if (selected == i)

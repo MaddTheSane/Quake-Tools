@@ -17,6 +17,10 @@ initFrame:
 	return self;
 }
 
+- (BOOL)isFlipped
+{
+    return YES;
+}
 
 - calcViewSize
 {
@@ -29,9 +33,6 @@ initFrame:
 	
 	ent = [map_i currentEntity];
 	count = [ent numPairs];
-
-#error ViewConversion: '[NSView setFlipped:]' is obsolete; you must override 'isFlipped' instead of setting externally. However, [NSImage setFlipped:] is not obsolete. If that is what you are using here, no change is needed.
-	[[self superview] setFlipped:YES];
 	
 	b = [[self superview] bounds];
 	w = b.size.width;
