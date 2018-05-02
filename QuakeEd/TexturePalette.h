@@ -37,7 +37,7 @@ qtexture_t *TEX_ForName (char *name);
 
 typedef struct
 {
-	id		image;		// NXImage
+	NSBitmapImageRep	*image;		// NXImage
 	NSRect	r;
 	char	*name;
 	int		index;

@@ -287,7 +287,7 @@ qtexture_t *TEX_ForName (char *name)
 	if (textureList_i)
 		[textureList_i empty];
 	else
-		textureList_i = [[Storage alloc]
+		textureList_i = [[CompatibleStorage alloc]
 			initCount:0
 			elementSize:sizeof(texpal_t)
 			description:NULL];

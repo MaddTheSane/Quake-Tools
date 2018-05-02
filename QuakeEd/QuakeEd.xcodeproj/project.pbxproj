@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5515A312209A159B00E7BB11 /* Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5515A310209A159A00E7BB11 /* Storage.m */; };
-		552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552A27021B9D402E0055D5D9 /* QuakeEd.xib */; };
+		5515A317209A16CB00E7BB11 /* Info.nib in Resources */ = {isa = PBXBuildFile; fileRef = 5515A313209A16CA00E7BB11 /* Info.nib */; };
+		5515A318209A16CB00E7BB11 /* QuakeEd.nib in Resources */ = {isa = PBXBuildFile; fileRef = 5515A315209A16CB00E7BB11 /* QuakeEd.nib */; };
 		553141691B98E61F00390795 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141221B98E61F00390795 /* CameraView.m */; };
 		5531416A1B98E61F00390795 /* Clipper.m in Sources */ = {isa = PBXBuildFile; fileRef = 553141241B98E61F00390795 /* Clipper.m */; };
 		5531416B1B98E61F00390795 /* cmdlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 553141251B98E61F00390795 /* cmdlib.c */; };
@@ -47,7 +48,8 @@
 /* Begin PBXFileReference section */
 		5515A310209A159A00E7BB11 /* Storage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Storage.m; sourceTree = "<group>"; };
 		5515A311209A159A00E7BB11 /* Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Storage.h; sourceTree = "<group>"; };
-		552A27021B9D402E0055D5D9 /* QuakeEd.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuakeEd.xib; sourceTree = "<group>"; };
+		5515A314209A16CA00E7BB11 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Info.nib; sourceTree = "<group>"; };
+		5515A316209A16CB00E7BB11 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/QuakeEd.nib; sourceTree = "<group>"; };
 		553141091B98E46B00390795 /* QuakeEd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuakeEd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5531411D1B98E5C400390795 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		553141201B98E61F00390795 /* Brush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Brush.h; sourceTree = "<group>"; };
@@ -221,7 +223,8 @@
 		553141941B98E64900390795 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				552A27021B9D402E0055D5D9 /* QuakeEd.xib */,
+				5515A313209A16CA00E7BB11 /* Info.nib */,
+				5515A315209A16CB00E7BB11 /* QuakeEd.nib */,
 				553141341B98E61F00390795 /* help.txt */,
 				5531413A1B98E61F00390795 /* i_quakeed.tiff */,
 				5531413F1B98E61F00390795 /* jrbase1.map */,
@@ -295,12 +298,13 @@
 			files = (
 				553141871B98E61F00390795 /* readme.txt in Resources */,
 				5531418F1B98E61F00390795 /* triggers.qc in Resources */,
+				5515A318209A16CB00E7BB11 /* QuakeEd.nib in Resources */,
 				555070A91CD1573A007D6E08 /* Icons.xcassets in Resources */,
 				553141861B98E61F00390795 /* README in Resources */,
 				553141831B98E61F00390795 /* quake.qpr in Resources */,
+				5515A317209A16CB00E7BB11 /* Info.nib in Resources */,
 				553141781B98E61F00390795 /* i_quakeed.tiff in Resources */,
 				553141721B98E61F00390795 /* help.txt in Resources */,
-				552A27031B9D402E0055D5D9 /* QuakeEd.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +346,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5515A313209A16CA00E7BB11 /* Info.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5515A314209A16CA00E7BB11 /* English */,
+			);
+			name = Info.nib;
+			sourceTree = "<group>";
+		};
+		5515A315209A16CB00E7BB11 /* QuakeEd.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5515A316209A16CB00E7BB11 /* English */,
+			);
+			name = QuakeEd.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		553141181B98E46B00390795 /* Debug */ = {
