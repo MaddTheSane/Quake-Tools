@@ -6,6 +6,7 @@
 #include <libc.h>
 #include <errno.h>
 #include <ctype.h>
+#include <sys/types.h>
 
 #define strcmpi strcasecmp
 #define stricmp strcasecmp
@@ -24,17 +25,18 @@ double I_FloatTime (void);
 
 int		GetKey (void);
 
-void	Error (char *error, ...);
+void	Error (const char *error, ...) __printflike(1, 2);
+void	ErrorV (const char* error, va_list list) __printflike(1, 0);
 int		CheckParm (char *check);
 
-int 	SafeOpenWrite (char *filename);
-int 	SafeOpenRead (char *filename);
+int 	SafeOpenWrite (const char *filename);
+int 	SafeOpenRead (const char *filename);
 void 	SafeRead (int handle, void *buffer, long count);
 void 	SafeWrite (int handle, void *buffer, long count);
 void 	*SafeMalloc (long size);
 
-long	LoadFile (char *filename, void **bufferptr);
-void	SaveFile (char *filename, void *buffer, long count);
+long	LoadFile (const char *filename, void **bufferptr);
+void	SaveFile (const char *filename, void *buffer, long count);
 
 void 	DefaultExtension (char *path, char *extension);
 void 	DefaultPath (char *path, char *basepath);
@@ -49,14 +51,15 @@ long 	ParseNum (char *str);
 
 short	BigShort (short l);
 short	LittleShort (short l);
-long	BigLong (long l);
-long	LittleLong (long l);
+int		BigLong (int l);
+int		LittleLong (int l);
 float	BigFloat (float l);
 float	LittleFloat (float l);
 
 extern	char		com_token[1024];
 extern	boolean		com_eof;
-
+
+
 char *COM_Parse (char *data);
 
 #endif
