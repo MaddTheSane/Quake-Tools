@@ -1,7 +1,7 @@
 About This Fork
 ===
 
-This is my attempt at updating QuakeEd to modern Mac OS X. This currently does not build.
+This is my attempt at updating QuakeEd to modern Mac OS X. This fork was run through the *OpenStepConversion* scripts provided by the OpenStep development tools, and will be further refined to run on Mac OS X. This currently does not build.
 
 Original Read-me
 ===
